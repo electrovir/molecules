@@ -63,7 +63,7 @@ const fitDistanceMargin = 1.2;
 /** How far the camera looks down at the molecule, so the ground and its shadow aren't seen edge-on. */
 const cameraElevationRadians = (25 * Math.PI) / 180;
 /**
- * Each molecule's starting turn: its +X end raised a little and swung toward the camera, then its
+ * The first molecule's starting turn, kept across molecule changes: its +X end raised a little and swung toward the camera, then its
  * top tipped away from the camera, so a molecule laid out flat is seen at an angle instead of
  * side-on.
  */
@@ -97,8 +97,28 @@ const highlightGlow = {
     max: 0.5,
     pulsesPerSecond: 0.8,
 };
+/**
+ * The glow's intensity is divided by the color's brightness, relative to this, so white atoms don't
+ * wash out while dark ones barely glow. Carbon's grey is about this bright, so it keeps the raw
+ * intensities.
+ */
+const highlightGlowReferenceLuminance = 0.28;
+/** Keeps very dark colors from getting an extreme boost. */
+const highlightGlowMaxBoost = 3;
 /** Pointer travel, in pixels, beyond which a press counts as an orbit drag instead of a click. */
 const clickMoveTolerance = 4;
+/** The idle turntable spin around the vertical axis. */
+const autoSpinRadiansPerSecond = 0.3;
+/** Releasing a drag while moving at least this fast flings the molecule back into spinning. */
+const flingPixelsPerSecond = 300;
+/** A release this long after the last pointer move is a stop, not a fling. */
+const flingMaxPauseMilliseconds = 80;
+/**
+ * How quickly a fling's speed eases down to the idle spin: the fraction of the extra speed lost per
+ * second, scaled by the square root of the current spin in radians per second. Fast spins brake
+ * harder and slow ones coast, without the gap between them being extreme.
+ */
+const flingSlowdown = 1.35;
 
 export enum MoleculeSelectionType {
     Atom = 'atom',
@@ -248,7 +268,11 @@ function pulseHighlight({
         model,
         selection,
     }).forEach((mesh) => {
-        mesh.material.emissiveIntensity = glow;
+        const color = mesh.material.color;
+        const luminance = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+        mesh.material.emissiveIntensity =
+            glow *
+            Math.min(highlightGlowMaxBoost, highlightGlowReferenceLuminance / (luminance || 1));
     });
 }
 
@@ -479,7 +503,7 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
         return meshes.map((mesh, atomIndex) => {
             const setOccluders = addContactShading({
                 material: mesh.material,
-                darkestBrightness: 0.6,
+                darkestBrightness: 0.75,
             });
             const atomPosition = toVector3(
                 assertWrap.isDefined(molecule.atoms[atomIndex]).position,
@@ -530,7 +554,7 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
         return sticks.map((stick) => {
             const setOccluders = addContactShading({
                 material: stick.material,
-                darkestBrightness: 0.5,
+                darkestBrightness: 0.7,
                 /** Wider than the default, so the band reads on a stick this thick. */
                 reach: 0.12,
             });
@@ -723,6 +747,7 @@ export function createMoleculeScene() {
      * swing the molecule around.
      */
     const turntable = new Group();
+    turntable.quaternion.copy(startingOrientation);
     scene.add(turntable);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -769,14 +794,26 @@ export function createMoleculeScene() {
     const pointerDownPosition = new Vector2();
     const drag: {
         lastPosition: Vector2 | undefined;
+        lastMoveMilliseconds: number;
+        pixelsPerSecond: Vector2;
     } = {
         lastPosition: undefined,
+        lastMoveMilliseconds: 0,
+        pixelsPerSecond: new Vector2(),
+    };
+    /** Undefined while the user holds the molecule still after grabbing it. */
+    const spin: {
+        radiansPerSecond: number | undefined;
+    } = {
+        radiansPerSecond: autoSpinRadiansPerSecond,
     };
 
     renderer.domElement.addEventListener('pointerdown', (event) => {
         pointerDownPosition.set(event.clientX, event.clientY);
         if (event.button === 0) {
             drag.lastPosition = new Vector2(event.clientX, event.clientY);
+            drag.lastMoveMilliseconds = event.timeStamp;
+            drag.pixelsPerSecond.set(0, 0);
         }
     });
     renderer.domElement.addEventListener('pointermove', (event) => {
@@ -798,12 +835,29 @@ export function createMoleculeScene() {
                     (event.clientY - drag.lastPosition.y) * radiansPerPixel,
                 ),
             );
+        const elapsedSeconds = (event.timeStamp - drag.lastMoveMilliseconds) / 1000;
+        if (elapsedSeconds > 0) {
+            drag.pixelsPerSecond.set(
+                (event.clientX - drag.lastPosition.x) / elapsedSeconds,
+                (event.clientY - drag.lastPosition.y) / elapsedSeconds,
+            );
+        }
         drag.lastPosition.set(event.clientX, event.clientY);
+        drag.lastMoveMilliseconds = event.timeStamp;
+        spin.radiansPerSecond = undefined;
     });
     renderer.domElement.addEventListener('pointercancel', () => {
         drag.lastPosition = undefined;
     });
     renderer.domElement.addEventListener('pointerup', (event) => {
+        if (
+            drag.lastPosition &&
+            event.timeStamp - drag.lastMoveMilliseconds < flingMaxPauseMilliseconds &&
+            drag.pixelsPerSecond.length() > flingPixelsPerSecond
+        ) {
+            spin.radiansPerSecond =
+                (drag.pixelsPerSecond.x * 2 * Math.PI) / renderer.domElement.clientHeight;
+        }
         drag.lastPosition = undefined;
         const model = current.model;
         if (
@@ -834,7 +888,33 @@ export function createMoleculeScene() {
         select(check.deepEquals(hitSelection, current.selection) ? undefined : hitSelection);
     });
 
+    const frameClock: {
+        lastMilliseconds: number | undefined;
+    } = {
+        lastMilliseconds: undefined,
+    };
+
     renderer.setAnimationLoop((timeMilliseconds) => {
+        const frameSeconds =
+            (timeMilliseconds - (frameClock.lastMilliseconds ?? timeMilliseconds)) / 1000;
+        frameClock.lastMilliseconds = timeMilliseconds;
+        if (spin.radiansPerSecond != undefined) {
+            /** A fling keeps its direction as it eases down to the idle speed. */
+            const idleRadiansPerSecond =
+                Math.sign(spin.radiansPerSecond || 1) * autoSpinRadiansPerSecond;
+            spin.radiansPerSecond +=
+                (idleRadiansPerSecond - spin.radiansPerSecond) *
+                Math.min(
+                    1,
+                    flingSlowdown * Math.sqrt(Math.abs(spin.radiansPerSecond)) * frameSeconds,
+                );
+            turntable.quaternion.premultiply(
+                new Quaternion().setFromAxisAngle(
+                    new Vector3(0, 1, 0),
+                    spin.radiansPerSecond * frameSeconds,
+                ),
+            );
+        }
         controls.update();
         if (current.model) {
             updateMoleculeModel({
@@ -878,7 +958,6 @@ export function createMoleculeScene() {
             }
             current.model = createMoleculeModel(molecule);
             turntable.add(current.model.group);
-            turntable.quaternion.copy(startingOrientation);
 
             const moleculeRadius = getMoleculeRadius(current.model.group);
             const fitDistance =

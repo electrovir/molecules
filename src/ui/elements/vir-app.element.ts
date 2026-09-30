@@ -1,48 +1,56 @@
 // cspell:word Hyperlegible
-import {css, defineElement, html} from 'element-vir';
-import {ViraCard} from 'vira';
+import {assertWrap} from '@augment-vir/assert';
+import {css, defineElement, html, listen} from 'element-vir';
 import {allMolecules} from '../../data/all-molecules.js';
 import {getMoleculeFormula} from '../../data/molecule.js';
+import {
+    createFrontendState,
+    createMoleculeRoute,
+    getRouteMolecule,
+} from '../frontend-state/frontend-state.js';
 import {VirMoleculeViewer} from './vir-molecule-viewer.element.js';
 
 export const VirApp = defineElement()({
     tagName: 'vir-app',
     styles: css`
         :host {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 32px;
-            box-sizing: border-box;
-            min-height: 100%;
-            padding: 32px;
+            display: block;
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle, #2a3448, #0f141e);
+            color: white;
             font-family: 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, sans-serif;
         }
 
-        ${ViraCard} {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 32px;
-            max-width: 900px;
-        }
-
         ${VirMoleculeViewer} {
-            width: 600px;
-            height: 600px;
-            border-radius: 8px;
-            background: radial-gradient(circle, #2a3448, #0f141e);
+            position: absolute;
+            inset: 0;
         }
 
-        .info {
+        .overlay {
+            position: absolute;
+            top: 16px;
+            left: 16px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            flex-basis: 300px;
-            flex-grow: 1;
+            max-width: 400px;
+            pointer-events: none;
 
             & h1,
             & p {
                 margin: 0;
+            }
+        }
+
+        .navigation {
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+
+            & button {
+                font-size: 1.5em;
             }
         }
 
@@ -55,25 +63,55 @@ export const VirApp = defineElement()({
             font-size: 1.5em;
         }
     `,
-    render() {
+    state() {
+        return {
+            frontendState: createFrontendState(),
+        };
+    },
+    cleanup({state}) {
+        state.frontendState.value.router.destroy();
+        state.frontendState.destroy();
+    },
+    render({state}) {
+        const molecule = getRouteMolecule(state.frontendState.value.currentRoute);
+        const moleculeIndex = allMolecules.indexOf(molecule);
+
+        function goToMolecule(indexOffset: number) {
+            state.frontendState.value.router.setRoute(
+                createMoleculeRoute(
+                    assertWrap.isDefined(
+                        allMolecules.at((moleculeIndex + indexOffset) % allMolecules.length),
+                    ),
+                ),
+            );
+        }
+
         return html`
-            ${allMolecules.map((molecule) => {
-                return html`
-                    <${ViraCard}>
-                        <${VirMoleculeViewer.assign({
-                            molecule,
-                        })}></${VirMoleculeViewer}>
-                        <div class="info">
-                            <span class="entry-number">
-                                #${String(molecule.entryNumber).padStart(3, '0')}
-                            </span>
-                            <h1>${molecule.name}</h1>
-                            <span class="formula">${getMoleculeFormula(molecule.atoms)}</span>
-                            <p>${molecule.description}</p>
-                        </div>
-                    </${ViraCard}>
-                `;
-            })}
+            <${VirMoleculeViewer.assign({
+                molecule,
+            })}></${VirMoleculeViewer}>
+            <div class="overlay">
+                <div class="navigation">
+                    <button
+                        ${listen('click', () => {
+                            goToMolecule(-1);
+                        })}
+                    >
+                        ←
+                    </button>
+                    <button
+                        ${listen('click', () => {
+                            goToMolecule(1);
+                        })}
+                    >
+                        →
+                    </button>
+                </div>
+                <span class="entry-number">#${String(molecule.entryNumber).padStart(3, '0')}</span>
+                <h1>${molecule.name}</h1>
+                <span class="formula">${getMoleculeFormula(molecule.atoms)}</span>
+                <p>${molecule.description}</p>
+            </div>
         `;
     },
 });

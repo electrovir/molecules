@@ -9,9 +9,9 @@ export const hydrogenChloride: Molecule = {
         {
             element: ChemicalElementSymbol.H,
             position: {
-                x: 0.6058,
-                y: -0.2053,
-                z: -1.1384,
+                x: 1.3058,
+                y: 0,
+                z: 0,
             },
         },
         {

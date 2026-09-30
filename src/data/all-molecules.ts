@@ -56,5 +56,7 @@ export const allMolecules = [
         return {
             ...molecule,
             entryNumber: index + 1,
+            /** The molecule's segment in its `/molecule/<name>` URL. */
+            routeName: molecule.name.toLowerCase().replaceAll(' ', '-'),
         };
     });

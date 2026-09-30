@@ -18,16 +18,16 @@ export const formaldehyde: Molecule = {
             element: ChemicalElementSymbol.H,
             position: {
                 x: -1.2,
-                y: 0.2426,
-                z: -0.8998,
+                y: 0.9319,
+                z: 0,
             },
         },
         {
             element: ChemicalElementSymbol.H,
             position: {
                 x: -1.2,
-                y: -0.2424,
-                z: 0.8998,
+                y: -0.9319,
+                z: 0,
             },
         },
         {
