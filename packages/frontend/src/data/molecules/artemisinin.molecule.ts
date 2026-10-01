@@ -1,4 +1,4 @@
-// cspell:words annua artemisinin Youyou
+// cspell:words annua artemisinin youyou
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 

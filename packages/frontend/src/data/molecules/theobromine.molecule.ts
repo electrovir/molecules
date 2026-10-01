@@ -1,4 +1,4 @@
-// cspell:words Theobroma
+// cspell:words theobroma
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 

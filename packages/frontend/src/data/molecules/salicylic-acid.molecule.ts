@@ -1,4 +1,4 @@
-// cspell:words Salix
+// cspell:words salix
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 

@@ -1,4 +1,4 @@
-// cspell:words Kekulé
+// cspell:words kekulé
 import {createArray} from '@augment-vir/common';
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
