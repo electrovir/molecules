@@ -27,13 +27,6 @@ function goToMolecule({
                 moleculeRouteNames.at((moleculeIndex + indexOffset) % moleculeRouteNames.length),
             ),
         ),
-        {
-            /**
-             * Leaves no history behind, so Safari's edge swipe has nothing to go back or forward
-             * to.
-             */
-            replace: true,
-        },
     );
 }
 
@@ -248,6 +241,9 @@ export const VirApp = defineElement()({
         const routeName = assertWrap.isDefined(moleculeRouteNames[moleculeIndex]);
         state.molecule.update(routeName);
         const molecule = state.molecule.isResolved() ? state.molecule.value : undefined;
+        if (molecule) {
+            globalThis.document.title = molecule.name;
+        }
 
         function toggleFullscreen() {
             void (globalThis.document.fullscreenElement
