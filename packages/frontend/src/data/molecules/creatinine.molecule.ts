@@ -4,16 +4,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 588. */
 const creatinine: Molecule = {
     name: 'Creatinine',
-    description:
-        'A five-membered ring of carbon and nitrogen with a ketone and a methyl group. Muscles make it as waste from creatine, and doctors measure it in blood to check the kidneys.',
+    structureDescription:
+        'A five-membered ring of carbon and nitrogen with a ketone and a methyl group.',
+    realLifeDescription:
+        'Muscles make it as waste from creatine, and doctors measure it in blood to check the kidneys.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 303,
         densityGramsPerCubicCentimeter: 1.09,
         waterSolubilityGramsPerLiter: 80.1,
         logP: -1.76,
-        hazardPictograms: [],
-        habitat: 'Blood and urine of humans and animals, from muscle creatine breakdown',
+        habitat: 'Blood and urine of humans and animals',
     },
     atoms: [
         {

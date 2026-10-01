@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4594. */
 const omeprazole: Molecule = {
     name: 'Omeprazole',
-    description:
-        'A benzimidazole ring linked through a sulfur and oxygen to a pyridine ring. It is the heartburn medicine in Prilosec, which turns down stomach acid.',
+    structureDescription:
+        'A benzimidazole ring linked through a sulfur and oxygen to a pyridine ring.',
+    realLifeDescription:
+        'It is the heartburn medicine in Prilosec, which turns down stomach acid. It works by switching off the tiny pumps in your stomach that make acid.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 156,

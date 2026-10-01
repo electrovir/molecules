@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 174. */
 const ethyleneGlycol: Molecule = {
     name: 'Ethylene Glycol',
-    description:
-        'Two carbon atoms each holding an oxygen-hydrogen group. It is the main ingredient of car antifreeze.',
+    structureDescription: 'Two carbon atoms each holding an oxygen-hydrogen group.',
+    realLifeDescription:
+        'It is the main ingredient of car antifreeze. It tastes sweet but is poisonous, so makers often add a bitter taste to keep kids and pets away.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -12.9,
@@ -20,9 +21,8 @@ const ethyleneGlycol: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1856,
-        smell: 'odorless',
         taste: 'sweet',
-        habitat: 'Made in factories; also a metabolic product of ethylene in pea plants',
+        habitat: 'Factories, pea plants',
     },
     atoms: [
         {

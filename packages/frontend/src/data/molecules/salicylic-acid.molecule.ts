@@ -1,11 +1,14 @@
+// cspell:words Salix
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
 /** 3D coordinates from PubChem CID 338. */
 const salicylicAcid: Molecule = {
     name: 'Salicylic Acid',
-    description:
-        'A benzene ring holding an acid group and an oxygen-hydrogen group side by side. It comes from willow bark, treats acne, and is the starting point for aspirin.',
+    structureDescription:
+        'A benzene ring holding an acid group and an oxygen-hydrogen group side by side.',
+    realLifeDescription:
+        'It comes from willow bark, treats acne, and is the starting point for aspirin. Its name comes from Salix, the Latin name for willow trees.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 158.6,
@@ -19,9 +22,8 @@ const salicylicAcid: Molecule = {
             GhsPictogram.Irritant,
         ],
         yearDiscovered: 1839,
-        smell: 'odorless',
         taste: 'sweetish, then acrid',
-        habitat: 'Willow bark, wintergreen, fruits, vegetables, and tea',
+        habitat: 'Willow bark, wintergreen, fruits, vegetables, tea',
         evolvesInto: ['aspirin'],
     },
     atoms: [

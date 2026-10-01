@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4284. */
 const deet: Molecule = {
     name: 'DEET',
-    description:
-        'A benzene ring with a methyl group, attached to an amide nitrogen carrying two ethyl groups. It is the active ingredient in most bug sprays.',
+    structureDescription:
+        'A benzene ring with a methyl group, attached to an amide nitrogen carrying two ethyl groups.',
+    realLifeDescription:
+        'It is the active ingredient in most bug sprays. It was first made for the US Army to protect soldiers in insect-filled jungles.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -33,

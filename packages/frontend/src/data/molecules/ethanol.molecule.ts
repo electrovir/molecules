@@ -3,8 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ethanol: Molecule = {
     name: 'Ethanol',
-    description:
-        'Two carbon atoms in a chain with an OH group on the end. It burns as a clean fuel and kills germs in hand sanitizer.',
+    structureDescription: 'Two carbon atoms in a chain with an OH group on the end.',
+    realLifeDescription: 'It burns as a clean fuel and kills germs in hand sanitizer.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -114.1,
@@ -20,7 +20,7 @@ const ethanol: Molecule = {
         ],
         smell: 'sharp, like hand sanitizer',
         taste: 'burning',
-        habitat: 'Fermenting fruit, yeast, plants, human breath, and interstellar space',
+        habitat: 'Fermenting fruit, yeast, plants, human breath, interstellar space',
         evolvesInto: [
             'acetaldehyde',
             'ethylene',

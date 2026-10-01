@@ -3,8 +3,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const nitrogen: Molecule = {
     name: 'Nitrogen',
-    description:
-        'Two nitrogen atoms held together by a triple bond, one of the strongest bonds in chemistry. It makes up about 78% of the air and barely reacts with anything.',
+    structureDescription:
+        'Two nitrogen atoms held together by a triple bond, one of the strongest bonds in chemistry.',
+    realLifeDescription:
+        'It makes up about 78% of the air and barely reacts with anything. Liquid nitrogen is so cold that it freezes flowers solid in seconds.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -210,
@@ -15,9 +17,7 @@ const nitrogen: Molecule = {
         dipoleMomentDebye: 0,
         hazardPictograms: [GhsPictogram.CompressedGas],
         yearDiscovered: 1772,
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: "Makes up 78% of Earth's air; also in volcanic and mine gases",
+        habitat: "Earth's air (78%), volcanic gases, mine gases",
         evolvesInto: ['ammonia'],
     },
     atoms: [

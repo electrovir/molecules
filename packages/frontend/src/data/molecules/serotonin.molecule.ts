@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5202. */
 const serotonin: Molecule = {
     name: 'Serotonin',
-    description:
-        'A double ring with a short chain ending in nitrogen. It is a brain signal that affects mood, sleep and appetite, and most of it is actually made in the gut.',
+    structureDescription: 'A double ring with a short chain ending in nitrogen.',
+    realLifeDescription:
+        'It is a brain signal that affects mood, sleep and appetite, and most of it is actually made in the gut.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 167.7,
@@ -17,7 +18,7 @@ const serotonin: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1937,
-        habitat: 'Gut, blood platelets, and brain of most animals; plants and fungi',
+        habitat: 'Animal guts, animal brains, blood platelets, plants, fungi',
     },
     atoms: [
         {

@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 177. */
 const acetaldehyde: Molecule = {
     name: 'Acetaldehyde',
-    description:
-        'Two carbon atoms with a double bonded oxygen on the end. It adds to the smell of ripe fruit, and it turns into acetic acid, the sour part of vinegar.',
+    structureDescription: 'Two carbon atoms with a double bonded oxygen on the end.',
+    realLifeDescription:
+        'It adds to the smell of ripe fruit, and it turns into acetic acid, the sour part of vinegar.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -123.4,
@@ -23,7 +24,7 @@ const acetaldehyde: Molecule = {
         yearDiscovered: 1774,
         smell: 'pungent, fruity',
         taste: 'tart',
-        habitat: 'Ripe fruit, coffee, bread, and plants',
+        habitat: 'Ripe fruit, coffee, bread, plants',
         evolvesInto: ['acetic-acid'],
     },
     atoms: [

@@ -5,14 +5,15 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 92934. */
 const luciferin: Molecule = {
     name: 'Luciferin',
-    description:
-        'A benzothiazole ring linked to a second ring holding sulfur and nitrogen, carrying an acid group. Fireflies glow when an enzyme reacts it with oxygen.',
+    structureDescription:
+        'A benzothiazole ring linked to a second ring holding sulfur and nitrogen, carrying an acid group.',
+    realLifeDescription:
+        'Fireflies glow when an enzyme reacts it with oxygen. Scientists use it to make cells glow so they can track them in experiments.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         logP: -0.28,
-        hazardPictograms: [],
         yearDiscovered: 1949,
-        habitat: 'Fireflies, click beetles, and other glowing insects',
+        habitat: 'Fireflies, click beetles, other glowing insects',
     },
     atoms: [
         {

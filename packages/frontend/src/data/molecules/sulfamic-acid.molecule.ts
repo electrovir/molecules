@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5987. */
 const sulfamicAcid: Molecule = {
     name: 'Sulfamic Acid',
-    description:
-        'A sulfur atom bonded to three oxygens and an amine group. It is the acid in many descalers that clear lime from coffee makers and toilets.',
+    structureDescription: 'A sulfur atom bonded to three oxygens and an amine group.',
+    realLifeDescription:
+        'It is the acid in many descalers that clear lime from coffee makers and toilets. It is a dry powder, which makes it safer to store and ship than liquid acids.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 205,
@@ -14,8 +15,7 @@ const sulfamicAcid: Molecule = {
         waterSolubilityGramsPerLiter: 213,
         logP: 0.1,
         hazardPictograms: [GhsPictogram.Irritant],
-        smell: 'odorless',
-        habitat: 'Made in factories from urea; listed as a human metabolite in kidney and liver',
+        habitat: 'Factories, human kidneys, liver',
         evolvesInto: [
             'ammonia',
             'sulfuric-acid',

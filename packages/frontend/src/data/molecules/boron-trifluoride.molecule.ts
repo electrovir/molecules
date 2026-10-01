@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const boronTrifluoride: Molecule = {
     name: 'Boron Trifluoride',
-    description:
-        'A boron atom bonded to three fluorine atoms in a flat triangle. Its boron is hungry for electrons, which makes it a strong helper for reactions that make plastics and fuels.',
+    structureDescription: 'A boron atom bonded to three fluorine atoms in a flat triangle.',
+    realLifeDescription:
+        'Its boron is hungry for electrons, which makes it a strong helper for reactions that make plastics and fuels.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -126.8,

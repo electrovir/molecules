@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 637511. */
 const cinnamaldehyde: Molecule = {
     name: 'Cinnamaldehyde',
-    description:
-        'A benzene ring attached to a three-carbon chain ending in a double bonded oxygen. It gives cinnamon its flavor and smell.',
+    structureDescription:
+        'A benzene ring attached to a three-carbon chain ending in a double bonded oxygen.',
+    realLifeDescription: 'It gives cinnamon its flavor and smell.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -7.5,
@@ -19,7 +20,7 @@ const cinnamaldehyde: Molecule = {
         yearDiscovered: 1834,
         smell: 'strong cinnamon, spicy',
         taste: 'sweet, burning',
-        habitat: 'Cinnamon bark and leaves; also clove buds and lemon balm',
+        habitat: 'Cinnamon bark, cinnamon leaves, clove buds, lemon balm',
     },
     atoms: [
         {

@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 774. */
 const histamine: Molecule = {
     name: 'Histamine',
-    description:
-        'A ring holding two nitrogens with a short chain ending in nitrogen. It causes the itching and sneezing of allergies, which is what antihistamines block.',
+    structureDescription: 'A ring holding two nitrogens with a short chain ending in nitrogen.',
+    realLifeDescription:
+        'It causes the itching and sneezing of allergies, which is what antihistamines block. Your stomach also uses it as a signal to make acid.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 83.5,
@@ -16,7 +17,7 @@ const histamine: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1910,
-        habitat: 'Mast cells and brain; also bacteria, plants, venoms, and rotting matter',
+        habitat: 'Mast cells, brain, bacteria, plants, venoms, rotting matter',
     },
     atoms: [
         {

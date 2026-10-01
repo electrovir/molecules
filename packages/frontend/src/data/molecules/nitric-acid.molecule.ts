@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 944. */
 const nitricAcid: Molecule = {
     name: 'Nitric Acid',
-    description:
-        'A nitrogen atom holding three oxygens, one with a hydrogen. It is a strong acid used to make fertilizer and explosives.',
+    structureDescription: 'A nitrogen atom holding three oxygens, one with a hydrogen.',
+    realLifeDescription:
+        'It is a strong acid used to make fertilizer and explosives. It turns skin yellow because it reacts with the proteins in it.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -41.6,
@@ -20,7 +21,7 @@ const nitricAcid: Molecule = {
             GhsPictogram.AcuteToxicity,
         ],
         smell: 'acrid, suffocating',
-        habitat: 'Forms in the atmosphere from gas-phase chemistry; otherwise made in factories',
+        habitat: 'The atmosphere, factories',
     },
     atoms: [
         {

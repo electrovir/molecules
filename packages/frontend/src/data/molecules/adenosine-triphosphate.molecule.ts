@@ -5,16 +5,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5957. */
 const adenosineTriphosphate: Molecule = {
     name: 'Adenosine Triphosphate',
-    description:
-        'Adenine and a ribose sugar ring attached to a chain of three phosphate groups. Known as ATP, it is the molecule every cell spends for energy.',
+    structureDescription:
+        'Adenine and a ribose sugar ring attached to a chain of three phosphate groups.',
+    realLifeDescription:
+        'Known as ATP, it is the molecule every cell spends for energy. Your body makes and recycles about its own weight in ATP every day.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 187,
         waterSolubilityGramsPerLiter: 1000,
         logP: -5.5,
-        hazardPictograms: [],
         yearDiscovered: 1929,
-        habitat: 'Every living cell, made by glycolysis and respiration',
+        habitat: 'Every living cell',
     },
     atoms: [
         {

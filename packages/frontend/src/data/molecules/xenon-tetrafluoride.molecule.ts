@@ -5,8 +5,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const xenonTetrafluoride: Molecule = {
     name: 'Xenon Tetrafluoride',
-    description:
-        'A xenon atom bonded to four fluorine atoms in a flat square. Made in 1962, it was one of the first proofs that noble gases can form compounds.',
+    structureDescription: 'A xenon atom bonded to four fluorine atoms in a flat square.',
+    realLifeDescription:
+        'Made in 1962, it was one of the first proofs that noble gases can form compounds.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         sublimationPointCelsius: 117,

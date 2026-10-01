@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 938. */
 const niacin: Molecule = {
     name: 'Niacin',
-    description:
-        'A pyridine ring with an acid group attached. It is vitamin B3, and large doses make your skin flush red.',
+    structureDescription: 'A pyridine ring with an acid group attached.',
+    realLifeDescription:
+        'It is vitamin B3, and large doses make your skin flush red. Not getting enough of it causes a disease called pellagra.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 237,
@@ -15,9 +16,8 @@ const niacin: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 7000,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1867,
-        smell: 'odorless',
         taste: 'faintly sour',
-        habitat: 'Made by plants and animals from tryptophan; also found in meteorites',
+        habitat: 'Plants, animals, meteorites',
     },
     atoms: [
         {

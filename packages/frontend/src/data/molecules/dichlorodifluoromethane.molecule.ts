@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6391. */
 const dichlorodifluoromethane: Molecule = {
     name: 'Dichlorodifluoromethane',
-    description:
-        'A carbon atom bonded to two chlorine and two fluorine atoms. Known as Freon-12, it cooled refrigerators until it was banned for destroying the ozone layer.',
+    structureDescription: 'A carbon atom bonded to two chlorine and two fluorine atoms.',
+    realLifeDescription:
+        'Known as Freon-12, it cooled refrigerators until it was banned for destroying the ozone layer. High in the sky, sunlight breaks off its chlorine atoms, and each one can destroy thousands of ozone molecules.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -158,

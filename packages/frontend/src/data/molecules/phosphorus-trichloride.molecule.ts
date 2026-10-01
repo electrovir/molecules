@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24387. */
 const phosphorusTrichloride: Molecule = {
     name: 'Phosphorus Trichloride',
-    description:
-        'A phosphorus atom bonded to three chlorine atoms in a low pyramid. It is the starting point for making weed killers, flame retardants, and nerve gas antidotes.',
+    structureDescription: 'A phosphorus atom bonded to three chlorine atoms in a low pyramid.',
+    realLifeDescription:
+        'It is the starting point for making weed killers, flame retardants, and nerve gas antidotes. It fumes in damp air as it reacts with water to make hydrochloric acid.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -93.6,

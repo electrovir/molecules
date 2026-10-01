@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24526. */
 const chlorine: Molecule = {
     name: 'Chlorine',
-    description:
-        'Two chlorine atoms joined by a single bond. It is a greenish yellow gas used to disinfect drinking water and swimming pools.',
+    structureDescription: 'Two chlorine atoms joined by a single bond.',
+    realLifeDescription:
+        'It is a greenish yellow gas used to disinfect drinking water and swimming pools.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -101.5,
@@ -22,7 +23,7 @@ const chlorine: Molecule = {
         ],
         yearDiscovered: 1774,
         smell: 'pungent, bleach-like',
-        habitat: 'Traces in volcanic gases and sea spray; mostly made in factories',
+        habitat: 'Factories, traces in volcanic gases, traces in sea spray',
         evolvesInto: [
             'hypochlorous-acid',
             'hydrogen-chloride',

@@ -5,18 +5,18 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 71485. */
 const sucralose: Molecule = {
     name: 'Sucralose',
-    description:
-        'A sucrose molecule with three of its OH groups swapped for chlorine atoms. The swap makes it about 600 times sweeter than sugar and stops the body from digesting it.',
+    structureDescription:
+        'A sucrose molecule with three of its OH groups swapped for chlorine atoms.',
+    realLifeDescription:
+        'The swap makes it about 600 times sweeter than sugar and stops the body from digesting it. It was discovered in 1976 when a student misheard "test this chemical" as "taste this chemical."',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 125,
         densityGramsPerCubicCentimeter: 1.69,
         waterSolubilityGramsPerLiter: 283,
-        hazardPictograms: [],
         yearDiscovered: 1975,
-        smell: 'odorless',
         taste: 'intensely sweet',
-        habitat: 'Made only in factories from sugar; traces in natural waters',
+        habitat: 'Factories, traces in natural waters',
     },
     atoms: [
         {

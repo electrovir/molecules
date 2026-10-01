@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 36573. */
 const acesulfame: Molecule = {
     name: 'Acesulfame',
-    description:
-        'A six-membered ring holding sulfur, nitrogen, and oxygen, with a ketone and a methyl group. It is about 200 times sweeter than sugar and sweetens diet sodas as Ace-K.',
+    structureDescription:
+        'A six-membered ring holding sulfur, nitrogen, and oxygen, with a ketone and a methyl group.',
+    realLifeDescription:
+        'It is about 200 times sweeter than sugar and sweetens diet sodas as Ace-K. It was discovered by accident when a chemist licked his finger to pick up a sheet of paper.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 123.2,
@@ -14,7 +16,6 @@ const acesulfame: Molecule = {
         waterSolubilityGramsPerLiter: 270,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1967,
-        smell: 'odorless',
         taste: 'sweet, bitter-metallic aftertaste',
         habitat: 'Made only in labs and factories',
     },

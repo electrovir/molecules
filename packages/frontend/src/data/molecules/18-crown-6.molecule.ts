@@ -1,11 +1,13 @@
+// cspell:words Pedersen
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
 /** 3D coordinates from PubChem CID 28557. */
 const crownEther18: Molecule = {
     name: '18-Crown-6',
-    description:
-        'A ring of twelve carbons and six oxygens shaped like a crown. Its oxygens point inward to grip a potassium ion in the middle.',
+    structureDescription: 'A ring of twelve carbons and six oxygens shaped like a crown.',
+    realLifeDescription:
+        'Its oxygens point inward to grip a potassium ion in the middle. Charles Pedersen shared a Nobel Prize for discovering crown-shaped molecules like this one.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 39,
@@ -14,7 +16,6 @@ const crownEther18: Molecule = {
         logP: -0.68,
         dipoleMomentDebye: 2.76,
         hazardPictograms: [GhsPictogram.Irritant],
-        smell: 'odorless',
         habitat: 'Made only in labs and factories',
     },
     atoms: [

@@ -4,8 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24404. */
 const phosphine: Molecule = {
     name: 'Phosphine',
-    description:
-        'A phosphorus atom with three hydrogens, shaped like a short pyramid. It is a toxic gas used to kill pests in stored grain.',
+    structureDescription: 'A phosphorus atom with three hydrogens, shaped like a short pyramid.',
+    realLifeDescription: 'It is a toxic gas used to kill pests in stored grain.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -133,
@@ -23,7 +23,7 @@ const phosphine: Molecule = {
         ],
         yearDiscovered: 1783,
         smell: 'fishy or garlicky (impure)',
-        habitat: "Decaying organic matter in soils and sludge; Jupiter's atmosphere",
+        habitat: "Decaying organic matter in soils and sludge, Jupiter's atmosphere",
         evolvesInto: ['phosphoric-acid'],
     },
     atoms: [

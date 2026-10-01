@@ -5,15 +5,16 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5329. */
 const sulfamethoxazole: Molecule = {
     name: 'Sulfamethoxazole',
-    description:
-        'A benzene ring with an amine group, linked through a sulfonyl group to a ring holding nitrogen and oxygen. It is the sulfa antibiotic in Bactrim.',
+    structureDescription:
+        'A benzene ring with an amine group, linked through a sulfonyl group to a ring holding nitrogen and oxygen.',
+    realLifeDescription:
+        'It is the sulfa antibiotic in Bactrim. Sulfa drugs were among the first medicines that could cure bacterial infections, years before penicillin was widely available.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 167,
         logP: 0.89,
         oralRatLethalDoseMilligramsPerKilogram: 6370,
         hazardPictograms: [GhsPictogram.Irritant],
-        smell: 'odorless',
         taste: 'bitter',
         habitat: 'Made only in labs and factories',
     },

@@ -4,8 +4,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 750. */
 const glycine: Molecule = {
     name: 'Glycine',
-    description:
-        'The simplest amino acid, with just a hydrogen as its side chain. It is one of the building blocks of every protein, and makes up about a third of collagen.',
+    structureDescription: 'The simplest amino acid, with just a hydrogen as its side chain.',
+    realLifeDescription:
+        'It is one of the building blocks of every protein, and makes up about a third of collagen. It has even been found in comet dust brought back to Earth by a spacecraft.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 233,
@@ -13,11 +14,9 @@ const glycine: Molecule = {
         waterSolubilityGramsPerLiter: 249,
         logP: -3.21,
         oralRatLethalDoseMilligramsPerKilogram: 7930,
-        hazardPictograms: [],
         yearDiscovered: 1820,
-        smell: 'odorless',
         taste: 'sweet',
-        habitat: 'Proteins like gelatin and silk; sugarcane; comets and meteorites',
+        habitat: 'Proteins like gelatin and silk, sugarcane, comets, meteorites',
     },
     atoms: [
         {

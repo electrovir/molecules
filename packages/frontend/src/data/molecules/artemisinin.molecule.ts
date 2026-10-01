@@ -1,12 +1,13 @@
-// cspell:words annua artemisinin
+// cspell:words annua artemisinin Youyou
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
 /** 3D coordinates from PubChem CID 68827. */
 const artemisinin: Molecule = {
     name: 'Artemisinin',
-    description:
-        'Three rings with a bridge of two linked oxygens across one of them. It comes from sweet wormwood and is a frontline malaria medicine.',
+    structureDescription: 'Three rings with a bridge of two linked oxygens across one of them.',
+    realLifeDescription:
+        'It comes from sweet wormwood and is a frontline malaria medicine. Tu Youyou won a Nobel Prize for finding it after studying ancient Chinese medicine books.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 154.5,
@@ -17,7 +18,7 @@ const artemisinin: Molecule = {
             GhsPictogram.EnvironmentalHazard,
         ],
         yearDiscovered: 1972,
-        habitat: 'Leaves of sweet wormwood (Artemisia annua)',
+        habitat: 'Sweet wormwood leaves (Artemisia annua)',
     },
     atoms: [
         {

@@ -4,16 +4,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 171548. */
 const biotin: Molecule = {
     name: 'Biotin',
-    description:
-        'A ring of carbon and nitrogen fused to a ring holding sulfur, with a carbon chain ending in an acid group. It is vitamin B7, sold as a supplement for hair and nails.',
+    structureDescription:
+        'A ring of carbon and nitrogen fused to a ring holding sulfur, with a carbon chain ending in an acid group.',
+    realLifeDescription:
+        'It is vitamin B7, sold as a supplement for hair and nails. Raw egg whites hold a protein that grabs biotin so tightly your body cannot use it.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 232,
         waterSolubilityGramsPerLiter: 0.22,
         logP: 0.5,
-        hazardPictograms: [],
         yearDiscovered: 1936,
-        habitat: 'Every living cell; rich in liver, yeast, nuts, and grains',
+        habitat: 'Every living cell, liver, yeast, nuts, grains',
     },
     atoms: [
         {

@@ -4,7 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1183. */
 const vanillin: Molecule = {
     name: 'Vanillin',
-    description: 'A benzene ring holding three different groups. It is the main flavor of vanilla.',
+    structureDescription: 'A benzene ring holding three different groups.',
+    realLifeDescription:
+        'It is the main flavor of vanilla. Most vanillin is made in factories, since real vanilla beans come from orchids that must be pollinated by hand.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 81.5,
@@ -17,7 +19,7 @@ const vanillin: Molecule = {
         yearDiscovered: 1858,
         smell: 'sweet, creamy vanilla',
         taste: 'pleasant vanilla',
-        habitat: 'Vanilla beans and other orchids; also pine bark and clove oil',
+        habitat: 'Vanilla beans, other orchids, pine bark, clove oil',
     },
     atoms: [
         {

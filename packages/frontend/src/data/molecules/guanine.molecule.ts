@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 135398634. */
 const guanine: Molecule = {
     name: 'Guanine',
-    description:
-        'A double ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with cytosine. It makes fish scales shimmer.',
+    structureDescription:
+        'A double ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with cytosine.',
+    realLifeDescription:
+        'It makes fish scales shimmer. Its name comes from guano, the bird droppings where it was first found.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 360,
@@ -13,7 +15,7 @@ const guanine: Molecule = {
         logP: -0.91,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1844,
-        habitat: 'DNA and RNA of all life; guano, fish scales, and reptile eyes',
+        habitat: 'DNA and RNA of all life, guano, fish scales, reptile eyes',
     },
     atoms: [
         {

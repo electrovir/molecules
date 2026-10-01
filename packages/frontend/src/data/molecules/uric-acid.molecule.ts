@@ -4,18 +4,18 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1175. */
 const uricAcid: Molecule = {
     name: 'Uric Acid',
-    description:
-        'Two fused rings of carbon and nitrogen with three oxygen atoms attached. It is how your body gets rid of old DNA, and crystals of it in the joints cause gout.',
+    structureDescription:
+        'Two fused rings of carbon and nitrogen with three oxygen atoms attached.',
+    realLifeDescription:
+        'It is how your body gets rid of old DNA, and crystals of it in the joints cause gout. Birds and reptiles get rid of nitrogen as uric acid, which is the white part of bird droppings.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 300,
         densityGramsPerCubicCentimeter: 1.89,
         waterSolubilityGramsPerLiter: 0.06,
         logP: -2.17,
-        hazardPictograms: [],
         yearDiscovered: 1776,
-        smell: 'odorless',
-        habitat: 'Human urine and kidney stones; the end product of purine breakdown in humans',
+        habitat: 'Human urine, kidney stones',
     },
     atoms: [
         {

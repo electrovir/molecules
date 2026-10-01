@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3386. */
 const fluoxetine: Molecule = {
     name: 'Fluoxetine',
-    description:
-        'A benzene ring with a CF₃ group, linked through an oxygen to a chain carrying another benzene ring and a methylamine group. It is the antidepressant Prozac.',
+    structureDescription:
+        'A benzene ring with a CF₃ group, linked through an oxygen to a chain carrying another benzene ring and a methylamine group.',
+    realLifeDescription: 'It is the antidepressant Prozac.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 180.5,

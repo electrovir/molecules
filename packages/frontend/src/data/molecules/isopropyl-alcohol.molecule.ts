@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3776. */
 const isopropylAlcohol: Molecule = {
     name: 'Isopropyl Alcohol',
-    description:
-        'Three carbon atoms with an oxygen-hydrogen group on the middle one. It is rubbing alcohol, used to clean wounds and electronics.',
+    structureDescription: 'Three carbon atoms with an oxygen-hydrogen group on the middle one.',
+    realLifeDescription:
+        'It is rubbing alcohol, used to clean wounds and electronics. It evaporates quickly, which is why it feels cold on your skin.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -89.5,
@@ -22,7 +23,7 @@ const isopropylAlcohol: Molecule = {
         yearDiscovered: 1853,
         smell: 'pungent, like rubbing alcohol',
         taste: 'slightly bitter, burning',
-        habitat: 'Made mostly in factories; also by spoilage bacteria, fungi, and yeast',
+        habitat: 'Factories, spoilage bacteria, fungi, yeast',
         evolvesInto: ['acetone'],
     },
     atoms: [

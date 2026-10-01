@@ -5,15 +5,16 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 54675776. */
 const tetracycline: Molecule = {
     name: 'Tetracycline',
-    description:
-        "Four fused six-membered rings covered in OH groups and ketones. It is an antibiotic, and it can stain children's growing teeth yellow.",
+    structureDescription: 'Four fused six-membered rings covered in OH groups and ketones.',
+    realLifeDescription:
+        "It is an antibiotic, and it can stain children's growing teeth yellow. It glows yellow under ultraviolet light.",
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 172.5,
         waterSolubilityGramsPerLiter: 0.231,
         logP: -1.3,
         yearDiscovered: 1953,
-        habitat: 'Made by Streptomyces soil bacteria; traces found in ancient Nubian bones',
+        habitat: 'Streptomyces soil bacteria, traces in ancient Nubian bones',
     },
     atoms: [
         {

@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4133. */
 const methylSalicylate: Molecule = {
     name: 'Methyl Salicylate',
-    description:
-        'A benzene ring with an OH group next to an ester group. It gives wintergreen its minty smell and warms sore muscles in muscle rubs.',
+    structureDescription: 'A benzene ring with an OH group next to an ester group.',
+    realLifeDescription:
+        'It gives wintergreen its minty smell and warms sore muscles in muscle rubs. It makes the sparks brighter when wintergreen candies are crushed in the dark.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -8.6,
@@ -19,7 +20,7 @@ const methylSalicylate: Molecule = {
         yearDiscovered: 1843,
         smell: 'wintergreen',
         taste: 'wintergreen',
-        habitat: 'Wintergreen leaves, sweet birch bark, and many other plants',
+        habitat: 'Wintergreen leaves, sweet birch bark, many other plants',
         evolvesInto: ['salicylic-acid'],
     },
     atoms: [

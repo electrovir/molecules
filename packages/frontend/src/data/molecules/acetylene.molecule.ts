@@ -3,8 +3,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const acetylene: Molecule = {
     name: 'Acetylene',
-    description:
-        'Two carbon atoms joined by a triple bond, with a hydrogen on each end, all in a straight line. It burns hot enough to cut and weld steel.',
+    structureDescription:
+        'Two carbon atoms joined by a triple bond, with a hydrogen on each end, all in a straight line.',
+    realLifeDescription:
+        'It burns hot enough to cut and weld steel. Before electric lights, miners wore lamps that made acetylene by dripping water onto rocks of calcium carbide.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         sublimationPointCelsius: -84,
@@ -18,7 +20,7 @@ const acetylene: Molecule = {
         ],
         yearDiscovered: 1836,
         smell: 'faint, ethereal',
-        habitat: 'Wood smoke, bacteria that feed on it, and Titan',
+        habitat: 'Wood smoke, bacteria that feed on it, Titan',
         evolvesInto: ['acetaldehyde'],
     },
     atoms: [

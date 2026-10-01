@@ -5,8 +5,9 @@ const hydrogenBondLength = 0.7414;
 
 const hydrogen: Molecule = {
     name: 'Hydrogen',
-    description:
-        'Two hydrogen atoms sharing a single bond. It is the simplest and lightest molecule there is, and burning it with oxygen produces nothing but water.',
+    structureDescription: 'Two hydrogen atoms sharing a single bond.',
+    realLifeDescription:
+        'It is the simplest and lightest molecule there is, and burning it with oxygen produces nothing but water. Hydrogen atoms make up most of every star, including our Sun.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -259.2,
@@ -19,9 +20,7 @@ const hydrogen: Molecule = {
             GhsPictogram.CompressedGas,
         ],
         yearDiscovered: 1766,
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: "Stars, gas giant planets, interstellar space, and traces in Earth's air",
+        habitat: "Stars, gas giant planets, interstellar space, traces in Earth's air",
         evolvesInto: ['water'],
     },
     atoms: [

@@ -4,18 +4,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 2723872. */
 const fructose: Molecule = {
     name: 'Fructose',
-    description:
-        'A sugar with the same atoms as glucose arranged differently. It is the sweetest natural sugar and is found in fruit and honey.',
+    structureDescription: 'A sugar with the same atoms as glucose arranged differently.',
+    realLifeDescription:
+        'It is the sweetest natural sugar and is found in fruit and honey. Linked with glucose, it makes table sugar.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 103,
         densityGramsPerCubicCentimeter: 1.694,
         waterSolubilityGramsPerLiter: 4000,
-        hazardPictograms: [],
         yearDiscovered: 1847,
-        smell: 'odorless',
         taste: 'sweet',
-        habitat: 'Honey, fruits, berries, flowers, root vegetables, and semen',
+        habitat: 'Honey, fruits, berries, flowers, root vegetables',
         evolvesInto: ['glucose'],
     },
     atoms: [

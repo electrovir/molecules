@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 240. */
 const benzaldehyde: Molecule = {
     name: 'Benzaldehyde',
-    description:
-        'A benzene ring with an aldehyde group attached. It gives almonds and cherries their flavor and is the main ingredient in almond extract.',
+    structureDescription: 'A benzene ring with an aldehyde group attached.',
+    realLifeDescription:
+        'It gives almonds and cherries their flavor and is the main ingredient in almond extract.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -57.1,
@@ -18,7 +19,7 @@ const benzaldehyde: Molecule = {
         yearDiscovered: 1803,
         smell: 'bitter almond',
         taste: 'burning, almond-like',
-        habitat: 'Bitter almonds, cranberries, and over 100 other plant species',
+        habitat: 'Bitter almonds, cranberries, over 100 other plant species',
     },
     atoms: [
         {

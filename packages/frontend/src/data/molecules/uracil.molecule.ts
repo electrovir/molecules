@@ -4,17 +4,16 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1174. */
 const uracil: Molecule = {
     name: 'Uracil',
-    description:
-        'A single ring of carbon and nitrogen that takes the place of thymine in RNA, where it pairs with adenine.',
+    structureDescription: 'A single ring of carbon and nitrogen.',
+    realLifeDescription: 'It takes the place of thymine in RNA, where it pairs with adenine.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 335,
         densityGramsPerCubicCentimeter: 1.32,
         waterSolubilityGramsPerLiter: 3.6,
         logP: -1.07,
-        hazardPictograms: [],
         yearDiscovered: 1900,
-        habitat: 'In the RNA of all living cells; yeast, wheat germ, and meteorites',
+        habitat: 'RNA of all living cells, yeast, wheat germ, meteorites',
         evolvesInto: ['thymine'],
     },
     atoms: [

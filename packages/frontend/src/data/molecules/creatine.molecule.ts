@@ -4,18 +4,18 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 586. */
 const creatine: Molecule = {
     name: 'Creatine',
-    description:
-        'A small molecule with a carbon bonded to three nitrogens, linked to an acid group. Muscles use it to store quick energy, and athletes take it as a supplement.',
+    structureDescription:
+        'A small molecule with a carbon bonded to three nitrogens, linked to an acid group.',
+    realLifeDescription:
+        'Muscles use it to store quick energy, and athletes take it as a supplement. Your body makes about a gram of it every day, mostly in the liver and kidneys.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 255,
         densityGramsPerCubicCentimeter: 1.33,
         waterSolubilityGramsPerLiter: 13.3,
         logP: -0.2,
-        hazardPictograms: [],
         yearDiscovered: 1832,
-        smell: 'odorless',
-        habitat: 'Skeletal and heart muscle; made by the liver, kidneys and pancreas',
+        habitat: 'Skeletal muscle, heart muscle, liver, kidneys, pancreas',
         evolvesInto: ['creatinine'],
     },
     atoms: [

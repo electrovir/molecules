@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5702160. */
 const famotidine: Molecule = {
     name: 'Famotidine',
-    description:
-        'A ring of carbon, nitrogen, and sulfur attached to a chain with two more sulfur atoms. It is the heartburn medicine in Pepcid.',
+    structureDescription:
+        'A ring of carbon, nitrogen, and sulfur attached to a chain with two more sulfur atoms.',
+    realLifeDescription:
+        'It is the heartburn medicine in Pepcid. It works by turning down how much acid the stomach makes.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 163.5,

@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 9554. */
 const pfoa: Molecule = {
     name: 'PFOA',
-    description:
-        'A chain of eight carbons wrapped in fifteen fluorine atoms, ending in an acid group. It was used to make Teflon and is one of the "forever chemicals" that never break down.',
+    structureDescription:
+        'A chain of eight carbons wrapped in fifteen fluorine atoms, ending in an acid group.',
+    realLifeDescription:
+        'It was used to make Teflon and is one of the "forever chemicals" that never break down. Traces of it have been found in the blood of almost everyone tested.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 54.3,
@@ -21,7 +23,7 @@ const pfoa: Molecule = {
         ],
         yearDiscovered: 1947,
         smell: 'pungent',
-        habitat: 'Man-made; persists in water, soil, wildlife, and human blood',
+        habitat: 'Factories, polluted water, soil, wildlife, human blood',
     },
     atoms: [
         {

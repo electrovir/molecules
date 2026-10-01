@@ -4,8 +4,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 6137. */
 const methionine: Molecule = {
     name: 'Methionine',
-    description:
-        'An amino acid with a side chain holding a sulfur atom. It is the first amino acid in almost every protein your cells make.',
+    structureDescription: 'An amino acid with a side chain holding a sulfur atom.',
+    realLifeDescription:
+        'It is the first amino acid in almost every protein your cells make. Your body cannot make it, so you must get it from foods like eggs, fish, and nuts.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 283,
@@ -13,11 +14,10 @@ const methionine: Molecule = {
         waterSolubilityGramsPerLiter: 56.6,
         logP: -1.87,
         oralRatLethalDoseMilligramsPerKilogram: 36_000,
-        hazardPictograms: [],
         yearDiscovered: 1921,
         smell: 'faint',
         taste: 'sulfurous',
-        habitat: 'Protein in all living things; rich in eggs, nuts, cheese, and meat',
+        habitat: 'Protein in all living things, eggs, nuts, cheese, meat',
     },
     atoms: [
         {

@@ -13,8 +13,9 @@ const hydrogenToOxygenMass = 1.008 / 15.999;
 
 const water: Molecule = {
     name: 'Water',
-    description:
-        'Two hydrogen atoms bonded to one oxygen atom at a bent 104.45° angle. The bend makes the molecule polar, which gives water its high boiling point and its talent for dissolving things.',
+    structureDescription: 'Two hydrogen atoms bonded to one oxygen atom at a bent 104.45° angle.',
+    realLifeDescription:
+        'The bend makes the molecule polar, which gives water its high boiling point and its talent for dissolving things. It is one of the very few substances whose solid form floats on its liquid.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 0,
@@ -23,10 +24,7 @@ const water: Molecule = {
         isWaterMiscible: true,
         logP: -1.38,
         dipoleMomentDebye: 1.854,
-        hazardPictograms: [],
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: 'Oceans, rivers, ice, air, and every living cell; also in space',
+        habitat: 'Oceans, rivers, ice, air, every living cell, space',
         evolvesInto: [
             'hydrogen',
             'oxygen',

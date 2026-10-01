@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 66348. */
 const octasulfur: Molecule = {
     name: 'Octasulfur',
-    description:
-        'Eight sulfur atoms in a ring folded like a crown. It is the most common form of sulfur, the yellow powder found around volcanoes.',
+    structureDescription: 'Eight sulfur atoms in a ring folded like a crown.',
+    realLifeDescription:
+        'It is the most common form of sulfur, the yellow powder found around volcanoes. It burns with a blue flame.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 119,
@@ -18,9 +19,7 @@ const octasulfur: Molecule = {
             GhsPictogram.Flammable,
             GhsPictogram.Irritant,
         ],
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: 'Volcanic deposits and petroleum refining; found in asteroid Ryugu samples',
+        habitat: 'Volcanic deposits, petroleum refining, asteroid Ryugu samples',
     },
     atoms: [
         {

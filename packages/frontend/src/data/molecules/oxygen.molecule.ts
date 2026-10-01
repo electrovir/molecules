@@ -5,8 +5,9 @@ const oxygenBondLength = 1.2075;
 
 const oxygen: Molecule = {
     name: 'Oxygen',
-    description:
-        'Two oxygen atoms joined by a double bond. It makes up about 21% of the air, and your cells use it to turn food into energy.',
+    structureDescription: 'Two oxygen atoms joined by a double bond.',
+    realLifeDescription:
+        'It makes up about 21% of the air, and your cells use it to turn food into energy. Liquid oxygen is pale blue and sticks to magnets.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -218.4,
@@ -19,9 +20,7 @@ const oxygen: Molecule = {
             GhsPictogram.Oxidizer,
             GhsPictogram.CompressedGas,
         ],
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: "21% of Earth's air, released by plant photosynthesis",
+        habitat: "Earth's air (21%), plant photosynthesis",
         evolvesInto: ['ozone'],
     },
     atoms: [

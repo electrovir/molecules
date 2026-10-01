@@ -1,12 +1,14 @@
-// cspell:words aminobutyric gaba
+// cspell:words aminobutyric gaba glutamic
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 
 /** 3D coordinates from PubChem CID 119. */
 const gaba: Molecule = {
     name: 'GABA',
-    description:
-        'Short for gamma-aminobutyric acid, a four-carbon chain with a nitrogen group on one end and an acid group on the other. It is the brain\'s main "slow down" signal.',
+    structureDescription:
+        'Short for gamma-aminobutyric acid, a four-carbon chain with a nitrogen group on one end and an acid group on the other.',
+    realLifeDescription:
+        'It is the brain\'s main "slow down" signal. Your brain makes it from glutamic acid, which is its main "speed up" signal.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 203.7,
@@ -14,7 +16,7 @@ const gaba: Molecule = {
         waterSolubilityGramsPerLiter: 1300,
         logP: -3.17,
         yearDiscovered: 1883,
-        habitat: 'Brain and spinal cord neurons; also plants and microbes',
+        habitat: 'Brain and spinal cord neurons, plants, microbes',
     },
     atoms: [
         {

@@ -1,11 +1,14 @@
+// cspell:words Müller
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
 /** 3D coordinates from PubChem CID 3036. */
 const ddt: Molecule = {
     name: 'DDT',
-    description:
-        'Two benzene rings, each with a chlorine, attached to a carbon next to a carbon holding three chlorines. It was a powerful insecticide until it was banned for harming birds.',
+    structureDescription:
+        'Two benzene rings, each with a chlorine, attached to a carbon next to a carbon holding three chlorines.',
+    realLifeDescription:
+        'It was a powerful insecticide until it was banned for harming birds. Paul Müller won a Nobel Prize in 1948 for discovering that it kills insects.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 108.5,
@@ -21,7 +24,7 @@ const ddt: Molecule = {
         ],
         yearDiscovered: 1874,
         smell: 'odorless or faintly aromatic',
-        habitat: 'Made only in labs and factories; persists in soils and rivers',
+        habitat: 'Labs, factories, polluted soils and rivers',
     },
     atoms: [
         {

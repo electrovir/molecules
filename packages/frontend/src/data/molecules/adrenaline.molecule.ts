@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5816. */
 const adrenaline: Molecule = {
     name: 'Adrenaline',
-    description:
-        'Dopamine with an extra oxygen and carbon group. Released during danger, it speeds up the heart and prepares the body to fight or run.',
+    structureDescription: 'Dopamine with an extra oxygen and carbon group.',
+    realLifeDescription:
+        'Released during danger, it speeds up the heart and prepares the body to fight or run. Doctors also give it as a shot to stop severe allergic reactions.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 211.5,
@@ -14,9 +15,8 @@ const adrenaline: Molecule = {
         logP: -1.37,
         hazardPictograms: [GhsPictogram.AcuteToxicity],
         yearDiscovered: 1897,
-        smell: 'odorless',
         taste: 'slightly bitter, numbing',
-        habitat: 'Adrenal glands and some neurons of animals; also the plant Scoparia dulcis',
+        habitat: 'Animal adrenal glands, some animal neurons, the plant Scoparia dulcis',
     },
     atoms: [
         {

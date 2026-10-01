@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 887. */
 const methanol: Molecule = {
     name: 'Methanol',
-    description:
-        'The smallest alcohol: a carbon atom with three hydrogens and an oxygen-hydrogen group. It is a fuel and solvent, and is poisonous to drink.',
+    structureDescription:
+        'The smallest alcohol: a carbon atom with three hydrogens and an oxygen-hydrogen group.',
+    realLifeDescription:
+        'It is a fuel and solvent, and is poisonous to drink. It burns with a nearly invisible flame.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -97.6,
@@ -22,8 +24,7 @@ const methanol: Molecule = {
         ],
         yearDiscovered: 1661,
         smell: 'faint, alcoholic, pungent',
-        habitat:
-            'Fruit pectin breakdown, plants, microbes, volcanic gases, and star-forming regions',
+        habitat: 'Fruit pectin breakdown, plants, microbes, volcanic gases, star-forming regions',
         evolvesInto: ['formaldehyde'],
     },
     atoms: [

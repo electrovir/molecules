@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 787. */
 const hydroxylamine: Molecule = {
     name: 'Hydroxylamine',
-    description:
-        'A nitrogen holding two hydrogens, bonded to an oxygen holding one hydrogen. It is used to make nylon and to strip photoresist off computer chips.',
+    structureDescription:
+        'A nitrogen holding two hydrogens, bonded to an oxygen holding one hydrogen.',
+    realLifeDescription: 'It is used to make nylon and to strip photoresist off computer chips.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 33,
@@ -20,8 +21,7 @@ const hydroxylamine: Molecule = {
             GhsPictogram.EnvironmentalHazard,
         ],
         yearDiscovered: 1865,
-        smell: 'odorless',
-        habitat: 'Ammonia-oxidizing bacteria; mostly made in factories',
+        habitat: 'Ammonia-oxidizing bacteria, factories',
         evolvesInto: ['nitrous-oxide'],
     },
     atoms: [

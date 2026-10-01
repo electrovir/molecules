@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 33613. */
 const amoxicillin: Molecule = {
     name: 'Amoxicillin',
-    description:
-        'A four-membered ring fused to a ring holding sulfur, with a side chain carrying a benzene ring with an OH group. It is the most common antibiotic for kids.',
+    structureDescription:
+        'A four-membered ring fused to a ring holding sulfur, with a side chain carrying a benzene ring with an OH group.',
+    realLifeDescription:
+        'It is the most common antibiotic for kids. It is a close cousin of penicillin, the first antibiotic.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 194,

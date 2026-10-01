@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 10215. */
 const indigo: Molecule = {
     name: 'Indigo',
-    description:
-        'Two pairs of fused rings, each holding a nitrogen and a ketone, joined by a carbon double bond. It is the blue dye in blue jeans.',
+    structureDescription:
+        'Two pairs of fused rings, each holding a nitrogen and a ketone, joined by a carbon double bond.',
+    realLifeDescription:
+        'It is the blue dye in blue jeans. It was once so precious that it was traded like gold, and today most of it is made in factories instead of from plants.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 391,
@@ -14,7 +16,7 @@ const indigo: Molecule = {
         waterSolubilityGramsPerLiter: 0.00099,
         logP: 2.63,
         hazardPictograms: [GhsPictogram.HealthHazard],
-        habitat: 'Indigofera plants and Murex sea snails',
+        habitat: 'Indigofera plants, Murex sea snails',
     },
     atoms: [
         {

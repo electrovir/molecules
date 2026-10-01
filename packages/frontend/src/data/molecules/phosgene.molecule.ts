@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6371. */
 const phosgene: Molecule = {
     name: 'Phosgene',
-    description:
-        'A carbon double bonded to an oxygen and holding two chlorine atoms. It was a deadly World War I gas and is now used to make plastics like polycarbonate.',
+    structureDescription: 'A carbon double bonded to an oxygen and holding two chlorine atoms.',
+    realLifeDescription:
+        'It was a deadly World War I gas and is now used to make plastics like polycarbonate.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -127.8,
@@ -20,7 +21,7 @@ const phosgene: Molecule = {
         ],
         yearDiscovered: 1812,
         smell: 'musty hay, suffocating',
-        habitat: 'Made in factories; forms in air from breakdown of chlorinated solvents',
+        habitat: 'Factories, air where chlorinated solvents break down',
         evolvesInto: [
             'hydrogen-chloride',
             'carbon-dioxide',

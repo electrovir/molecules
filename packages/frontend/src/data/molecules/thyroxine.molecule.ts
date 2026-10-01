@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5819. */
 const thyroxine: Molecule = {
     name: 'Thyroxine',
-    description:
-        'Two benzene rings linked by an oxygen, carrying four iodine atoms, with an amino acid chain attached. It is the main thyroid hormone, which sets how fast your body burns energy.',
+    structureDescription:
+        'Two benzene rings linked by an oxygen, carrying four iodine atoms, with an amino acid chain attached.',
+    realLifeDescription:
+        'It is the main thyroid hormone, which sets how fast your body burns energy. Your body needs iodine from food to make it, which is why iodine is added to table salt.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 232,
@@ -13,7 +15,7 @@ const thyroxine: Molecule = {
         logP: 4,
         hazardPictograms: [GhsPictogram.HealthHazard],
         yearDiscovered: 1914,
-        habitat: 'Made by the thyroid gland in humans and other mammals',
+        habitat: 'Thyroid glands of humans and other mammals',
     },
     atoms: [
         {

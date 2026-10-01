@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 284. */
 const formicAcid: Molecule = {
     name: 'Formic Acid',
-    description:
-        'The simplest carboxylic acid: one carbon, two oxygens and two hydrogens. Ants and stinging nettles use it to sting.',
+    structureDescription:
+        'The simplest carboxylic acid: one carbon, two oxygens and two hydrogens.',
+    realLifeDescription:
+        'Ants and stinging nettles use it to sting. Its name comes from formica, the Latin word for ant.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 8.4,
@@ -24,7 +26,7 @@ const formicAcid: Molecule = {
         yearDiscovered: 1671,
         smell: 'pungent, vinegar-like',
         taste: 'sour',
-        habitat: 'Ant and bee stings, stinging nettles, fruits, and forest air',
+        habitat: 'Ant and bee stings, stinging nettles, fruits, forest air',
         evolvesInto: ['carbon-dioxide'],
     },
     atoms: [

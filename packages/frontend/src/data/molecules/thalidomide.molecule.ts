@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5426. */
 const thalidomide: Molecule = {
     name: 'Thalidomide',
-    description:
-        'Two rings, each holding a nitrogen between two ketones, joined at one carbon. It caused birth defects in the 1960s and is now used to treat cancer.',
+    structureDescription:
+        'Two rings, each holding a nitrogen between two ketones, joined at one carbon.',
+    realLifeDescription:
+        'It caused birth defects in the 1960s and is now used to treat cancer. The disaster led to much stricter testing of new medicines.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 270,

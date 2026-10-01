@@ -3,8 +3,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const carbonMonoxide: Molecule = {
     name: 'Carbon Monoxide',
-    description:
-        'A carbon atom and an oxygen atom joined by a triple bond. It is colorless and odorless, and it is poisonous because it grabs onto the hemoglobin that should be carrying oxygen in your blood.',
+    structureDescription: 'A carbon atom and an oxygen atom joined by a triple bond.',
+    realLifeDescription:
+        'It is colorless and odorless, and it is poisonous because it grabs onto the hemoglobin that should be carrying oxygen in your blood. Carbon monoxide detectors in homes beep to warn people when it builds up.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -205,
@@ -19,10 +20,7 @@ const carbonMonoxide: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1772,
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat:
-            'Volcanoes, wildfires, combustion and ocean microbes; made in small amounts in the body',
+        habitat: 'Volcanoes, wildfires, combustion, ocean microbes, small amounts in the body',
         evolvesInto: ['carbon-dioxide'],
     },
     atoms: [

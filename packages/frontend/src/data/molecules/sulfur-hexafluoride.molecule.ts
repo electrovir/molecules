@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const sulfurHexafluoride: Molecule = {
     name: 'Sulfur Hexafluoride',
-    description:
-        'A sulfur atom bonded to six fluorine atoms at the corners of an octahedron. It is so heavy that breathing it makes your voice deep, and it insulates high-voltage power equipment.',
+    structureDescription:
+        'A sulfur atom bonded to six fluorine atoms at the corners of an octahedron.',
+    realLifeDescription:
+        'It is so heavy that breathing it makes your voice deep, and it insulates high-voltage power equipment. It is also the most powerful greenhouse gas known.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         sublimationPointCelsius: -63.8,
@@ -19,9 +21,7 @@ const sulfurHexafluoride: Molecule = {
             GhsPictogram.Irritant,
         ],
         yearDiscovered: 1901,
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: 'Mostly industrial; traces in fluorite, granite, and volcanic hot springs',
+        habitat: 'Factories, traces in fluorite, granite, volcanic hot springs',
     },
     atoms: [
         {

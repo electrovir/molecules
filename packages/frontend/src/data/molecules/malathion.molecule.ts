@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4004. */
 const malathion: Molecule = {
     name: 'Malathion',
-    description:
-        'A phosphorus atom bonded to two sulfurs and two methoxy groups, attached to a chain with two ester groups. It is an insecticide sprayed to kill mosquitoes and treat head lice.',
+    structureDescription:
+        'A phosphorus atom bonded to two sulfurs and two methoxy groups, attached to a chain with two ester groups.',
+    realLifeDescription: 'It is an insecticide sprayed to kill mosquitoes and treat head lice.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 2.9,

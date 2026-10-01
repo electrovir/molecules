@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 597. */
 const cytosine: Molecule = {
     name: 'Cytosine',
-    description:
-        'A single ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with guanine.',
+    structureDescription: 'A single ring of carbon and nitrogen.',
+    realLifeDescription:
+        'It is one of the four letters of DNA, where it pairs with guanine. It can slowly change into uracil by losing a nitrogen group, so cells constantly check their DNA for this mistake.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 322.5,
@@ -14,7 +15,7 @@ const cytosine: Molecule = {
         logP: -1.73,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1894,
-        habitat: 'DNA and RNA of all living things; also found in meteorites',
+        habitat: 'DNA and RNA of all living things, meteorites',
         evolvesInto: ['uracil'],
     },
     atoms: [

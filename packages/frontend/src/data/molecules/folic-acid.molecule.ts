@@ -5,19 +5,18 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 135398658. */
 const folicAcid: Molecule = {
     name: 'Folic Acid',
-    description:
-        'Two fused rings of carbon and nitrogen linked to a benzene ring and then to glutamic acid. It is vitamin B9, added to bread and flour to prevent birth defects.',
+    structureDescription:
+        'Two fused rings of carbon and nitrogen linked to a benzene ring and then to glutamic acid.',
+    realLifeDescription:
+        'It is vitamin B9, added to bread and flour to prevent birth defects. Its name comes from the Latin word for leaf, because leafy greens are full of it.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 250,
         densityGramsPerCubicCentimeter: 1.6,
         waterSolubilityGramsPerLiter: 0.0016,
         logP: -2.5,
-        hazardPictograms: [],
         yearDiscovered: 1941,
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: 'Leafy greens, liver, beans, yeast, and fresh fruit',
+        habitat: 'Leafy greens, liver, beans, yeast, fresh fruit',
     },
     atoms: [
         {

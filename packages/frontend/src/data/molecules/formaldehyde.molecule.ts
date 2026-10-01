@@ -3,8 +3,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const formaldehyde: Molecule = {
     name: 'Formaldehyde',
-    description:
-        'A carbon atom double-bonded to an oxygen and holding two hydrogens, all flat. It is used to preserve specimens and to make resins and glues.',
+    structureDescription:
+        'A carbon atom double-bonded to an oxygen and holding two hydrogens, all flat.',
+    realLifeDescription:
+        'It is used to preserve specimens and to make resins and glues. Small amounts form naturally in your body and in fruits like pears.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -92,
@@ -21,7 +23,7 @@ const formaldehyde: Molecule = {
         ],
         yearDiscovered: 1859,
         smell: 'pungent, suffocating',
-        habitat: 'Human blood, most living cells, and air from methane oxidation',
+        habitat: 'Human blood, most living cells, air from methane oxidation',
         evolvesInto: ['formic-acid'],
     },
     atoms: [

@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5971. */
 const allylIsothiocyanate: Molecule = {
     name: 'Allyl Isothiocyanate',
-    description:
-        'A carbon double bonded to both a nitrogen and a sulfur, with a three-carbon allyl group on the nitrogen. It is the sinus-clearing heat in mustard, horseradish, and wasabi.',
+    structureDescription:
+        'A carbon double bonded to both a nitrogen and a sulfur, with a three-carbon allyl group on the nitrogen.',
+    realLifeDescription:
+        'It is the sinus-clearing heat in mustard, horseradish, and wasabi. The plant keeps two ingredients apart in its cells and only makes it when you crush or chew them together.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -80,
@@ -24,7 +26,7 @@ const allylIsothiocyanate: Molecule = {
         ],
         smell: 'very pungent, mustard-like',
         taste: 'acrid, mustard',
-        habitat: 'Mustard, radish, horseradish, wasabi, and garlic mustard',
+        habitat: 'Mustard, radish, horseradish, wasabi, garlic mustard',
     },
     atoms: [
         {

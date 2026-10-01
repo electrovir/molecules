@@ -4,14 +4,16 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5280489. */
 const betaCarotene: Molecule = {
     name: 'Beta-Carotene',
-    description:
-        'A long chain of alternating single and double bonds with a ring of six carbons on each end. It makes carrots orange, and your body turns it into vitamin A.',
+    structureDescription:
+        'A long chain of alternating single and double bonds with a ring of six carbons on each end.',
+    realLifeDescription:
+        'It makes carrots orange, and your body turns it into vitamin A. Eating huge amounts of carrots can turn your skin slightly orange.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 183,
         densityGramsPerCubicCentimeter: 1,
         waterSolubilityGramsPerLiter: 0.0006,
-        habitat: 'Carrots, pumpkins, spinach, sweet potatoes, and algae',
+        habitat: 'Carrots, pumpkins, spinach, sweet potatoes, algae',
     },
     atoms: [
         {

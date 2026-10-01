@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5862. */
 const cysteine: Molecule = {
     name: 'Cysteine',
-    description:
-        'An amino acid with a sulfur-hydrogen group on its side chain. Two cysteines can link through their sulfurs, which is what holds the curls in hair.',
+    structureDescription: 'An amino acid with a sulfur-hydrogen group on its side chain.',
+    realLifeDescription:
+        'Two cysteines can link through their sulfurs, which is what holds the curls in hair. Onions and garlic build their sharp-smelling molecules from it.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 240,
@@ -15,7 +16,7 @@ const cysteine: Molecule = {
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1884,
         smell: 'sulfurous',
-        habitat: 'Proteins of all organisms, especially keratin; also in many plants',
+        habitat: 'Proteins of all organisms, keratin, many plants',
     },
     atoms: [
         {

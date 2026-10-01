@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 190. */
 const adenine: Molecule = {
     name: 'Adenine',
-    description:
-        'A double ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with thymine. It is also part of ATP, the molecule cells use to carry energy.',
+    structureDescription:
+        'A double ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with thymine.',
+    realLifeDescription: 'It is also part of ATP, the molecule cells use to carry energy.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 360,
@@ -14,7 +15,7 @@ const adenine: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 227,
         hazardPictograms: [GhsPictogram.AcuteToxicity],
         yearDiscovered: 1885,
-        habitat: 'DNA, RNA, and energy molecules in every living cell',
+        habitat: 'DNA, RNA, energy molecules in every living cell',
     },
     atoms: [
         {

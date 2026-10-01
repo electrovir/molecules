@@ -5,8 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4101. */
 const methenamine: Molecule = {
     name: 'Methenamine',
-    description:
-        'Six carbons and four nitrogens folded into a cage like adamantane. It is the solid fuel in camping stove tablets and a urinary antiseptic.',
+    structureDescription: 'Six carbons and four nitrogens folded into a cage like adamantane.',
+    realLifeDescription: 'It is the solid fuel in camping stove tablets and a urinary antiseptic.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         sublimationPointCelsius: 280,
@@ -20,7 +20,7 @@ const methenamine: Molecule = {
         ],
         yearDiscovered: 1859,
         smell: 'odorless to faintly fishy',
-        habitat: 'Made in labs and factories; also found in meteorites',
+        habitat: 'Labs, factories, meteorites',
         evolvesInto: [
             'formaldehyde',
             'ammonia',

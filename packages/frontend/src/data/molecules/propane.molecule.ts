@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6334. */
 const propane: Molecule = {
     name: 'Propane',
-    description:
-        'A chain of three carbon atoms covered in hydrogens. It is the fuel in barbecue grills and camping stoves, stored as a liquid under pressure.',
+    structureDescription: 'A chain of three carbon atoms covered in hydrogens.',
+    realLifeDescription:
+        'It is the fuel in barbecue grills and camping stoves, stored as a liquid under pressure. Propane has no smell of its own, so a stinky chemical is added to help people notice leaks.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -187.7,
@@ -19,8 +20,7 @@ const propane: Molecule = {
             GhsPictogram.CompressedGas,
         ],
         yearDiscovered: 1857,
-        smell: 'odorless',
-        habitat: "Crude oil and natural gas; Saturn's moon Titan",
+        habitat: "Crude oil, natural gas, Saturn's moon Titan",
         evolvesInto: ['isopropyl-alcohol'],
     },
     atoms: [

@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const caffeine: Molecule = {
     name: 'Caffeine',
-    description:
-        'Two fused rings of carbon and nitrogen, trimmed with oxygen atoms and methyl groups. It keeps you alert by blocking adenosine, the molecule that makes you feel sleepy.',
+    structureDescription:
+        'Two fused rings of carbon and nitrogen, trimmed with oxygen atoms and methyl groups.',
+    realLifeDescription:
+        'It keeps you alert by blocking adenosine, the molecule that makes you feel sleepy. Plants make it to protect themselves from hungry insects.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 236,
@@ -17,9 +19,8 @@ const caffeine: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 192,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1819,
-        smell: 'odorless',
         taste: 'bitter',
-        habitat: 'Seeds, leaves and nuts of coffee, tea, cacao, kola, mate and guarana plants',
+        habitat: 'Coffee, tea, cacao, kola, mate, guarana',
         evolvesInto: [
             'theobromine',
             'theophylline',

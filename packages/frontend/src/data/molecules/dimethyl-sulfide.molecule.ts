@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1068. */
 const dimethylSulfide: Molecule = {
     name: 'Dimethyl Sulfide',
-    description:
-        'A sulfur atom with a methyl group on each side. Ocean plankton make it, and it gives the seaside and cooked cabbage their smell.',
+    structureDescription: 'A sulfur atom with a methyl group on each side.',
+    realLifeDescription:
+        'Ocean plankton make it, and it gives the seaside and cooked cabbage their smell. Seabirds follow its smell to find places full of food.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -98.3,
@@ -18,7 +19,7 @@ const dimethylSulfide: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 3300,
         hazardPictograms: [GhsPictogram.Flammable],
         smell: 'cabbage-like, unpleasant',
-        habitat: 'Ocean plankton and bacteria; cabbage, garlic, tea, and cheese',
+        habitat: 'Ocean plankton, bacteria, cabbage, garlic, tea, cheese',
         evolvesInto: ['dimethyl-sulfoxide'],
     },
     atoms: [

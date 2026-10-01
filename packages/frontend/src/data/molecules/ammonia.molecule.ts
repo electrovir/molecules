@@ -3,8 +3,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ammonia: Molecule = {
     name: 'Ammonia',
-    description:
-        'A nitrogen atom bonded to three hydrogen atoms in a squat pyramid. It is the sharp smell in some cleaning products and the starting point for most fertilizer.',
+    structureDescription: 'A nitrogen atom bonded to three hydrogen atoms in a squat pyramid.',
+    realLifeDescription:
+        'It is the sharp smell in some cleaning products and the starting point for most fertilizer. Factories make it by pulling nitrogen out of the air, which helps grow food for billions of people.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -77.7,
@@ -22,8 +23,7 @@ const ammonia: Molecule = {
         ],
         yearDiscovered: 1756,
         smell: 'pungent, suffocating',
-        habitat:
-            'Animal waste, decaying matter, the atmosphere, giant planets, and interstellar space',
+        habitat: 'Animal waste, decaying matter, the atmosphere, giant planets, interstellar space',
         evolvesInto: ['urea'],
     },
     atoms: [

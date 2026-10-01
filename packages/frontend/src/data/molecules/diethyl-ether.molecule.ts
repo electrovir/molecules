@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3283. */
 const diethylEther: Molecule = {
     name: 'Diethyl Ether',
-    description:
-        'An oxygen atom with a two-carbon chain on each side. It was one of the first surgical anesthetics.',
+    structureDescription: 'An oxygen atom with a two-carbon chain on each side.',
+    realLifeDescription:
+        'It was one of the first surgical anesthetics. It was first shown off in a public surgery in Boston in 1846.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -116.3,

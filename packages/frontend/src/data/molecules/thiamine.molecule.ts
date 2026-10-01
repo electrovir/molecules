@@ -4,18 +4,19 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1130. */
 const thiamine: Molecule = {
     name: 'Thiamine',
-    description:
-        'A ring of carbon and nitrogen linked by a carbon to a ring of sulfur, nitrogen, and carbon with a short OH chain. It is vitamin B1, which your body needs to burn sugar.',
+    structureDescription:
+        'A ring of carbon and nitrogen linked by a carbon to a ring of sulfur, nitrogen, and carbon with a short OH chain.',
+    realLifeDescription:
+        'It is vitamin B1, which your body needs to burn sugar. It was the first B vitamin discovered, found while searching for the cause of the disease beriberi.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 248,
         waterSolubilityGramsPerLiter: 500,
         oralRatLethalDoseMilligramsPerKilogram: 3710,
-        hazardPictograms: [],
         yearDiscovered: 1910,
         smell: 'slight, unpleasant, thiazole-like',
         taste: 'bitter',
-        habitat: 'Whole grains, pork, legumes, and nuts; present in all plants and animals',
+        habitat: 'Whole grains, pork, legumes, nuts, all plants and animals',
     },
     atoms: [
         {

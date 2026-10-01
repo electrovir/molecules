@@ -5,8 +5,10 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 10236. */
 const ninhydrin: Molecule = {
     name: 'Ninhydrin',
-    description:
-        'A benzene ring fused to a five-membered ring with two ketones and two OH groups. Police spray it on paper to turn hidden fingerprints purple.',
+    structureDescription:
+        'A benzene ring fused to a five-membered ring with two ketones and two OH groups.',
+    realLifeDescription:
+        'Police spray it on paper to turn hidden fingerprints purple. It reacts with amino acids left behind in the oils from your fingers.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 250,
@@ -14,7 +16,6 @@ const ninhydrin: Molecule = {
         waterSolubilityGramsPerLiter: 20,
         logP: 0.67,
         yearDiscovered: 1910,
-        smell: 'odorless',
         habitat: 'Made only in labs and factories',
     },
     atoms: [

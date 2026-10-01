@@ -4,8 +4,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1983. */
 const acetaminophen: Molecule = {
     name: 'Acetaminophen',
-    description:
-        'A benzene ring with an oxygen-hydrogen group on one side and a nitrogen group on the other. It is the pain reliever in Tylenol.',
+    structureDescription:
+        'A benzene ring with an oxygen-hydrogen group on one side and a nitrogen group on the other.',
+    realLifeDescription: 'It is the pain reliever in Tylenol. Many countries call it paracetamol.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 169,
@@ -13,9 +14,7 @@ const acetaminophen: Molecule = {
         waterSolubilityGramsPerLiter: 14,
         logP: 0.46,
         oralRatLethalDoseMilligramsPerKilogram: 1940,
-        hazardPictograms: [],
         yearDiscovered: 1878,
-        smell: 'odorless',
         taste: 'slightly bitter',
         habitat: 'Made only in labs and factories',
     },

@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 65036. */
 const allicin: Molecule = {
     name: 'Allicin',
-    description:
-        'Two sulfur atoms in a row, one carrying an oxygen, with a three-carbon allyl group on each end. It forms the moment you crush garlic and gives it its sharp bite.',
+    structureDescription:
+        'Two sulfur atoms in a row, one carrying an oxygen, with a three-carbon allyl group on each end.',
+    realLifeDescription:
+        'It forms the moment you crush garlic and gives it its sharp bite. Garlic makes it to defend itself against pests and germs.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         densityGramsPerCubicCentimeter: 1.112,

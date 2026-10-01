@@ -4,17 +4,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 896. */
 const melatonin: Molecule = {
     name: 'Melatonin',
-    description:
-        'A double ring with two side chains, made from serotonin. Your body releases it in the dark to make you sleepy.',
+    structureDescription: 'A double ring with two side chains, made from serotonin.',
+    realLifeDescription:
+        'Your body releases it in the dark to make you sleepy. Light from screens at night can slow its release.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 117,
         waterSolubilityGramsPerLiter: 2,
         logP: 1.6,
         oralRatLethalDoseMilligramsPerKilogram: 3200,
-        hazardPictograms: [],
         yearDiscovered: 1958,
-        habitat: 'Pineal gland of vertebrates at night; also found in all plants studied',
+        habitat: 'Vertebrate pineal glands at night, all plants studied',
     },
     atoms: [
         {

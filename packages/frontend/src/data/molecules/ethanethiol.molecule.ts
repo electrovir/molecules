@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6343. */
 const ethanethiol: Molecule = {
     name: 'Ethanethiol',
-    description:
-        'An ethyl group bonded to a sulfur with a hydrogen. It is added to natural gas, which has no smell on its own, so you can smell a leak.',
+    structureDescription: 'An ethyl group bonded to a sulfur with a hydrogen.',
+    realLifeDescription:
+        'It is added to natural gas, which has no smell on its own, so you can smell a leak. Noses can catch it even when there is only a tiny trace in the air.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -147.9,
@@ -23,7 +24,7 @@ const ethanethiol: Molecule = {
         ],
         yearDiscovered: 1834,
         smell: 'skunk-like, rotten cabbage, garlic',
-        habitat: 'Petroleum, sour natural gas, and cabbage',
+        habitat: 'Petroleum, sour natural gas, cabbage',
     },
     atoms: [
         {

@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6393. */
 const tetrafluoromethane: Molecule = {
     name: 'Tetrafluoromethane',
-    description:
-        'A carbon atom bonded to four fluorine atoms. It is one of the most stable molecules known and is used to etch computer chips.',
+    structureDescription: 'A carbon atom bonded to four fluorine atoms.',
+    realLifeDescription:
+        'It is one of the most stable molecules known and is used to etch computer chips. It is a strong greenhouse gas that lasts for tens of thousands of years in the air.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -183.6,
@@ -17,8 +18,7 @@ const tetrafluoromethane: Molecule = {
         dipoleMomentDebye: 0,
         hazardPictograms: [GhsPictogram.CompressedGas],
         yearDiscovered: 1890,
-        smell: 'odorless',
-        habitat: 'Made industrially; traces released from rocks and soils',
+        habitat: 'Factories, traces from rocks and soils',
     },
     atoms: [
         {

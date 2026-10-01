@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5288826. */
 const morphine: Molecule = {
     name: 'Morphine',
-    description:
-        'Five fused rings of carbon, oxygen, and nitrogen with two OH groups. It comes from opium poppies and is one of the strongest painkillers. Doctors give it in careful doses to prevent misuse.',
+    structureDescription: 'Five fused rings of carbon, oxygen, and nitrogen with two OH groups.',
+    realLifeDescription:
+        'It comes from opium poppies and is one of the strongest painkillers. Doctors give it in careful doses to prevent misuse.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 255,
@@ -18,9 +19,8 @@ const morphine: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1804,
-        smell: 'odorless',
         taste: 'bitter',
-        habitat: 'Opium poppy latex; tiny amounts made in the human body',
+        habitat: 'Opium poppy latex, tiny amounts in the human body',
     },
     atoms: [
         {

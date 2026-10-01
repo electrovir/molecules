@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2083. */
 const albuterol: Molecule = {
     name: 'Albuterol',
-    description:
-        'A benzene ring with an OH group and a CH₂OH group, attached to a chain with an OH group and a bulky amine. It is the medicine in rescue inhalers that opens airways.',
+    structureDescription:
+        'A benzene ring with an OH group and a CH₂OH group, attached to a chain with an OH group and a bulky amine.',
+    realLifeDescription:
+        'It is the medicine in rescue inhalers that opens airways. It starts working within minutes, which is why it is called a rescue medicine.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 157.5,

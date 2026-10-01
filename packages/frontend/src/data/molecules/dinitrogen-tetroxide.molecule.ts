@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 25352. */
 const dinitrogenTetroxide: Molecule = {
     name: 'Dinitrogen Tetroxide',
-    description:
-        'Two nitrogen atoms bonded together, each holding two oxygens, in a flat shape. It was the oxidizer that burned with fuel to fly the Apollo spacecraft.',
+    structureDescription:
+        'Two nitrogen atoms bonded together, each holding two oxygens, in a flat shape.',
+    realLifeDescription:
+        'It was the oxidizer that burned with fuel to fly the Apollo spacecraft. It bursts into flame the moment it touches its fuel, so the engines needed no spark to start.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -11.2,

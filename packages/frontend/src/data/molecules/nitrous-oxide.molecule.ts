@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 948. */
 const nitrousOxide: Molecule = {
     name: 'Nitrous Oxide',
-    description:
-        'Two nitrogen atoms and an oxygen in a straight line. It is laughing gas, used by dentists and in whipped cream cans.',
+    structureDescription: 'Two nitrogen atoms and an oxygen in a straight line.',
+    realLifeDescription:
+        'It is laughing gas, used by dentists and in whipped cream cans. It is also used to give race cars an extra boost of power.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -90.8,
@@ -22,7 +23,7 @@ const nitrousOxide: Molecule = {
         yearDiscovered: 1772,
         smell: 'slightly sweet',
         taste: 'slightly sweet',
-        habitat: "Made by soil and ocean microbes; part of Earth's air",
+        habitat: "Soil microbes, ocean microbes, Earth's air",
         evolvesInto: ['nitrogen'],
     },
     atoms: [

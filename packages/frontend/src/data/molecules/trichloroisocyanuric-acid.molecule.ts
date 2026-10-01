@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6909. */
 const trichloroisocyanuricAcid: Molecule = {
     name: 'Trichloroisocyanuric Acid',
-    description:
-        'A ring of alternating carbon and nitrogen atoms, with an oxygen on each carbon and a chlorine on each nitrogen. It slowly releases chlorine and is the tablet that keeps pools clean.',
+    structureDescription:
+        'A ring of alternating carbon and nitrogen atoms, with an oxygen on each carbon and a chlorine on each nitrogen.',
+    realLifeDescription: 'It slowly releases chlorine and is the tablet that keeps pools clean.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 246.7,

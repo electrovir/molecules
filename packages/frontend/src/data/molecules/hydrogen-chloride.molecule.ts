@@ -3,8 +3,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const hydrogenChloride: Molecule = {
     name: 'Hydrogen Chloride',
-    description:
-        'A hydrogen atom bonded to a chlorine atom. Dissolved in water it becomes hydrochloric acid, the same acid your stomach uses to digest food.',
+    structureDescription: 'A hydrogen atom bonded to a chlorine atom.',
+    realLifeDescription:
+        'Dissolved in water it becomes hydrochloric acid, the same acid your stomach uses to digest food. The gas fumes in moist air because it grabs water to form tiny acid droplets.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -114.2,
@@ -21,7 +22,7 @@ const hydrogenChloride: Molecule = {
         ],
         yearDiscovered: 1772,
         smell: 'pungent, sharp, burning',
-        habitat: 'Volcanic gases, mammal stomach acid, and the atmosphere of Venus',
+        habitat: 'Volcanic gases, mammal stomach acid, the atmosphere of Venus',
     },
     atoms: [
         {

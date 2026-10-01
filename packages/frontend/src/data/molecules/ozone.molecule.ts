@@ -3,8 +3,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ozone: Molecule = {
     name: 'Ozone',
-    description:
-        'Three oxygen atoms in a bent chain. High in the atmosphere it shields the Earth from ultraviolet light, but at ground level it is an irritating pollutant.',
+    structureDescription: 'Three oxygen atoms in a bent chain.',
+    realLifeDescription:
+        'High in the atmosphere it shields the Earth from ultraviolet light, but at ground level it is an irritating pollutant. It gives the air its fresh smell after a thunderstorm.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -193,
@@ -20,7 +21,7 @@ const ozone: Molecule = {
         ],
         yearDiscovered: 1839,
         smell: 'pungent, chlorine-like',
-        habitat: 'Upper-atmosphere ozone layer; made by lightning and sunlight on oxygen',
+        habitat: 'The upper-atmosphere ozone layer, lightning, sunlight on oxygen',
         evolvesInto: ['oxygen'],
     },
     atoms: [

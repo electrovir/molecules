@@ -5,15 +5,16 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 4201. */
 const minoxidil: Molecule = {
     name: 'Minoxidil',
-    description:
-        'A ring of carbon and nitrogen with two amine groups and an oxygen, attached to a ring of five carbons and a nitrogen. It is Rogaine, which regrows hair.',
+    structureDescription:
+        'A ring of carbon and nitrogen with two amine groups and an oxygen, attached to a ring of five carbons and a nitrogen.',
+    realLifeDescription:
+        'It is Rogaine, which regrows hair. It was first made as a blood pressure medicine, and doctors noticed hair growth as a side effect.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 248,
         waterSolubilityGramsPerLiter: 2.2,
         logP: 1.24,
         yearDiscovered: 1963,
-        smell: 'odorless',
         habitat: 'Made only in labs and factories',
     },
     atoms: [

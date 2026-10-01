@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 7439. */
 const carvone: Molecule = {
     name: 'Carvone',
-    description:
-        'A ring of six carbons with an oxygen, a double bond, and a short branch. One mirror image smells like spearmint and the other smells like caraway seeds.',
+    structureDescription:
+        'A ring of six carbons with an oxygen, a double bond, and a short branch.',
+    realLifeDescription:
+        'One mirror image smells like spearmint and the other smells like caraway seeds.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 25.2,
@@ -17,7 +19,7 @@ const carvone: Molecule = {
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1849,
         smell: 'spearmint or caraway',
-        habitat: 'Spearmint, caraway and dill seed oils',
+        habitat: 'Spearmint oil, caraway oil, dill seed oil',
     },
     atoms: [
         {

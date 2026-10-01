@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2153. */
 const theophylline: Molecule = {
     name: 'Theophylline',
-    description:
-        'Two fused rings of carbon and nitrogen trimmed with oxygen atoms and two methyl groups, one methyl short of caffeine. It is found in tea and opens airways in asthma medicine.',
+    structureDescription:
+        'Two fused rings of carbon and nitrogen trimmed with oxygen atoms and two methyl groups, one methyl short of caffeine.',
+    realLifeDescription: 'It is found in tea and opens airways in asthma medicine.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 273,
@@ -16,9 +17,8 @@ const theophylline: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1888,
-        smell: 'odorless',
         taste: 'bitter',
-        habitat: 'Cocoa beans, tea, coffee, and kola nuts; a caffeine metabolite in the body',
+        habitat: 'Cocoa beans, tea, coffee, kola nuts',
         evolvesInto: ['caffeine'],
     },
     atoms: [

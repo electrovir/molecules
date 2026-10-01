@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 768. */
 const hydrogenCyanide: Molecule = {
     name: 'Hydrogen Cyanide',
-    description:
-        'A hydrogen, a carbon and a nitrogen in a straight line, with a triple bond between the carbon and nitrogen. It is extremely poisonous and smells faintly of bitter almonds.',
+    structureDescription:
+        'A hydrogen, a carbon and a nitrogen in a straight line, with a triple bond between the carbon and nitrogen.',
+    realLifeDescription:
+        'It is extremely poisonous and smells faintly of bitter almonds. Apple seeds hold tiny amounts of a molecule that can release it, far too little to harm you if swallowed.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -13.3,
@@ -23,7 +25,7 @@ const hydrogenCyanide: Molecule = {
         yearDiscovered: 1752,
         smell: 'bitter almond',
         taste: 'bitter, burning',
-        habitat: 'Fruit pits, cyanogenic plants, microbes, human blood, and space',
+        habitat: 'Fruit pits, cyanogenic plants, microbes, human blood, space',
     },
     atoms: [
         {

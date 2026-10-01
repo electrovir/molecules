@@ -4,13 +4,14 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 767. */
 const carbonicAcid: Molecule = {
     name: 'Carbonic Acid',
-    description:
-        'A carbon atom double bonded to one oxygen and holding two OH groups. It forms when carbon dioxide dissolves in water, which gives soda its sharp bite.',
+    structureDescription: 'A carbon atom double bonded to one oxygen and holding two OH groups.',
+    realLifeDescription:
+        'It forms when carbon dioxide dissolves in water, which gives soda its sharp bite. It also helps keep your blood at just the right acidity.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1987,
-        habitat: 'Forms when carbon dioxide dissolves in water, blood and oceans',
+        habitat: 'Water, blood, oceans',
         evolvesInto: [
             'carbon-dioxide',
             'water',

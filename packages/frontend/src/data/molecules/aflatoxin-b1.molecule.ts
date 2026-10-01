@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 186907. */
 const aflatoxinB1: Molecule = {
     name: 'Aflatoxin B1',
-    description:
-        'Five fused rings of carbon and oxygen with a methoxy group. Molds make it on damp peanuts and corn, and it is one of the strongest natural causes of cancer.',
+    structureDescription: 'Five fused rings of carbon and oxygen with a methoxy group.',
+    realLifeDescription:
+        'Molds make it on damp peanuts and corn, and it is one of the strongest natural causes of cancer. Food inspectors test peanuts and corn to keep it out of what we eat.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 268,

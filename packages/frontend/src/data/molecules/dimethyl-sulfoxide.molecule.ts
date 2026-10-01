@@ -5,8 +5,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 679. */
 const dimethylSulfoxide: Molecule = {
     name: 'Dimethyl Sulfoxide',
-    description:
-        'A sulfur atom holding an oxygen and two carbon groups. It dissolves an unusual range of things and passes through skin easily, carrying other molecules with it.',
+    structureDescription: 'A sulfur atom holding an oxygen and two carbon groups.',
+    realLifeDescription:
+        'It dissolves an unusual range of things and passes through skin easily, carrying other molecules with it. Rubbing a little on skin can make a person taste garlic.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 18.5,
@@ -16,11 +17,10 @@ const dimethylSulfoxide: Molecule = {
         logP: -1.35,
         dipoleMomentDebye: 3.96,
         oralRatLethalDoseMilligramsPerKilogram: 14_500,
-        hazardPictograms: [],
         yearDiscovered: 1866,
         smell: 'slightly sulfurous, garlic-like',
         taste: 'slightly bitter, sweet aftertaste',
-        habitat: 'Seawater phytoplankton; traces in vegetables, grains, milk, coffee and tea',
+        habitat: 'Seawater phytoplankton, traces in vegetables, grains, milk, coffee, tea',
         evolvesInto: ['dimethyl-sulfide'],
     },
     atoms: [

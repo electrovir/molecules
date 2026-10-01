@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const phosphorusPentachloride: Molecule = {
     name: 'Phosphorus Pentachloride',
-    description:
-        'A phosphorus atom bonded to five chlorine atoms, three around its middle and one above and below. Chemists use it to swap OH groups for chlorine atoms.',
+    structureDescription:
+        'A phosphorus atom bonded to five chlorine atoms, three around its middle and one above and below.',
+    realLifeDescription: 'Chemists use it to swap OH groups for chlorine atoms.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         sublimationPointCelsius: 160,

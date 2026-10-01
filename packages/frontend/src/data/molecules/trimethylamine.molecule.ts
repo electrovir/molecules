@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1146. */
 const trimethylamine: Molecule = {
     name: 'Trimethylamine',
-    description:
-        'A nitrogen atom with three methyl groups. It is the smell of rotting fish, and lemon juice neutralizes it.',
+    structureDescription: 'A nitrogen atom with three methyl groups.',
+    realLifeDescription:
+        'It is the smell of rotting fish, and lemon juice neutralizes it. Living fish use a related molecule to balance the salt in their bodies, and it breaks down into this one after the fish dies.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -117.1,
@@ -23,7 +24,7 @@ const trimethylamine: Molecule = {
         ],
         smell: 'fishy, ammonia-like',
         taste: 'fishy, salty',
-        habitat: 'Rotting fish; made by gut bacteria from choline and carnitine',
+        habitat: 'Rotting fish, gut bacteria',
         evolvesInto: ['ammonia'],
     },
     atoms: [

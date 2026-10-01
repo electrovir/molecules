@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 612. */
 const lacticAcid: Molecule = {
     name: 'Lactic Acid',
-    description:
-        'Three carbon atoms with an acid group and an oxygen-hydrogen group. Bacteria make it when they turn milk into yogurt, and your muscles make it during hard exercise.',
+    structureDescription: 'Three carbon atoms with an acid group and an oxygen-hydrogen group.',
+    realLifeDescription:
+        'Bacteria make it when they turn milk into yogurt, and your muscles make it during hard exercise. It gives sourdough bread and pickles their sour taste.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 17,
@@ -18,9 +19,8 @@ const lacticAcid: Molecule = {
             GhsPictogram.Irritant,
         ],
         yearDiscovered: 1780,
-        smell: 'odorless',
         taste: 'mildly sour, acrid',
-        habitat: 'Sour milk, fermented foods, fruits, and working muscles',
+        habitat: 'Sour milk, fermented foods, fruits, working muscles',
     },
     atoms: [
         {

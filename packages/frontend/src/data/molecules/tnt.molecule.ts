@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 8376. */
 const tnt: Molecule = {
     name: 'TNT',
-    description:
-        'Short for trinitrotoluene: a toluene ring holding three nitro groups. It is a stable explosive that only goes off with a detonator.',
+    structureDescription: 'Short for trinitrotoluene: a toluene ring holding three nitro groups.',
+    realLifeDescription:
+        'It is a stable explosive that only goes off with a detonator. It was first made in 1863 as a yellow dye.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 80.4,
@@ -20,8 +21,7 @@ const tnt: Molecule = {
             GhsPictogram.EnvironmentalHazard,
         ],
         yearDiscovered: 1863,
-        smell: 'odorless',
-        habitat: 'Made only in labs and factories; found as a contaminant in ecosystems',
+        habitat: 'Labs, factories, polluted ecosystems',
     },
     atoms: [
         {

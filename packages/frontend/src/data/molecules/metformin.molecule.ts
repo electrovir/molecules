@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4091. */
 const metformin: Molecule = {
     name: 'Metformin',
-    description:
-        'Two linked carbons each bonded to three nitrogens, with two methyl groups on one end. It is the most prescribed medicine for type 2 diabetes.',
+    structureDescription:
+        'Two linked carbons each bonded to three nitrogens, with two methyl groups on one end.',
+    realLifeDescription:
+        'It is the most prescribed medicine for type 2 diabetes. It was developed from a chemical found in a flowering plant called French lilac.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 224.5,

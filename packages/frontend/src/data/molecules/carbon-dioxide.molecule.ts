@@ -3,8 +3,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const carbonDioxide: Molecule = {
     name: 'Carbon Dioxide',
-    description:
-        'A carbon atom double-bonded to two oxygen atoms in a straight line. You breathe it out, plants take it in, and it traps heat in the atmosphere.',
+    structureDescription: 'A carbon atom double-bonded to two oxygen atoms in a straight line.',
+    realLifeDescription:
+        'You breathe it out, plants take it in, and it traps heat in the atmosphere. Frozen solid, it is dry ice, which turns straight into gas without melting.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         sublimationPointCelsius: -78.5,
@@ -14,10 +15,9 @@ const carbonDioxide: Molecule = {
         dipoleMomentDebye: 0,
         hazardPictograms: [GhsPictogram.CompressedGas],
         yearDiscovered: 1640,
-        smell: 'odorless',
         taste: 'faintly acidic',
         habitat:
-            'Air, animal breath, volcanoes, fires, groundwater and seawater; atmospheres of Venus',
+            'Air, animal breath, volcanoes, fires, groundwater, seawater, the atmosphere of Venus',
         evolvesInto: ['carbonic-acid'],
     },
     atoms: [

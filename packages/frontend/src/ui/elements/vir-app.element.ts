@@ -1,3 +1,4 @@
+// cspell:words rowspan
 import {assertWrap} from '@augment-vir/assert';
 import {asyncProp, css, defineElement, html, listen, nothing, onResize} from 'element-vir';
 import {lucideIcons, ViraIcon, viraTheme} from 'vira';
@@ -170,6 +171,22 @@ export const VirApp = defineElement()({
                 border-top: 1px solid
                     ${viraTheme.colors['vira-grey-foreground-decoration'].foreground.value};
             }
+
+            & tr.continued {
+                border-top: none;
+            }
+        }
+
+        .stat-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            & svg {
+                flex-shrink: 0;
+                width: 32px;
+                height: 32px;
+            }
         }
 
         .evolutions {
@@ -271,7 +288,8 @@ export const VirApp = defineElement()({
         return html`
             <${VirMoleculeViewer.assign({
                 molecule,
-                initialRenderQuality: frontendState.value.localDbClient.value.settledRenderQualityV2,
+                initialRenderQuality:
+                    frontendState.value.localDbClient.value.settledRenderQualityV2,
                 /**
                  * `overlayWidth` is the content width, so this adds the overlay's padding on both
                  * sides, its right margin, and the same gap on its left.
@@ -323,51 +341,53 @@ export const VirApp = defineElement()({
                           <h1>${molecule.name}</h1>
                           <span class="formula">${getMoleculeFormula(molecule.atoms)}</span>
                           <div class="scroll-area">
+                              <p>${molecule.structureDescription}</p>
+                              <p>${molecule.realLifeDescription}</p>
                               <table>
                                   ${getMoleculeStatRows(molecule).map((row) => {
-                                      return html`
-                                          <tr>
-                                              <th>${row.label}</th>
-                                              <td>${row.value}</td>
-                                          </tr>
-                                      `;
+                                      return row.values.map((value, index) => {
+                                          return html`
+                                              <tr class=${index ? 'continued' : ''}>
+                                                  ${index
+                                                      ? nothing
+                                                      : html`
+                                                            <th rowspan=${row.values.length}>
+                                                                ${row.label}
+                                                            </th>
+                                                        `}
+                                                  <td>
+                                                      <span class="stat-value">
+                                                          ${value.icon ?? nothing} ${value.text}
+                                                      </span>
+                                                  </td>
+                                              </tr>
+                                          `;
+                                      });
                                   })}
-                                  ${molecule.stats.evolvesInto
-                                      ? html`
-                                            <tr>
-                                                <th>Evolves into</th>
-                                                <td class="evolutions">
-                                                    ${molecule.stats.evolvesInto.map(
-                                                        (routeName) => {
-                                                            function goToEvolution() {
-                                                                frontendState?.value.router.setRoute(
-                                                                    createMoleculeRoute(routeName),
-                                                                    {
-                                                                        replace: true,
-                                                                    },
-                                                                );
-                                                            }
-                                                            return html`
-                                                                <button
-                                                                    ${listenToPress(goToEvolution)}
-                                                                    ${listenToKeyboardPress(
-                                                                        goToEvolution,
-                                                                    )}
-                                                                >
-                                                                    ${routeName.replaceAll(
-                                                                        '-',
-                                                                        ' ',
-                                                                    )}
-                                                                </button>
-                                                            `;
-                                                        },
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        `
-                                      : ''}
+                                  <tr>
+                                      <th>Evolves into</th>
+                                      <td class="evolutions">
+                                          ${molecule.stats.evolvesInto?.map((routeName) => {
+                                              function goToEvolution() {
+                                                  frontendState?.value.router.setRoute(
+                                                      createMoleculeRoute(routeName),
+                                                      {
+                                                          replace: true,
+                                                      },
+                                                  );
+                                              }
+                                              return html`
+                                                  <button
+                                                      ${listenToPress(goToEvolution)}
+                                                      ${listenToKeyboardPress(goToEvolution)}
+                                                  >
+                                                      ${routeName.replaceAll('-', ' ')}
+                                                  </button>
+                                              `;
+                                          }) ?? '-'}
+                                      </td>
+                                  </tr>
                               </table>
-                              <p>${molecule.description}</p>
                           </div>
                       `
                     : ''}

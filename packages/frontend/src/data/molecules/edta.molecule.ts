@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6049. */
 const edta: Molecule = {
     name: 'EDTA',
-    description:
-        'Two nitrogens joined by a two-carbon bridge, each holding two acetic acid arms. Its arms wrap around metal ions, which keeps food fresh and stops soap scum.',
+    structureDescription:
+        'Two nitrogens joined by a two-carbon bridge, each holding two acetic acid arms.',
+    realLifeDescription:
+        'Its arms wrap around metal ions, which keeps food fresh and stops soap scum. Doctors also use it to pull poisonous metals like lead out of the body.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 241,
@@ -19,7 +21,6 @@ const edta: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1935,
-        smell: 'odorless',
         habitat: 'Made only in labs and factories',
     },
     atoms: [

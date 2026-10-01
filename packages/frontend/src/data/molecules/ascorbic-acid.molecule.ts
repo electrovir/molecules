@@ -4,8 +4,10 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 54670067. */
 const ascorbicAcid: Molecule = {
     name: 'Ascorbic Acid',
-    description:
-        'Vitamin C: a ring of carbons and oxygens with several oxygen-hydrogen groups. Without it, the body cannot make collagen, which leads to scurvy.',
+    structureDescription:
+        'Vitamin C: a ring of carbons and oxygens with several oxygen-hydrogen groups.',
+    realLifeDescription:
+        'Without it, the body cannot make collagen, which leads to scurvy. Unlike most animals, humans cannot make their own, so we need it from foods like oranges and peppers.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 191,
@@ -13,11 +15,9 @@ const ascorbicAcid: Molecule = {
         waterSolubilityGramsPerLiter: 330,
         logP: -1.85,
         oralRatLethalDoseMilligramsPerKilogram: 11_900,
-        hazardPictograms: [],
         yearDiscovered: 1928,
-        smell: 'odorless',
         taste: 'pleasant, sharp, acidic',
-        habitat: 'Citrus fruits, vegetables, and most plant and animal tissues',
+        habitat: 'Citrus fruits, vegetables, most plant and animal tissues',
     },
     atoms: [
         {

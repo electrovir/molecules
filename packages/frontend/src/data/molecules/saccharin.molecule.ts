@@ -4,15 +4,16 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5143. */
 const saccharin: Molecule = {
     name: 'Saccharin',
-    description:
-        'A benzene ring fused to a five-membered ring holding sulfur and nitrogen. Discovered by accident in 1879, it is the sweetener in the pink packets.',
+    structureDescription:
+        'A benzene ring fused to a five-membered ring holding sulfur and nitrogen.',
+    realLifeDescription:
+        'Discovered by accident in 1879, it is the sweetener in the pink packets. Its discoverer noticed his dinner tasted sweet after working in the lab without washing his hands.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 228,
         densityGramsPerCubicCentimeter: 0.828,
         waterSolubilityGramsPerLiter: 3.4,
         logP: 0.91,
-        hazardPictograms: [],
         yearDiscovered: 1879,
         smell: 'odorless or faintly aromatic',
         taste: 'intensely sweet, metallic aftertaste',

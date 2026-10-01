@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 311. */
 const citricAcid: Molecule = {
     name: 'Citric Acid',
-    description:
-        'A six carbon molecule with three acid groups. It makes lemons and limes sour, and it is at the center of the cycle your cells use to release energy.',
+    structureDescription: 'A six carbon molecule with three acid groups.',
+    realLifeDescription:
+        'It makes lemons and limes sour, and it is at the center of the cycle your cells use to release energy.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 153,
@@ -15,9 +16,8 @@ const citricAcid: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 9200,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1784,
-        smell: 'odorless',
         taste: 'strongly sour, tart',
-        habitat: 'Citrus fruits, many plants, and cells of all aerobic organisms',
+        habitat: 'Citrus fruits, many plants, cells of all aerobic organisms',
         evolvesInto: ['acetic-acid'],
     },
     atoms: [

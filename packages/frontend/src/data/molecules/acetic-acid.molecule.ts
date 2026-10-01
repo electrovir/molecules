@@ -3,8 +3,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const aceticAcid: Molecule = {
     name: 'Acetic Acid',
-    description:
-        'Two carbon atoms, one of them carrying an acid group made of a double-bonded oxygen and an OH. It is what gives vinegar its sour taste and sharp smell.',
+    structureDescription:
+        'Two carbon atoms, one of them carrying an acid group made of a double-bonded oxygen and an OH.',
+    realLifeDescription:
+        'It is what gives vinegar its sour taste and sharp smell. Vinegar is mostly water, with only a small splash of acetic acid mixed in.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 16.6,
@@ -20,7 +22,7 @@ const aceticAcid: Molecule = {
         ],
         smell: 'pungent, vinegar-like',
         taste: 'burning',
-        habitat: 'Vinegar, fermented fruit juices, ocean water, and nearly all living cells',
+        habitat: 'Vinegar, fermented fruit juices, ocean water, nearly all living cells',
         evolvesInto: ['formic-acid'],
     },
     atoms: [

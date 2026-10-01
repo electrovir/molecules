@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5943. */
 const carbonTetrachloride: Molecule = {
     name: 'Carbon Tetrachloride',
-    description:
-        'A carbon atom with four chlorines pointing to the corners of a tetrahedron. It was once used in fire extinguishers and dry cleaning until it was found to damage the liver.',
+    structureDescription:
+        'A carbon atom with four chlorines pointing to the corners of a tetrahedron.',
+    realLifeDescription:
+        'It was once used in fire extinguishers and dry cleaning until it was found to damage the liver.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -22.6,
@@ -22,7 +24,7 @@ const carbonTetrachloride: Molecule = {
         ],
         yearDiscovered: 1839,
         smell: 'sweet, ether-like',
-        habitat: 'Oceans, red algae (Asparagopsis) and volcanic gases',
+        habitat: 'Oceans, red algae (Asparagopsis), volcanic gases',
         evolvesInto: ['chloroform'],
     },
     atoms: [

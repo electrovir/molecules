@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6351. */
 const cyclopropane: Molecule = {
     name: 'Cyclopropane',
-    description:
-        'Three carbon atoms bent into a triangle. The bonds are squeezed far from their natural angle, which makes the ring strained and reactive. It was once used as an anesthetic.',
+    structureDescription:
+        'Three carbon atoms bent into a triangle. The bonds are squeezed far from their natural angle, which makes the ring strained and reactive.',
+    realLifeDescription:
+        'It was once used as an anesthetic. It also catches fire very easily, which made it risky to use in operating rooms.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -127.4,

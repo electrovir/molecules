@@ -5,8 +5,10 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 7955. */
 const melamine: Molecule = {
     name: 'Melamine',
-    description:
-        'A ring of alternating carbon and nitrogen atoms with an amine group on each carbon. It makes the hard plastic in kitchen dishes and countertops.',
+    structureDescription:
+        'A ring of alternating carbon and nitrogen atoms with an amine group on each carbon.',
+    realLifeDescription:
+        'It makes the hard plastic in kitchen dishes and countertops. It is mixed into fire-resistant materials because it releases nitrogen when it burns.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 345,
@@ -14,9 +16,8 @@ const melamine: Molecule = {
         waterSolubilityGramsPerLiter: 3.24,
         logP: -1.37,
         oralRatLethalDoseMilligramsPerKilogram: 3500,
-        hazardPictograms: [],
         yearDiscovered: 1834,
-        habitat: 'Made in factories; also a breakdown product of the pesticide cyromazine',
+        habitat: 'Factories, breakdown of the pesticide cyromazine',
     },
     atoms: [
         {

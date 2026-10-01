@@ -5,8 +5,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5988. */
 const sucrose: Molecule = {
     name: 'Sucrose',
-    description:
-        'A glucose and a fructose joined together. It is ordinary table sugar, made from sugarcane and sugar beets.',
+    structureDescription: 'A glucose and a fructose joined together.',
+    realLifeDescription:
+        'It is ordinary table sugar, made from sugarcane and sugar beets. Heating it until it melts and browns turns it into caramel.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 186,
@@ -14,10 +15,8 @@ const sucrose: Molecule = {
         waterSolubilityGramsPerLiter: 2010,
         logP: -3.7,
         oralRatLethalDoseMilligramsPerKilogram: 29_700,
-        hazardPictograms: [],
-        smell: 'odorless',
         taste: 'sweet',
-        habitat: 'Sugarcane, sugar beets, fruits, nectar, honey, and maple sap',
+        habitat: 'Sugarcane, sugar beets, fruits, nectar, honey, maple sap',
         evolvesInto: [
             'glucose',
             'fructose',

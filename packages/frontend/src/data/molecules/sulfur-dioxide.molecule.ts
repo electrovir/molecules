@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1119. */
 const sulfurDioxide: Molecule = {
     name: 'Sulfur Dioxide',
-    description:
-        'A sulfur atom holding two oxygens in a bent shape. Volcanoes release it, it smells like a struck match, and it is added to dried fruit to keep them fresh.',
+    structureDescription: 'A sulfur atom holding two oxygens in a bent shape.',
+    realLifeDescription:
+        'Volcanoes release it, it smells like a struck match, and it is added to dried fruit to keep them fresh.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -75.5,
@@ -20,7 +21,7 @@ const sulfurDioxide: Molecule = {
         ],
         smell: 'pungent, like a struck match',
         taste: 'acidic',
-        habitat: 'Volcanic gases, burning sulfur and fossil fuels; Venus atmosphere',
+        habitat: 'Volcanic gases, burning sulfur and fossil fuels, the atmosphere of Venus',
         evolvesInto: ['sulfur-trioxide'],
     },
     atoms: [

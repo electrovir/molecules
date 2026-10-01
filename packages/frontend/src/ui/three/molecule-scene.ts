@@ -48,6 +48,11 @@ const fallbackAtomColor = 0xff_14_93;
 const fallbackVanDerWaalsRadius = 2;
 /** Extra room around the molecule when zooming the camera to fit it. */
 const fitDistanceMargin = 1.2;
+/**
+ * The camera fits molecules smaller than this radius, in ångströms, as if they were this big, so
+ * small molecules show small instead of being zoomed in to fill the view.
+ */
+const minimumFitRadius = 3;
 /** When the viewer's shorter side is below this many CSS pixels, the camera starts farther out. */
 const smallScreenPixels = 600;
 const smallScreenFitDistanceMargin = 1.3;
@@ -1068,13 +1073,16 @@ export function createMoleculeScene() {
                 ),
             );
             const fitDistance =
-                (moleculeRadius / Math.sin(narrowestHalfFov)) *
+                (Math.max(moleculeRadius, minimumFitRadius) / Math.sin(narrowestHalfFov)) *
                 fitDistanceMargin *
                 (Math.min(viewerSize.x, viewerSize.y) < smallScreenPixels
                     ? smallScreenFitDistanceMargin
                     : 1);
             camera.position.setLength(fitDistance);
             controls.maxDistance = fitDistance * 3;
+            /** Reaches past the molecule and the far corner of its ground shadow at full zoom-out. */
+            camera.far = controls.maxDistance + moleculeRadius * 3 + groundGap + 2;
+            camera.updateProjectionMatrix();
         },
         resize({width, height}: Readonly<{width: number; height: number}>) {
             if (!width || !height) {

@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24816. */
 const siliconTetrachloride: Molecule = {
     name: 'Silicon Tetrachloride',
-    description:
-        'A silicon atom bonded to four chlorine atoms at the corners of a tetrahedron. It is purified to make the ultra-pure silicon in computer chips and solar panels.',
+    structureDescription:
+        'A silicon atom bonded to four chlorine atoms at the corners of a tetrahedron.',
+    realLifeDescription:
+        'It is purified to make the ultra-pure silicon in computer chips and solar panels. It is also used to make the glass in fiber-optic cables.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -68.7,

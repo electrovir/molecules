@@ -4,14 +4,15 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 187. */
 const acetylcholine: Molecule = {
     name: 'Acetylcholine',
-    description:
-        'An acetic acid group joined through an ester link to a two-carbon chain ending in a nitrogen with three methyl groups. Nerves release it to make your muscles contract.',
+    structureDescription:
+        'An acetic acid group joined through an ester link to a two-carbon chain ending in a nitrogen with three methyl groups.',
+    realLifeDescription:
+        'Nerves release it to make your muscles contract. It was the first nerve messenger ever discovered, found in experiments with frog hearts.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 148,
-        hazardPictograms: [],
         yearDiscovered: 1867,
-        habitat: 'Nerve cells of animals, some non-neural cells, plants, and microbes',
+        habitat: 'Nerve cells of animals, some non-neural cells, plants, microbes',
         evolvesInto: ['acetic-acid'],
     },
     atoms: [

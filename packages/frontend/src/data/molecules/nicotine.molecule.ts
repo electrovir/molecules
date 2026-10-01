@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 89594. */
 const nicotine: Molecule = {
     name: 'Nicotine',
-    description:
-        'Two nitrogen-containing rings joined together. Tobacco plants make it to poison insects that eat its leaves.',
+    structureDescription: 'Two nitrogen-containing rings joined together.',
+    realLifeDescription:
+        'Tobacco plants make it to poison insects that eat its leaves. Farmers once sprayed it on crops as an insecticide.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -79,
@@ -21,7 +22,7 @@ const nicotine: Molecule = {
         yearDiscovered: 1828,
         smell: 'pungent, fishy when warm',
         taste: 'acrid, burning',
-        habitat: 'Tobacco leaves; traces in tomatoes, potatoes, and eggplants',
+        habitat: 'Tobacco leaves, traces in tomatoes, potatoes, eggplants',
         evolvesInto: ['niacin'],
     },
     atoms: [

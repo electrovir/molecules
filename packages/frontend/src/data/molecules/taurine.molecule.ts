@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1123. */
 const taurine: Molecule = {
     name: 'Taurine',
-    description:
-        'A two-carbon chain with an amine group on one end and a sulfonic acid group on the other. It is added to energy drinks and is found in meat and fish.',
+    structureDescription:
+        'A two-carbon chain with an amine group on one end and a sulfonic acid group on the other.',
+    realLifeDescription:
+        'It is added to energy drinks and is found in meat and fish. It was first found in ox bile, and its name comes from the Latin word for bull.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 305,
@@ -14,9 +16,8 @@ const taurine: Molecule = {
         waterSolubilityGramsPerLiter: 94.9,
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1827,
-        smell: 'odorless',
         taste: 'slightly acidic',
-        habitat: 'Animal tissues, bile, and algae; made in the liver from cysteine',
+        habitat: 'Animal tissues, bile, algae, the liver',
     },
     atoms: [
         {

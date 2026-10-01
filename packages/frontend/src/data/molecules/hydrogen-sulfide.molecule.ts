@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 402. */
 const hydrogenSulfide: Molecule = {
     name: 'Hydrogen Sulfide',
-    description:
-        'A sulfur atom with two hydrogens, bent like water. It gives rotten eggs their smell.',
+    structureDescription: 'A sulfur atom with two hydrogens, bent like water.',
+    realLifeDescription:
+        'It gives rotten eggs their smell. Volcanoes and hot springs give it off too.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -85.5,
@@ -22,7 +23,7 @@ const hydrogenSulfide: Molecule = {
         yearDiscovered: 1777,
         smell: 'rotten eggs',
         taste: 'sweetish',
-        habitat: 'Volcanic gas, sulfur springs, natural gas, sewers, and the human gut',
+        habitat: 'Volcanic gas, sulfur springs, natural gas, sewers, the human gut',
     },
     atoms: [
         {

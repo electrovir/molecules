@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 9321. */
 const hydrazine: Molecule = {
     name: 'Hydrazine',
-    description:
-        'Two nitrogen atoms bonded together, each holding two hydrogens. It is a rocket fuel used to steer satellites and spacecraft.',
+    structureDescription: 'Two nitrogen atoms bonded together, each holding two hydrogens.',
+    realLifeDescription:
+        'It is a rocket fuel used to steer satellites and spacecraft. It splits apart over a hot metal catalyst, so it can make thrust without any oxygen.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 2,
@@ -26,7 +27,7 @@ const hydrazine: Molecule = {
         ],
         yearDiscovered: 1887,
         smell: 'ammonia-like',
-        habitat: 'Some yeasts, anammox ocean bacteria, and nitrogen-fixing soil bacteria',
+        habitat: 'Some yeasts, anammox ocean bacteria, nitrogen-fixing soil bacteria',
         evolvesInto: [
             'nitrogen',
             'ammonia',

@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5904. */
 const penicillinG: Molecule = {
     name: 'Penicillin G',
-    description:
-        'A four-membered ring fused to a ring holding sulfur, with a side chain carrying a benzene ring. It was the first antibiotic, found growing from mold in 1928.',
+    structureDescription:
+        'A four-membered ring fused to a ring holding sulfur, with a side chain carrying a benzene ring.',
+    realLifeDescription:
+        'It was the first antibiotic, found growing from mold in 1928. Alexander Fleming discovered it when mold accidentally grew on one of his bacteria dishes.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 214,
@@ -17,7 +19,7 @@ const penicillinG: Molecule = {
             GhsPictogram.HealthHazard,
             GhsPictogram.EnvironmentalHazard,
         ],
-        habitat: 'Made by the mold Penicillium chrysogenum',
+        habitat: 'The mold Penicillium chrysogenum',
     },
     atoms: [
         {

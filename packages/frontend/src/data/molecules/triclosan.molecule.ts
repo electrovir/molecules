@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5564. */
 const triclosan: Molecule = {
     name: 'Triclosan',
-    description:
-        'Two benzene rings linked by an oxygen, carrying three chlorine atoms and an OH group. It was the germ killer in antibacterial soap until it was banned from soaps in 2016.',
+    structureDescription:
+        'Two benzene rings linked by an oxygen, carrying three chlorine atoms and an OH group.',
+    realLifeDescription:
+        'It was the germ killer in antibacterial soap until it was banned from soaps in 2016.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 56,
@@ -17,7 +19,7 @@ const triclosan: Molecule = {
         hazardPictograms: [GhsPictogram.EnvironmentalHazard],
         yearDiscovered: 1964,
         smell: 'faintly aromatic',
-        habitat: 'Made only in labs and factories; widespread contaminant in water and animals',
+        habitat: 'Labs, factories, polluted water, animals',
     },
     atoms: [
         {

@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 807. */
 const iodine: Molecule = {
     name: 'Iodine',
-    description:
-        'Two iodine atoms joined by a single bond. Tinctures of it disinfect cuts, and your thyroid needs it to make its hormones, which is why table salt is iodized.',
+    structureDescription: 'Two iodine atoms joined by a single bond.',
+    realLifeDescription:
+        'Tinctures of it disinfect cuts, and your thyroid needs it to make its hormones, which is why table salt is iodized. When heated, its dark purple crystals turn straight into a purple gas without melting first.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 113.7,
@@ -23,7 +24,7 @@ const iodine: Molecule = {
         yearDiscovered: 1811,
         smell: 'sharp, irritating',
         taste: 'sharp, acrid',
-        habitat: 'Seawater, seaweed, salt brines, and Chilean saltpeter',
+        habitat: 'Seawater, seaweed, salt brines, Chilean saltpeter',
     },
     atoms: [
         {

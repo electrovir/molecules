@@ -3,8 +3,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const methane: Molecule = {
     name: 'Methane',
-    description:
-        'A carbon atom bonded to four hydrogen atoms that point to the corners of a tetrahedron. It is the main ingredient of natural gas.',
+    structureDescription:
+        'A carbon atom bonded to four hydrogen atoms that point to the corners of a tetrahedron.',
+    realLifeDescription:
+        'It is the main ingredient of natural gas. Cows burp large amounts of it, and it is a strong greenhouse gas.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -182.5,
@@ -18,9 +20,7 @@ const methane: Molecule = {
             GhsPictogram.CompressedGas,
         ],
         yearDiscovered: 1776,
-        smell: 'odorless',
-        taste: 'tasteless',
-        habitat: 'Natural gas, wetlands, cattle, termites, and seafloor sediments',
+        habitat: 'Natural gas, wetlands, cattle, termites, seafloor sediments',
         evolvesInto: ['methanol'],
     },
     atoms: [

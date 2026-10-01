@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24682. */
 const sulfurTrioxide: Molecule = {
     name: 'Sulfur Trioxide',
-    description:
-        'A sulfur atom double bonded to three oxygens in a flat triangle. It forms when sulfur dioxide from burning coal reacts in the air, and it turns into sulfuric acid in acid rain.',
+    structureDescription: 'A sulfur atom double bonded to three oxygens in a flat triangle.',
+    realLifeDescription:
+        'It forms when sulfur dioxide from burning coal reacts in the air, and it turns into sulfuric acid in acid rain.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 16.9,
@@ -20,7 +21,7 @@ const sulfurTrioxide: Molecule = {
             GhsPictogram.EnvironmentalHazard,
         ],
         smell: 'pungent, like sulfur dioxide',
-        habitat: 'Made in factories from sulfur dioxide; traces form when sulfur burns',
+        habitat: 'Factories, burning sulfur',
         evolvesInto: ['sulfuric-acid'],
     },
     atoms: [

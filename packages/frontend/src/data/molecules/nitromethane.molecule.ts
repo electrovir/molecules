@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6375. */
 const nitromethane: Molecule = {
     name: 'Nitromethane',
-    description:
-        'A methyl group bonded to a nitrogen that carries two oxygens. It is the fuel in drag racers and model airplane engines.',
+    structureDescription: 'A methyl group bonded to a nitrogen that carries two oxygens.',
+    realLifeDescription:
+        'It is the fuel in drag racers and model airplane engines. It is also used as a solvent in labs.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -28.7,

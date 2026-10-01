@@ -4,8 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6212. */
 const chloroform: Molecule = {
     name: 'Chloroform',
-    description:
-        'Methane with three hydrogens swapped for chlorines. It was an early surgical anesthetic and is now a common lab solvent.',
+    structureDescription: 'Methane with three hydrogens swapped for chlorines.',
+    realLifeDescription: 'It was an early surgical anesthetic and is now a common lab solvent.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -63.5,
@@ -23,7 +23,7 @@ const chloroform: Molecule = {
         yearDiscovered: 1830,
         smell: 'sweet, pleasant, ether-like',
         taste: 'sweet',
-        habitat: 'Seaweeds, soil fungi and chlorinated tap water',
+        habitat: 'Seaweeds, soil fungi, chlorinated tap water',
         evolvesInto: [
             'phosgene',
             'carbon-monoxide',

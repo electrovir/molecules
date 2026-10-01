@@ -5,17 +5,16 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 134601. */
 const aspartame: Molecule = {
     name: 'Aspartame',
-    description:
-        'Two amino acids, aspartic acid and phenylalanine, joined together with a methyl group capping one end. It is about 200 times sweeter than sugar and sweetens diet sodas.',
+    structureDescription:
+        'Two amino acids, aspartic acid and phenylalanine, joined together with a methyl group capping one end.',
+    realLifeDescription: 'It is about 200 times sweeter than sugar and sweetens diet sodas.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 246.5,
         densityGramsPerCubicCentimeter: 1.347,
         waterSolubilityGramsPerLiter: 10.2,
         logP: -0.1,
-        hazardPictograms: [],
         yearDiscovered: 1965,
-        smell: 'odorless',
         taste: 'sweet',
         habitat: 'Made only in labs and factories',
         evolvesInto: ['methanol'],

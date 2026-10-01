@@ -3,8 +3,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const aspirin: Molecule = {
     name: 'Aspirin',
-    description:
-        'A benzene ring carrying an acid group and an acetyl group side by side. It relieves pain, fever and inflammation by blocking the enzymes that make pain and inflammation signals in the body.',
+    structureDescription: 'A benzene ring carrying an acid group and an acetyl group side by side.',
+    realLifeDescription:
+        'It relieves pain, fever and inflammation by blocking the enzymes that make pain and inflammation signals in the body. People chewed willow bark, which holds a similar chemical, for pain thousands of years before aspirin was made.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 135,
@@ -17,7 +18,6 @@ const aspirin: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1853,
-        smell: 'odorless',
         taste: 'slightly bitter',
         habitat: 'Made only in labs and factories',
         evolvesInto: [

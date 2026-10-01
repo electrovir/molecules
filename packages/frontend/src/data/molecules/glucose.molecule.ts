@@ -3,8 +3,10 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 
 const glucose: Molecule = {
     name: 'Glucose',
-    description:
-        'A ring of five carbons and one oxygen, with hydroxyl groups sticking out around it. It is the sugar your body burns for energy and the one plants make from sunlight.',
+    structureDescription:
+        'A ring of five carbons and one oxygen, with hydroxyl groups sticking out around it.',
+    realLifeDescription:
+        'It is the sugar your body burns for energy and the one plants make from sunlight. Plants link thousands of glucose molecules together to make starch and cellulose.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 146,
@@ -12,11 +14,9 @@ const glucose: Molecule = {
         waterSolubilityGramsPerLiter: 909,
         logP: -3,
         oralRatLethalDoseMilligramsPerKilogram: 25_800,
-        hazardPictograms: [],
         yearDiscovered: 1747,
-        smell: 'odorless',
         taste: 'sweet',
-        habitat: 'Fruits and plants via photosynthesis; human blood',
+        habitat: 'Fruits, plants, human blood',
     },
     atoms: [
         {

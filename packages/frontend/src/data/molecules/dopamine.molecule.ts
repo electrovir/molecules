@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 681. */
 const dopamine: Molecule = {
     name: 'Dopamine',
-    description:
-        'A ring holding two oxygen-hydrogen groups and a short chain ending in nitrogen. It is a brain signal tied to reward, motivation and movement.',
+    structureDescription:
+        'A ring holding two oxygen-hydrogen groups and a short chain ending in nitrogen.',
+    realLifeDescription:
+        'It is a brain signal tied to reward, motivation and movement. Bananas contain it too, but dopamine from food cannot reach the brain.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 128,
@@ -17,7 +19,7 @@ const dopamine: Molecule = {
             GhsPictogram.EnvironmentalHazard,
         ],
         yearDiscovered: 1910,
-        habitat: 'Brain, nerves and adrenal glands of animals; also found in many foods',
+        habitat: 'Animal brains, nerves, adrenal glands, many foods',
     },
     atoms: [
         {

@@ -5,12 +5,14 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 65028. */
 const oseltamivir: Molecule = {
     name: 'Oseltamivir',
-    description:
-        'A ring of six carbons with an ester, an amine, an amide, and a branched ether. It is Tamiflu, which slows the flu virus from spreading.',
+    structureDescription:
+        'A ring of six carbons with an ester, an amine, an amide, and a branched ether.',
+    realLifeDescription:
+        'It is Tamiflu, which slows the flu virus from spreading. It was first made from a chemical found in star anise, a star-shaped spice.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         logP: 1,
-        habitat: 'Made in labs from shikimic acid, once extracted from star anise',
+        habitat: 'Labs, shikimic acid from star anise',
     },
     atoms: [
         {

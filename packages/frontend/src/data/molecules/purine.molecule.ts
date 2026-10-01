@@ -4,16 +4,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1044. */
 const purine: Molecule = {
     name: 'Purine',
-    description:
-        'A six-membered ring and a five-membered ring of carbon and nitrogen fused together. It is the parent shape of adenine, guanine, caffeine, and uric acid.',
+    structureDescription:
+        'A six-membered ring and a five-membered ring of carbon and nitrogen fused together.',
+    realLifeDescription:
+        'It is the parent shape of adenine, guanine, caffeine, and uric acid. Its name comes from the Latin for pure uric acid, where chemists first found its shape.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 214,
         waterSolubilityGramsPerLiter: 500,
         logP: -0.37,
-        hazardPictograms: [],
         yearDiscovered: 1898,
-        habitat: 'Made only in labs; parent of DNA and RNA bases',
+        habitat: 'Labs',
     },
     atoms: [
         {

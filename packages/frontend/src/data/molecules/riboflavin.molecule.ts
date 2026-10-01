@@ -4,18 +4,19 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 493570. */
 const riboflavin: Molecule = {
     name: 'Riboflavin',
-    description:
-        'Three fused rings of carbon and nitrogen attached to a chain of carbons covered in OH groups. It is vitamin B2, and it turns urine bright yellow when you take extra.',
+    structureDescription:
+        'Three fused rings of carbon and nitrogen attached to a chain of carbons covered in OH groups.',
+    realLifeDescription:
+        'It is vitamin B2, and it turns urine bright yellow when you take extra. It glows yellow-green under ultraviolet light.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 280,
         waterSolubilityGramsPerLiter: 0.085,
         logP: -1.46,
-        hazardPictograms: [],
         yearDiscovered: 1879,
         smell: 'faint',
         taste: 'bitter',
-        habitat: 'Milk, eggs, liver, leafy greens, and yeast; all plant and animal cells',
+        habitat: 'Milk, eggs, liver, leafy greens, yeast, all plant and animal cells',
     },
     atoms: [
         {

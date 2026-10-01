@@ -5,8 +5,10 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const cisplatin: Molecule = {
     name: 'Cisplatin',
-    description:
-        'A platinum atom holding two chlorine atoms and two ammonia groups on one side of a flat square. It is a cancer drug that binds DNA, discovered when an electric current through platinum stopped bacteria from dividing.',
+    structureDescription:
+        'A platinum atom holding two chlorine atoms and two ammonia groups on one side of a flat square.',
+    realLifeDescription:
+        'It is a cancer drug that binds DNA, discovered when an electric current through platinum stopped bacteria from dividing.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 270,

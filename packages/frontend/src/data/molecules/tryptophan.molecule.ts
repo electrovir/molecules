@@ -4,18 +4,17 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 6305. */
 const tryptophan: Molecule = {
     name: 'Tryptophan',
-    description:
-        'An amino acid with a double ring side chain. Your body turns it into serotonin and melatonin.',
+    structureDescription: 'An amino acid with a double ring side chain.',
+    realLifeDescription:
+        'Your body turns it into serotonin and melatonin. Turkey has no more of it than chicken or cheese, so it is probably not why people get sleepy after a big holiday meal.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 290,
         waterSolubilityGramsPerLiter: 13.4,
         logP: -1.06,
-        hazardPictograms: [],
         yearDiscovered: 1901,
-        smell: 'odorless',
         taste: 'flat, slightly bitter',
-        habitat: 'Protein-rich foods like milk and eggs; an essential amino acid',
+        habitat: 'Protein-rich foods, milk, eggs',
         evolvesInto: ['serotonin'],
     },
     atoms: [

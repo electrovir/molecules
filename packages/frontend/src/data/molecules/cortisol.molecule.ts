@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5754. */
 const cortisol: Molecule = {
     name: 'Cortisol',
-    description:
-        'Four fused rings of carbon decorated with oxygen atoms and OH groups. It is the main stress hormone, and creams that calm itchy skin contain it as hydrocortisone.',
+    structureDescription: 'Four fused rings of carbon decorated with oxygen atoms and OH groups.',
+    realLifeDescription:
+        'It is the main stress hormone, and creams that calm itchy skin contain it as hydrocortisone. Its level rises in the morning to help you wake up.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 220,
@@ -13,9 +14,8 @@ const cortisol: Molecule = {
         waterSolubilityGramsPerLiter: 0.32,
         logP: 1.61,
         hazardPictograms: [GhsPictogram.HealthHazard],
-        smell: 'odorless',
         taste: 'bitter',
-        habitat: 'Made by the adrenal glands of humans and other animals',
+        habitat: 'Adrenal glands of humans and other animals',
     },
     atoms: [
         {

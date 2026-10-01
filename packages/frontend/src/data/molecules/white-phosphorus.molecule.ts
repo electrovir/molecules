@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const whitePhosphorus: Molecule = {
     name: 'White Phosphorus',
-    description:
-        'Four phosphorus atoms at the corners of a tetrahedron, each bonded to the other three. It glows in the dark and bursts into flame in air, which is why it is stored under water.',
+    structureDescription:
+        'Four phosphorus atoms at the corners of a tetrahedron, each bonded to the other three.',
+    realLifeDescription:
+        'It glows in the dark and bursts into flame in air, which is why it is stored under water. It was discovered in 1669 by a man boiling down urine while trying to make gold.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 44.1,

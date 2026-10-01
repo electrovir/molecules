@@ -71,7 +71,10 @@ export type MoleculeStats = PartialWithUndefined<{
 
 export type Molecule = {
     name: string;
-    description: string;
+    /** What the molecule is built from and its shape. */
+    structureDescription: string;
+    /** Where the molecule shows up in everyday life and what it does there. */
+    realLifeDescription: string;
     stats: MoleculeStats;
     atoms: MoleculeAtom[];
     bonds: MoleculeBond[];

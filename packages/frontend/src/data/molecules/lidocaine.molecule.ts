@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3676. */
 const lidocaine: Molecule = {
     name: 'Lidocaine',
-    description:
-        'A benzene ring with two methyl groups, linked through an amide to a chain ending in a nitrogen with two ethyl groups. It numbs the skin for dentists and in sunburn sprays.',
+    structureDescription:
+        'A benzene ring with two methyl groups, linked through an amide to a chain ending in a nitrogen with two ethyl groups.',
+    realLifeDescription:
+        'It numbs the skin for dentists and in sunburn sprays. It works by blocking the signals nerves send to the brain.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 68,

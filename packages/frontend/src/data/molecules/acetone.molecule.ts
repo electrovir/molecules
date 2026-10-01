@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 180. */
 const acetone: Molecule = {
     name: 'Acetone',
-    description:
-        'A carbon atom double bonded to an oxygen, with a carbon on each side. It is nail polish remover, and your body makes small amounts when it burns fat.',
+    structureDescription: 'A carbon atom double bonded to an oxygen, with a carbon on each side.',
+    realLifeDescription:
+        'It is nail polish remover, and your body makes small amounts when it burns fat. It evaporates so fast that a drop on your skin feels cold.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -94.9,
@@ -22,7 +23,7 @@ const acetone: Molecule = {
         yearDiscovered: 1606,
         smell: 'fruity, mint-like',
         taste: 'pungent, sweetish',
-        habitat: 'Human blood and breath, plants, volcanoes, and forest fires',
+        habitat: 'Human blood and breath, plants, volcanoes, forest fires',
     },
     atoms: [
         {

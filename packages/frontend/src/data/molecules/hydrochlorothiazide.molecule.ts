@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3639. */
 const hydrochlorothiazide: Molecule = {
     name: 'Hydrochlorothiazide',
-    description:
-        'A benzene ring with a chlorine, fused to a ring of sulfur and nitrogen and carrying a second sulfonyl group. It is a water pill that lowers blood pressure.',
+    structureDescription:
+        'A benzene ring with a chlorine, fused to a ring of sulfur and nitrogen and carrying a second sulfonyl group.',
+    realLifeDescription:
+        'It is a water pill that lowers blood pressure. It makes the kidneys send more salt and water out in urine.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 274,
@@ -17,7 +19,6 @@ const hydrochlorothiazide: Molecule = {
             GhsPictogram.Irritant,
             GhsPictogram.HealthHazard,
         ],
-        smell: 'odorless',
         taste: 'slightly bitter',
         habitat: 'Made only in labs and factories',
     },

@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6374. */
 const iodoform: Molecule = {
     name: 'Iodoform',
-    description:
-        'A carbon atom bonded to three iodine atoms and one hydrogen. It is a yellow antiseptic with a strong smell, once used to dress wounds.',
+    structureDescription: 'A carbon atom bonded to three iodine atoms and one hydrogen.',
+    realLifeDescription:
+        'It is a yellow antiseptic with a strong smell, once used to dress wounds. Dentists still use it in some root canal pastes.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 119,
@@ -18,7 +19,7 @@ const iodoform: Molecule = {
         yearDiscovered: 1822,
         smell: 'penetrating, sweetish, chloroform-like',
         taste: 'sweetish',
-        habitat: "Angel's bonnet mushroom; otherwise made in labs",
+        habitat: "Angel's bonnet mushroom, labs",
         evolvesInto: ['carbon-monoxide'],
     },
     atoms: [

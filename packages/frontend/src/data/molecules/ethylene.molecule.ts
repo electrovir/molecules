@@ -3,8 +3,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ethylene: Molecule = {
     name: 'Ethylene',
-    description:
-        'Two carbon atoms joined by a double bond, each holding two hydrogens, all in one flat plane. Plants release it to ripen fruit, and it is the building block of polyethylene plastic.',
+    structureDescription:
+        'Two carbon atoms joined by a double bond, each holding two hydrogens, all in one flat plane.',
+    realLifeDescription:
+        'Plants release it to ripen fruit, and it is the building block of polyethylene plastic. That is why one rotten apple can make a whole barrel of fruit ripen faster.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -169.2,
@@ -21,7 +23,7 @@ const ethylene: Molecule = {
         yearDiscovered: 1669,
         smell: 'sweet',
         taste: 'sweet',
-        habitat: 'Ripening fruits, flowers, leaves, roots, and petrochemical plants',
+        habitat: 'Ripening fruits, flowers, leaves, roots, petrochemical plants',
         evolvesInto: [
             'ethanol',
             'acetaldehyde',

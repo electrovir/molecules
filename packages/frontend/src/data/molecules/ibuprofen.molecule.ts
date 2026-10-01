@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3672. */
 const ibuprofen: Molecule = {
     name: 'Ibuprofen',
-    description:
-        'A benzene ring with a branched carbon chain on one side and an acid group on the other. It relieves pain by blocking the enzymes that cause inflammation.',
+    structureDescription:
+        'A benzene ring with a branched carbon chain on one side and an acid group on the other.',
+    realLifeDescription:
+        'It relieves pain by blocking the enzymes that cause inflammation. It also brings down fevers.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 76,

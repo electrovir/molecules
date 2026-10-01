@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const borazine: Molecule = {
     name: 'Borazine',
-    description:
-        'A flat ring of alternating boron and nitrogen atoms, each holding one hydrogen. It has the same shape as benzene with no carbon at all, so it is nicknamed inorganic benzene.',
+    structureDescription:
+        'A flat ring of alternating boron and nitrogen atoms, each holding one hydrogen.',
+    realLifeDescription:
+        'It has the same shape as benzene with no carbon at all, so it is nicknamed inorganic benzene.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -58,

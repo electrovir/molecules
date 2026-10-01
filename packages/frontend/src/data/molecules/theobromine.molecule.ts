@@ -1,11 +1,13 @@
+// cspell:words Theobroma
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
 /** 3D coordinates from PubChem CID 5429. */
 const theobromine: Molecule = {
     name: 'Theobromine',
-    description:
-        'A close cousin of caffeine, missing one carbon group. It is the main stimulant in chocolate, and is why chocolate is dangerous for dogs.',
+    structureDescription: 'A close cousin of caffeine, missing one carbon group.',
+    realLifeDescription:
+        'It is the main stimulant in chocolate, and is why chocolate is dangerous for dogs. Despite its name it has no bromine; it is named after the cacao tree, Theobroma, which means food of the gods.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 351,
@@ -18,9 +20,8 @@ const theobromine: Molecule = {
             GhsPictogram.HealthHazard,
         ],
         yearDiscovered: 1841,
-        smell: 'odorless',
         taste: 'bitter',
-        habitat: 'Cacao beans and chocolate, tea, and kola nuts; made in the body from caffeine',
+        habitat: 'Cacao beans, chocolate, tea, kola nuts',
         evolvesInto: ['caffeine'],
     },
     atoms: [

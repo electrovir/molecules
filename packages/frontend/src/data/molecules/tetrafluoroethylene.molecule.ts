@@ -5,16 +5,15 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 8301. */
 const tetrafluoroethylene: Molecule = {
     name: 'Tetrafluoroethylene',
-    description:
-        'Two carbons joined by a double bond, each holding two fluorine atoms. Linked into long chains, it becomes Teflon, the nonstick coating on pans.',
+    structureDescription: 'Two carbons joined by a double bond, each holding two fluorine atoms.',
+    realLifeDescription:
+        'Linked into long chains, it becomes Teflon, the nonstick coating on pans. Teflon was discovered by accident in 1938 when a tank of this gas turned into a slippery white powder.',
     stats: {
         stateAtRoomTemperature: MatterState.Gas,
         meltingPointCelsius: -142.5,
         boilingPointCelsius: -76,
         waterSolubilityGramsPerLiter: 0.159,
         dipoleMomentDebye: 0,
-        hazardPictograms: [],
-        smell: 'odorless',
         habitat: 'Made only in labs and factories',
         evolvesInto: ['tetrafluoromethane'],
     },

@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const hydrogenPeroxide: Molecule = {
     name: 'Hydrogen Peroxide',
-    description:
-        'Two oxygen atoms bonded to each other, each carrying a hydrogen, in a twisted shape. The weak oxygen-oxygen bond breaks easily, which is why it bubbles on cuts and works as a bleach.',
+    structureDescription:
+        'Two oxygen atoms bonded to each other, each carrying a hydrogen, in a twisted shape.',
+    realLifeDescription:
+        'The weak oxygen-oxygen bond breaks easily, which is why it bubbles on cuts and works as a bleach. Your body makes it too, and an enzyme called catalase quickly breaks it into water and oxygen.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -0.4,
@@ -22,7 +24,7 @@ const hydrogenPeroxide: Molecule = {
         yearDiscovered: 1818,
         smell: 'slightly sharp',
         taste: 'bitter, slightly acidic',
-        habitat: 'Human cells and peroxisomes; rain and the lower atmosphere',
+        habitat: 'Human cells, peroxisomes, rain, the lower atmosphere',
         evolvesInto: [
             'water',
             'oxygen',

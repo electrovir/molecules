@@ -1,3 +1,4 @@
+// cspell:words Kekulé
 import {createArray} from '@augment-vir/common';
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
@@ -17,8 +18,9 @@ function getRingPosition({index, radius}: Readonly<{index: number; radius: numbe
 
 const benzene: Molecule = {
     name: 'Benzene',
-    description:
-        'Six carbon atoms in a flat ring, each holding one hydrogen. The ring is drawn with alternating single and double bonds, but in reality its electrons are shared evenly around the whole ring, making it unusually stable.',
+    structureDescription: 'Six carbon atoms in a flat ring, each holding one hydrogen.',
+    realLifeDescription:
+        'The ring is drawn with alternating single and double bonds, but in reality its electrons are shared evenly around the whole ring, making it unusually stable. August Kekulé said he figured out its ring shape after dreaming of a snake biting its own tail.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 5.5,
@@ -35,7 +37,7 @@ const benzene: Molecule = {
         ],
         yearDiscovered: 1825,
         smell: 'aromatic, gasoline-like',
-        habitat: 'Crude oil, coal, volcanoes, forest fires, and traces in some foods',
+        habitat: 'Crude oil, coal, volcanoes, forest fires, traces in some foods',
     },
     atoms: [
         ...createArray(ringSize, (index) => {

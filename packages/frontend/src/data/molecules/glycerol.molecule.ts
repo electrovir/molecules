@@ -4,8 +4,9 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 753. */
 const glycerol: Molecule = {
     name: 'Glycerol',
-    description:
-        'Three carbon atoms each holding an oxygen-hydrogen group. It is a sweet, syrupy liquid that forms the backbone of every fat molecule.',
+    structureDescription: 'Three carbon atoms each holding an oxygen-hydrogen group.',
+    realLifeDescription:
+        'It is a sweet, syrupy liquid that forms the backbone of every fat molecule. It keeps soaps and lotions moist because it pulls water from the air.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 18.1,
@@ -15,10 +16,8 @@ const glycerol: Molecule = {
         logP: -1.76,
         dipoleMomentDebye: 2.56,
         oralRatLethalDoseMilligramsPerKilogram: 9100,
-        hazardPictograms: [],
-        smell: 'odorless',
         taste: 'sweet, warm',
-        habitat: 'Fats and oils of all plants and animals, as triglycerides',
+        habitat: 'Fats and oils of all plants and animals',
     },
     atoms: [
         {

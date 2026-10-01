@@ -4,8 +4,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3016. */
 const diazepam: Molecule = {
     name: 'Diazepam',
-    description:
-        'A benzene ring with a chlorine fused to a seven-membered ring with two nitrogens, carrying another benzene ring. It is Valium, which calms anxiety. Doctors give it in careful doses to prevent misuse.',
+    structureDescription:
+        'A benzene ring with a chlorine fused to a seven-membered ring with two nitrogens, carrying another benzene ring.',
+    realLifeDescription:
+        'It is Valium, which calms anxiety. Doctors give it in careful doses to prevent misuse.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 125.5,
@@ -16,7 +18,7 @@ const diazepam: Molecule = {
         yearDiscovered: 1959,
         smell: 'practically odorless',
         taste: 'tasteless, bitter aftertaste',
-        habitat: 'Mostly made in labs; traces reported in some plants and animal brains',
+        habitat: 'Labs, traces in some plants and animal brains',
     },
     atoms: [
         {

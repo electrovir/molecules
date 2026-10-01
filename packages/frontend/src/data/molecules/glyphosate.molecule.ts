@@ -5,8 +5,10 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3496. */
 const glyphosate: Molecule = {
     name: 'Glyphosate',
-    description:
-        'A glycine molecule with a phosphonic acid group attached to its nitrogen. It is the weed killer in Roundup.',
+    structureDescription:
+        'A glycine molecule with a phosphonic acid group attached to its nitrogen.',
+    realLifeDescription:
+        'It is the weed killer in Roundup. It works by blocking an enzyme that plants need but animals do not have.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 184.5,
@@ -19,7 +21,6 @@ const glyphosate: Molecule = {
             GhsPictogram.EnvironmentalHazard,
         ],
         yearDiscovered: 1950,
-        smell: 'odorless',
         habitat: 'Made only in labs and factories',
     },
     atoms: [

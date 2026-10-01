@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 10925. */
 const isoamylMercaptan: Molecule = {
     name: 'Isoamyl Mercaptan',
-    description:
-        'A branched five-carbon chain ending in a sulfur with a hydrogen. It is one of the main stink molecules in skunk spray.',
+    structureDescription: 'A branched five-carbon chain ending in a sulfur with a hydrogen.',
+    realLifeDescription:
+        'It is one of the main stink molecules in skunk spray. Skunks can spray it accurately about three meters.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         boilingPointCelsius: 119.5,

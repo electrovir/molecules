@@ -4,8 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2707. */
 const chloralHydrate: Molecule = {
     name: 'Chloral Hydrate',
-    description:
-        'A carbon holding three chlorines next to a carbon with two OH groups. It was one of the first sleeping pills.',
+    structureDescription: 'A carbon holding three chlorines next to a carbon with two OH groups.',
+    realLifeDescription: 'It was one of the first sleeping pills.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 57,
@@ -17,7 +17,7 @@ const chloralHydrate: Molecule = {
         yearDiscovered: 1832,
         smell: 'aromatic, penetrating, slightly acrid',
         taste: 'slightly bitter, caustic',
-        habitat: 'Chlorinated drinking water in traces; otherwise made in labs and factories',
+        habitat: 'Traces in chlorinated drinking water, labs, factories',
         evolvesInto: ['chloroform'],
     },
     atoms: [

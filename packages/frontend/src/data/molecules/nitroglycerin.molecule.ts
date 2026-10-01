@@ -4,8 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4510. */
 const nitroglycerin: Molecule = {
     name: 'Nitroglycerin',
-    description:
-        'Glycerol with each oxygen-hydrogen group swapped for a nitrate. It is a powerful explosive, the key ingredient of dynamite, and also a heart medicine.',
+    structureDescription: 'Glycerol with each oxygen-hydrogen group swapped for a nitrate.',
+    realLifeDescription:
+        'It is a powerful explosive, the key ingredient of dynamite, and also a heart medicine.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: 13.5,

@@ -4,8 +4,10 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1176. */
 const urea: Molecule = {
     name: 'Urea',
-    description:
-        'A carbon atom double bonded to an oxygen and holding two nitrogen groups. Your body uses it to get rid of extra nitrogen in urine, and it was the first natural molecule made in a lab.',
+    structureDescription:
+        'A carbon atom double bonded to an oxygen and holding two nitrogen groups.',
+    realLifeDescription:
+        'Your body uses it to get rid of extra nitrogen in urine, and it was the first natural molecule made in a lab. It is also the most widely used nitrogen fertilizer on farms.',
     stats: {
         stateAtRoomTemperature: MatterState.Solid,
         meltingPointCelsius: 132.7,
@@ -14,11 +16,10 @@ const urea: Molecule = {
         logP: -2.11,
         dipoleMomentDebye: 4.56,
         oralRatLethalDoseMilligramsPerKilogram: 8500,
-        hazardPictograms: [],
         yearDiscovered: 1727,
         smell: 'odorless to faintly ammonia-like',
         taste: 'cooling, salty',
-        habitat: 'Urine of mammals and amphibians; made in the liver from protein breakdown',
+        habitat: 'Mammal and amphibian urine, the liver',
         evolvesInto: [
             'ammonia',
             'carbon-dioxide',

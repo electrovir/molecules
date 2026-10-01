@@ -5,8 +5,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24386. */
 const thionylChloride: Molecule = {
     name: 'Thionyl Chloride',
-    description:
-        'A sulfur atom holding one oxygen and two chlorine atoms in a pyramid. It is a harsh reagent chemists use to make medicines and lithium batteries.',
+    structureDescription: 'A sulfur atom holding one oxygen and two chlorine atoms in a pyramid.',
+    realLifeDescription:
+        'It is a harsh reagent chemists use to make medicines and lithium batteries.',
     stats: {
         stateAtRoomTemperature: MatterState.Liquid,
         meltingPointCelsius: -104.5,
