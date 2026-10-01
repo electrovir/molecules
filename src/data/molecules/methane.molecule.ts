@@ -1,10 +1,28 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const methane: Molecule = {
+const methane: Molecule = {
     name: 'Methane',
     description:
         'A carbon atom bonded to four hydrogen atoms that point to the corners of a tetrahedron. It is the main ingredient of natural gas.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Gas,
+        meltingPointCelsius: -182.5,
+        boilingPointCelsius: -161.5,
+        densityGramsPerCubicCentimeter: 0.000657,
+        waterSolubilityGramsPerLiter: 0.022,
+        logP: 1.09,
+        dipoleMomentDebye: 0,
+        hazardPictograms: [
+            GhsPictogram.Flammable,
+            GhsPictogram.CompressedGas,
+        ],
+        yearDiscovered: 1776,
+        smell: 'odorless',
+        taste: 'tasteless',
+        habitat: 'Natural gas, wetlands, cattle, termites, and seafloor sediments',
+        evolvesInto: ['methanol'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -78,3 +96,5 @@ export const methane: Molecule = {
         },
     ],
 };
+
+export default methane;

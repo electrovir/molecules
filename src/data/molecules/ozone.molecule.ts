@@ -1,10 +1,28 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const ozone: Molecule = {
+const ozone: Molecule = {
     name: 'Ozone',
     description:
         'Three oxygen atoms in a bent chain. High in the atmosphere it shields the Earth from ultraviolet light, but at ground level it is an irritating pollutant.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Gas,
+        meltingPointCelsius: -193,
+        boilingPointCelsius: -111.9,
+        densityGramsPerCubicCentimeter: 0.002144,
+        dipoleMomentDebye: 0.53,
+        hazardPictograms: [
+            GhsPictogram.Oxidizer,
+            GhsPictogram.AcuteToxicity,
+            GhsPictogram.Irritant,
+            GhsPictogram.HealthHazard,
+            GhsPictogram.EnvironmentalHazard,
+        ],
+        yearDiscovered: 1839,
+        smell: 'pungent, chlorine-like',
+        habitat: 'Upper-atmosphere ozone layer; made by lightning and sunlight on oxygen',
+        evolvesInto: ['oxygen'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.O,
@@ -48,3 +66,5 @@ export const ozone: Molecule = {
         },
     ],
 };
+
+export default ozone;

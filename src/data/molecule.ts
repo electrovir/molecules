@@ -1,5 +1,5 @@
-import {getObjectTypedEntries} from '@augment-vir/common';
-import {type ChemicalElementSymbol} from './chemical-element.js';
+import {getObjectTypedEntries, type PartialWithUndefined} from '@augment-vir/common';
+import {chemicalElements, type ChemicalElementSymbol} from './chemical-element.js';
 
 export type Coordinates = {
     x: number;
@@ -32,13 +32,74 @@ export type MoleculeBond = {
     order: BondOrder;
 };
 
+export enum MatterState {
+    Gas = 'gas',
+    Liquid = 'liquid',
+    Solid = 'solid',
+}
+
+export enum GhsPictogram {
+    Explosive = 'GHS01',
+    Flammable = 'GHS02',
+    Oxidizer = 'GHS03',
+    CompressedGas = 'GHS04',
+    Corrosive = 'GHS05',
+    AcuteToxicity = 'GHS06',
+    Irritant = 'GHS07',
+    HealthHazard = 'GHS08',
+    EnvironmentalHazard = 'GHS09',
+}
+
+export type MoleculeStats = PartialWithUndefined<{
+    stateAtRoomTemperature: MatterState;
+    meltingPointCelsius: number;
+    boilingPointCelsius: number;
+    sublimationPointCelsius: number;
+    densityGramsPerCubicCentimeter: number;
+    waterSolubilityGramsPerLiter: number;
+    isWaterMiscible: boolean;
+    logP: number;
+    dipoleMomentDebye: number;
+    oralRatLethalDoseMilligramsPerKilogram: number;
+    hazardPictograms: GhsPictogram[];
+    yearDiscovered: number;
+    smell: string;
+    taste: string;
+    habitat: string;
+    evolvesInto: string[];
+}>;
+
 export type Molecule = {
     name: string;
     description: string;
+    stats: MoleculeStats;
     atoms: MoleculeAtom[];
     bonds: MoleculeBond[];
     vibrationModes?: VibrationMode[] | undefined;
 };
+
+export function getMolarMass(atoms: ReadonlyArray<Readonly<Pick<MoleculeAtom, 'element'>>>) {
+    return atoms.reduce((total, atom) => total + chemicalElements[atom.element].atomicMass, 0);
+}
+
+export function getTotalBondOrder(bonds: ReadonlyArray<Readonly<Pick<MoleculeBond, 'order'>>>) {
+    return bonds.reduce((total, bond) => total + bond.order, 0);
+}
+
+export function getMoleculeSize(atoms: ReadonlyArray<Readonly<Pick<MoleculeAtom, 'position'>>>) {
+    return atoms.reduce((largest, first, firstIndex) => {
+        return atoms.slice(firstIndex + 1).reduce((innerLargest, second) => {
+            return Math.max(
+                innerLargest,
+                Math.hypot(
+                    first.position.x - second.position.x,
+                    first.position.y - second.position.y,
+                    first.position.z - second.position.z,
+                ),
+            );
+        }, largest);
+    }, 0);
+}
 
 const subscriptDigits = '₀₁₂₃₄₅₆₇₈₉';
 

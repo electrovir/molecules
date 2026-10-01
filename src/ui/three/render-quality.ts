@@ -1,0 +1,191 @@
+import {check} from '@augment-vir/assert';
+import {defineShape, enumShape} from 'object-shape-tester';
+
+/** Effects that can be turned off to keep the frame rate up, in the order they get turned off. */
+export enum RenderEffect {
+    SelfReflections = 'self-reflections',
+    Transmission = 'transmission',
+    Shadows = 'shadows',
+}
+
+const effectRemovalOrder = Object.values(RenderEffect);
+
+export const renderQualityShape = defineShape({
+    /** Multiplies the device's pixel ratio. */
+    resolutionScale: 1,
+    disabledEffects: [enumShape(RenderEffect)],
+});
+
+export type RenderQuality = typeof renderQualityShape.runtimeType;
+
+export const defaultRenderQuality: Readonly<RenderQuality> = {
+    resolutionScale: 1,
+    disabledEffects: [],
+};
+
+/** Below this average frame rate, quality drops. */
+const minFramesPerSecond = 50;
+/** Frame rate is judged over this many frames at a time. */
+const samplesPerCheck = 6;
+/**
+ * Every quality change rebuilds shaders or reallocates buffers, and the slow frames that causes
+ * would otherwise count against the new quality.
+ */
+const framesToSkipAfterChange = 10;
+const resolutionStep = 0.2;
+/** Resolution drops to here first, then effects turn off, then resolution drops further. */
+const effectsResolutionScale = 0.6;
+const minResolutionScale = 0.4;
+/** Longer gaps than this are a hidden tab or a paused debugger, not slow rendering. */
+const maxSampleSeconds = 0.25;
+/**
+ * A screen can't show more than its refresh rate, so there's no way to tell how much headroom a
+ * smooth frame rate has. Quality steps back up after this long at full speed, as a test.
+ */
+const firstRaiseDelaySeconds = 30;
+/**
+ * Each time a raise has to be undone, the wait before the next raise doubles, up to this, so a
+ * device right at the edge settles instead of flipping back and forth.
+ */
+const maxRaiseDelaySeconds = 30 * 60;
+
+function lowerQuality({resolutionScale, disabledEffects}: Readonly<RenderQuality>): RenderQuality {
+    const nextEffect = effectRemovalOrder.find((effect) => !disabledEffects.includes(effect));
+    if (resolutionScale > effectsResolutionScale || !nextEffect) {
+        return {
+            resolutionScale: Math.max(
+                resolutionScale > effectsResolutionScale
+                    ? effectsResolutionScale
+                    : minResolutionScale,
+                resolutionScale - resolutionStep,
+            ),
+            disabledEffects: [...disabledEffects],
+        };
+    }
+    return {
+        resolutionScale,
+        disabledEffects: [
+            ...disabledEffects,
+            nextEffect,
+        ],
+    };
+}
+
+/** Undoes one {@link lowerQuality} step. */
+function raiseQuality({resolutionScale, disabledEffects}: Readonly<RenderQuality>): RenderQuality {
+    if (
+        resolutionScale < effectsResolutionScale ||
+        (resolutionScale < 1 && !disabledEffects.length)
+    ) {
+        return {
+            resolutionScale: Math.min(
+                resolutionScale < effectsResolutionScale ? effectsResolutionScale : 1,
+                resolutionScale + resolutionStep,
+            ),
+            disabledEffects: [...disabledEffects],
+        };
+    }
+    return {
+        resolutionScale,
+        disabledEffects: disabledEffects.slice(0, -1),
+    };
+}
+
+/**
+ * Watches the frame rate and steps render quality down while it's too low, then slowly back up
+ * while it stays smooth. Resolution goes first, then effects, then more resolution.
+ */
+export function createRenderQualityScaler({
+    applyQuality,
+}: Readonly<{
+    applyQuality: (quality: Readonly<RenderQuality>) => void;
+}>) {
+    const state: {
+        quality: RenderQuality;
+        samples: number[];
+        framesToSkip: number;
+        smoothSeconds: number;
+        raiseDelaySeconds: number;
+        wasLastChangeRaise: boolean;
+    } = {
+        quality: defaultRenderQuality,
+        samples: [],
+        framesToSkip: framesToSkipAfterChange,
+        smoothSeconds: 0,
+        raiseDelaySeconds: firstRaiseDelaySeconds,
+        wasLastChangeRaise: false,
+    };
+
+    function setQuality(quality: Readonly<RenderQuality>) {
+        state.quality = {
+            /** Keeps repeated steps from drifting into values like `0.6000000000000001`. */
+            resolutionScale: Math.round(quality.resolutionScale * 100) / 100,
+            disabledEffects: [...quality.disabledEffects],
+        };
+        state.samples = [];
+        state.framesToSkip = framesToSkipAfterChange;
+        state.smoothSeconds = 0;
+        applyQuality(state.quality);
+    }
+
+    applyQuality(state.quality);
+
+    return {
+        getQuality() {
+            return state.quality;
+        },
+        setQuality(quality: Readonly<RenderQuality>) {
+            if (!check.deepEquals(quality, state.quality)) {
+                setQuality(quality);
+            }
+        },
+        /** Returns `true` when this frame changed the quality. */
+        recordFrame(frameSeconds: number) {
+            if (!frameSeconds || frameSeconds > maxSampleSeconds) {
+                return false;
+            } else if (state.framesToSkip) {
+                state.framesToSkip--;
+                return false;
+            }
+            state.samples = [
+                ...state.samples,
+                frameSeconds,
+            ];
+            if (state.samples.length < samplesPerCheck) {
+                return false;
+            }
+            const sampleSeconds = state.samples.reduce((total, sample) => total + sample, 0);
+            const framesPerSecond = state.samples.length / sampleSeconds;
+            state.samples = [];
+
+            if (framesPerSecond >= minFramesPerSecond) {
+                state.smoothSeconds += sampleSeconds;
+                if (state.smoothSeconds < state.raiseDelaySeconds) {
+                    return false;
+                }
+                const raised = raiseQuality(state.quality);
+                if (check.deepEquals(raised, state.quality)) {
+                    state.smoothSeconds = 0;
+                    return false;
+                }
+                state.wasLastChangeRaise = true;
+                setQuality(raised);
+                return true;
+            }
+            state.smoothSeconds = 0;
+            const lowered = lowerQuality(state.quality);
+            if (check.deepEquals(lowered, state.quality)) {
+                return false;
+            }
+            if (state.wasLastChangeRaise) {
+                state.raiseDelaySeconds = Math.min(
+                    maxRaiseDelaySeconds,
+                    state.raiseDelaySeconds * 2,
+                );
+            }
+            state.wasLastChangeRaise = false;
+            setQuality(lowered);
+            return true;
+        },
+    };
+}

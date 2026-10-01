@@ -1,10 +1,25 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const carbonDioxide: Molecule = {
+const carbonDioxide: Molecule = {
     name: 'Carbon Dioxide',
     description:
         'A carbon atom double-bonded to two oxygen atoms in a straight line. You breathe it out, plants take it in, and it traps heat in the atmosphere.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Gas,
+        sublimationPointCelsius: -78.5,
+        densityGramsPerCubicCentimeter: 0.00198,
+        waterSolubilityGramsPerLiter: 1.45,
+        logP: 0.83,
+        dipoleMomentDebye: 0,
+        hazardPictograms: [GhsPictogram.CompressedGas],
+        yearDiscovered: 1640,
+        smell: 'odorless',
+        taste: 'faintly acidic',
+        habitat:
+            'Air, animal breath, volcanoes, fires, groundwater and seawater; atmospheres of Venus',
+        evolvesInto: ['carbonic-acid'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -48,3 +63,5 @@ export const carbonDioxide: Molecule = {
         },
     ],
 };
+
+export default carbonDioxide;

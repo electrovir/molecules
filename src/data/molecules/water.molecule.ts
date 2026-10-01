@@ -1,5 +1,5 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 
 const waterBondLength = 0.9584;
 const waterHalfBondAngle = ((104.45 / 2) * Math.PI) / 180;
@@ -11,10 +11,27 @@ const cosHalfAngle = Math.cos(waterHalfBondAngle);
  */
 const hydrogenToOxygenMass = 1.008 / 15.999;
 
-export const water: Molecule = {
+const water: Molecule = {
     name: 'Water',
     description:
         'Two hydrogen atoms bonded to one oxygen atom at a bent 104.45° angle. The bend makes the molecule polar, which gives water its high boiling point and its talent for dissolving things.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Liquid,
+        meltingPointCelsius: 0,
+        boilingPointCelsius: 100,
+        densityGramsPerCubicCentimeter: 1,
+        isWaterMiscible: true,
+        logP: -1.38,
+        dipoleMomentDebye: 1.854,
+        hazardPictograms: [],
+        smell: 'odorless',
+        taste: 'tasteless',
+        habitat: 'Oceans, rivers, ice, air, and every living cell; also in space',
+        evolvesInto: [
+            'hydrogen',
+            'oxygen',
+        ],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.H,
@@ -123,3 +140,5 @@ export const water: Molecule = {
         },
     ],
 };
+
+export default water;

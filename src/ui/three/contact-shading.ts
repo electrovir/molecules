@@ -1,6 +1,5 @@
-// cspell:words ångströms occluder occluders
-import {createArray} from '@augment-vir/common';
-import {type MeshStandardMaterial, Vector3} from 'three';
+// cspell:words ångströms highp occluder occluders texels
+import {DataTexture, FloatType, type MeshStandardMaterial, RGBAFormat, type Vector3} from 'three';
 
 /** A capsule in world space. A sphere is a capsule whose start and end are the same point. */
 export type Occluder = {
@@ -11,8 +10,47 @@ export type Occluder = {
 
 /** How far from an occluder's surface its darkening fades out, in ångströms. */
 export const contactReach = 0.04;
-/** The shader loops over a fixed-size uniform array, so occluders past this many are dropped. */
+/** Each material's occluders get a fixed-width row of the data texture, so extras are dropped. */
 const maxOccluders = 12;
+/** Each occluder takes two texels: its start with its radius in alpha, then its end. */
+const texelsPerOccluder = 2;
+const rowWidth = maxOccluders * texelsPerOccluder;
+
+/**
+ * Holds the occluders of every material given to {@link addContactShading} in one texture, a row per
+ * material. Uniform arrays would be re-uploaded by three.js for every mesh drawn, while the texture
+ * uploads once per frame.
+ */
+export function createContactShadingData({materialCount}: Readonly<{materialCount: number}>) {
+    const data = new Float32Array(rowWidth * materialCount * 4);
+    const texture = new DataTexture(data, rowWidth, materialCount, RGBAFormat, FloatType);
+    texture.needsUpdate = true;
+    const state = {
+        usedRows: 0,
+    };
+
+    return {
+        data,
+        texture,
+        takeRow() {
+            if (state.usedRows >= materialCount) {
+                throw new Error(
+                    `Contact shading data only has rows for ${materialCount} materials.`,
+                );
+            }
+            return state.usedRows++;
+        },
+        /** Call once a frame, after setting any occluders that moved. */
+        upload() {
+            texture.needsUpdate = true;
+        },
+        dispose() {
+            texture.dispose();
+        },
+    };
+}
+
+export type ContactShadingData = ReturnType<typeof createContactShadingData>;
 
 /**
  * Darkens a material's surface in a thin band wherever it comes close to one of its occluders, like
@@ -23,31 +61,31 @@ const maxOccluders = 12;
  * Keeps any `onBeforeCompile` the material already has.
  *
  * Returns a setter for the material's occluders, which must be called again whenever they or the
- * mesh move.
+ * mesh move, followed by the data's `upload`.
  */
 export function addContactShading({
     material,
+    contactShadingData,
     darkestBrightness,
     reach = contactReach,
 }: Readonly<{
     material: MeshStandardMaterial;
+    contactShadingData: Pick<ContactShadingData, 'data' | 'texture' | 'takeRow'>;
     /** Brightness multiplier right where two surfaces meet. */
     darkestBrightness: number;
     /** How far from an occluder's surface the darkening fades out, in ångströms. */
     reach?: number | undefined;
 }>) {
+    const row = contactShadingData.takeRow();
     const uniforms = {
         contactDarkness: {
             value: 1 - darkestBrightness,
         },
-        contactStarts: {
-            value: createArray(maxOccluders, () => new Vector3()),
+        contactData: {
+            value: contactShadingData.texture,
         },
-        contactEnds: {
-            value: createArray(maxOccluders, () => new Vector3()),
-        },
-        contactRadii: {
-            value: createArray(maxOccluders, () => 0),
+        contactRow: {
+            value: row,
         },
         contactCount: {
             value: 0,
@@ -69,9 +107,8 @@ export function addContactShading({
             .replace(
                 '#include <common>',
                 `#include <common>
-                uniform vec3 contactStarts[${maxOccluders}];
-                uniform vec3 contactEnds[${maxOccluders}];
-                uniform float contactRadii[${maxOccluders}];
+                uniform highp sampler2D contactData;
+                uniform int contactRow;
                 uniform int contactCount;
                 uniform float contactDarkness;
                 varying vec3 vContactWorldPosition;
@@ -82,16 +119,26 @@ export function addContactShading({
                         if (index >= contactCount) {
                             break;
                         }
-                        vec3 segment = contactEnds[index] - contactStarts[index];
+                        vec4 startAndRadius = texelFetch(
+                            contactData,
+                            ivec2(index * ${texelsPerOccluder}, contactRow),
+                            0
+                        );
+                        vec3 start = startAndRadius.xyz;
+                        vec3 segment = texelFetch(
+                            contactData,
+                            ivec2(index * ${texelsPerOccluder} + 1, contactRow),
+                            0
+                        ).xyz - start;
                         float along = clamp(
-                            dot(vContactWorldPosition - contactStarts[index], segment) /
+                            dot(vContactWorldPosition - start, segment) /
                                 max(dot(segment, segment), 1e-6),
                             0.0,
                             1.0
                         );
                         float gap = max(
-                            distance(vContactWorldPosition, contactStarts[index] + segment * along) -
-                                contactRadii[index],
+                            distance(vContactWorldPosition, start + segment * along) -
+                                startAndRadius.w,
                             0.0
                         );
                         float closeness = 1.0 - min(gap / ${reach.toFixed(4)}, 1.0);
@@ -123,9 +170,15 @@ export function addContactShading({
     return (occluders: ReadonlyArray<Readonly<Occluder>>) => {
         const usedOccluders = occluders.slice(0, maxOccluders);
         usedOccluders.forEach((occluder, index) => {
-            uniforms.contactStarts.value[index]?.copy(occluder.start);
-            uniforms.contactEnds.value[index]?.copy(occluder.end);
-            uniforms.contactRadii.value[index] = occluder.radius;
+            const offset = (row * rowWidth + index * texelsPerOccluder) * 4;
+            contactShadingData.data.set(
+                [
+                    ...occluder.start.toArray(),
+                    occluder.radius,
+                    ...occluder.end.toArray(),
+                ],
+                offset,
+            );
         });
         uniforms.contactCount.value = usedOccluders.length;
     };

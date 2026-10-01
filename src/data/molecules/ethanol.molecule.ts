@@ -1,10 +1,31 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const ethanol: Molecule = {
+const ethanol: Molecule = {
     name: 'Ethanol',
     description:
         'Two carbon atoms in a chain with an OH group on the end. It is the alcohol in drinks, and it also burns as fuel and kills germs in hand sanitizer.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Liquid,
+        meltingPointCelsius: -114.1,
+        boilingPointCelsius: 78.2,
+        densityGramsPerCubicCentimeter: 0.789,
+        isWaterMiscible: true,
+        logP: -0.31,
+        dipoleMomentDebye: 1.69,
+        oralRatLethalDoseMilligramsPerKilogram: 5630,
+        hazardPictograms: [
+            GhsPictogram.Flammable,
+            GhsPictogram.Irritant,
+        ],
+        smell: 'wine-like, pungent',
+        taste: 'burning',
+        habitat: 'Fermenting fruit, yeast, plants, human breath, and interstellar space',
+        evolvesInto: [
+            'acetaldehyde',
+            'ethylene',
+        ],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -138,3 +159,5 @@ export const ethanol: Molecule = {
         },
     ],
 };
+
+export default ethanol;

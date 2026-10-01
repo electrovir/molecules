@@ -1,7 +1,8 @@
 import {assertWrap, check} from '@augment-vir/assert';
 import {Observable} from 'element-vir';
 import {type FullSpaRoute, PathTree, SpaRouter} from 'spa-router-vir';
-import {allMolecules} from '../../data/all-molecules.js';
+import {allMoleculeEntries, type MoleculeEntry} from '../../data/all-molecules.js';
+import {createMoleculesLocalDbClient} from './frontend-clients/local-db.client.js';
 
 export const frontendPathTree = new PathTree({
     allowBare: false,
@@ -20,30 +21,31 @@ export type FrontendRoute = Readonly<FullSpaRoute<FrontendPaths, undefined, unde
 export type FrontendRouter = SpaRouter<FrontendPaths>;
 
 /** Every route shows a molecule, so unknown or bare paths redirect to the first one. */
-export function getRouteMolecule(route: Readonly<Pick<FullSpaRoute, 'paths'>>) {
+export function getRouteMoleculeEntry(route: Readonly<Pick<FullSpaRoute, 'paths'>>) {
     const routeName = route.paths[0] === 'molecule' ? route.paths[1] : undefined;
     return (
-        allMolecules.find((molecule) => molecule.routeName === routeName) ||
-        assertWrap.isDefined(allMolecules[0])
+        allMoleculeEntries.find((entry) => entry.routeName === routeName) ||
+        assertWrap.isDefined(allMoleculeEntries[0])
     );
 }
 
 export function createMoleculeRoute(
-    molecule: Readonly<Pick<ReturnType<typeof getRouteMolecule>, 'routeName'>>,
+    entry: Readonly<Pick<MoleculeEntry, 'routeName'>>,
 ): FrontendRoute {
     return {
         paths: frontendPathTree.paths.children.molecule.children[':molecule-name'].fill(
-            molecule.routeName,
+            entry.routeName,
         ).fullPaths,
         search: undefined,
         hash: undefined,
     };
 }
 
-export function createFrontendState() {
+export async function createFrontendState() {
+    const localDbClient = await createMoleculesLocalDbClient();
     const router: FrontendRouter = new SpaRouter({
         sanitizeRoute(rawRoute) {
-            return createMoleculeRoute(getRouteMolecule(rawRoute));
+            return createMoleculeRoute(getRouteMoleculeEntry(rawRoute));
         },
     });
 
@@ -51,6 +53,7 @@ export function createFrontendState() {
         equalityCheck: check.strictEquals,
         defaultValue: {
             router,
+            localDbClient,
             currentRoute: router.readCurrentRoute(),
         },
     });
@@ -65,4 +68,4 @@ export function createFrontendState() {
     return frontendState;
 }
 
-export type FrontendStateObservable = ReturnType<typeof createFrontendState>;
+export type FrontendStateObservable = Awaited<ReturnType<typeof createFrontendState>>;

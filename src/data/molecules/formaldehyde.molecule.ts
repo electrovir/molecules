@@ -1,10 +1,29 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const formaldehyde: Molecule = {
+const formaldehyde: Molecule = {
     name: 'Formaldehyde',
     description:
         'A carbon atom double-bonded to an oxygen and holding two hydrogens, all flat. It is used to preserve specimens and to make resins and glues.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Gas,
+        meltingPointCelsius: -92,
+        boilingPointCelsius: -19.1,
+        waterSolubilityGramsPerLiter: 400,
+        logP: 0.35,
+        dipoleMomentDebye: 2.33,
+        oralRatLethalDoseMilligramsPerKilogram: 800,
+        hazardPictograms: [
+            GhsPictogram.Corrosive,
+            GhsPictogram.AcuteToxicity,
+            GhsPictogram.Irritant,
+            GhsPictogram.HealthHazard,
+        ],
+        yearDiscovered: 1859,
+        smell: 'pungent, suffocating',
+        habitat: 'Human blood, most living cells, and air from methane oxidation',
+        evolvesInto: ['formic-acid'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -63,3 +82,5 @@ export const formaldehyde: Molecule = {
         },
     ],
 };
+
+export default formaldehyde;

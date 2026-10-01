@@ -1,6 +1,6 @@
 // cspell:words raycaster ångströms wavenumber occluder occluders pmrem
 import {assertWrap, check} from '@augment-vir/assert';
-import {createArray, ensureArray} from '@augment-vir/common';
+import {createArray, ensureArray, getOrSet} from '@augment-vir/common';
 import {
     AmbientLight,
     BackSide,
@@ -9,7 +9,6 @@ import {
     Color,
     CylinderGeometry,
     DirectionalLight,
-    DoubleSide,
     Euler,
     Group,
     Matrix4,
@@ -26,6 +25,7 @@ import {
     Scene,
     ShadowMaterial,
     SphereGeometry,
+    TOUCH,
     Vector2,
     Vector3,
     WebGLRenderer,
@@ -38,8 +38,15 @@ import {
     type Molecule,
     type MoleculeBond,
 } from '../../data/molecule.js';
-import {addContactShading, contactReach, type Occluder} from './contact-shading.js';
+import {
+    addContactShading,
+    contactReach,
+    createContactShadingData,
+    type Occluder,
+} from './contact-shading.js';
 import {addGlassShell, addMarbleGlow, addSelfReflections, createSelfReflections} from './marble.js';
+import {type MoleculeSelection, MoleculeSelectionType} from './molecule-selection.js';
+import {createRenderQualityScaler, RenderEffect, type RenderQuality} from './render-quality.js';
 import {addFullyShadowedShine} from './shadowed-shine.js';
 import {addSurfaceNoise, SurfaceNoiseSpace} from './surface-noise.js';
 import {surfaceTexture} from './surface-texture.js';
@@ -55,17 +62,29 @@ const bondRadius = 0.1;
 const multipleBondRadius = 0.06;
 const multipleBondSpacing = 0.2;
 const bondColor = 0xb3_b3_b3;
+/**
+ * Enough that a sphere's outline stays smooth when zoomed all the way in. Every vertex is processed
+ * again for each shadow and glass pass, so more is a real cost on tablets.
+ */
+const sphereSegments = {
+    around: 48,
+    vertical: 32,
+};
+const stickRadialSegments = 24;
 /** PubChem has no color or van der Waals radius for the superheavy elements (Fm and beyond). */
 const fallbackAtomColor = 0xff_14_93;
 const fallbackVanDerWaalsRadius = 2;
 /** Extra room around the molecule when zooming the camera to fit it. */
 const fitDistanceMargin = 1.2;
+/** When the viewer's shorter side is below this many CSS pixels, the camera starts farther out. */
+const smallScreenPixels = 600;
+const smallScreenFitDistanceMargin = 1.3;
 /** How far the camera looks down at the molecule, so the ground and its shadow aren't seen edge-on. */
 const cameraElevationRadians = (25 * Math.PI) / 180;
 /**
- * The first molecule's starting turn, kept across molecule changes: its +X end raised a little and swung toward the camera, then its
- * top tipped away from the camera, so a molecule laid out flat is seen at an angle instead of
- * side-on.
+ * The first molecule's starting turn, kept across molecule changes: its +X end raised a little and
+ * swung toward the camera, then its top tipped away from the camera, so a molecule laid out flat is
+ * seen at an angle instead of side-on.
  */
 const startingOrientation = new Quaternion().setFromEuler(
     new Euler((-15 * Math.PI) / 180, (-20 * Math.PI) / 180, (10 * Math.PI) / 180),
@@ -106,7 +125,7 @@ const highlightGlowReferenceLuminance = 0.28;
 /** Keeps very dark colors from getting an extreme boost. */
 const highlightGlowMaxBoost = 3;
 /** Pointer travel, in pixels, beyond which a press counts as an orbit drag instead of a click. */
-const clickMoveTolerance = 4;
+const clickMoveTolerance = 12;
 /** The idle turntable spin around the vertical axis. */
 const autoSpinRadiansPerSecond = 0.3;
 /** Releasing a drag while moving at least this fast flings the molecule back into spinning. */
@@ -119,21 +138,8 @@ const flingMaxPauseMilliseconds = 80;
  * harder and slow ones coast, without the gap between them being extreme.
  */
 const flingSlowdown = 1.35;
-
-export enum MoleculeSelectionType {
-    Atom = 'atom',
-    Bond = 'bond',
-}
-
-export type MoleculeSelection =
-    | {
-          type: MoleculeSelectionType.Atom;
-          atomIndex: number;
-      }
-    | {
-          type: MoleculeSelectionType.Bond;
-          bondIndex: number;
-      };
+/** After this long without touching the molecule, it starts spinning again. */
+const idleSpinResumeMilliseconds = 5000;
 
 function toVector3({x, y, z}: Readonly<Coordinates>) {
     return new Vector3(x, y, z);
@@ -176,6 +182,16 @@ type BondSticks = {
     sticks: Mesh<BufferGeometry, MeshStandardMaterial>[];
 };
 
+/** Where the molecule's parts are in world space this frame. */
+type PartPositions = {
+    atomCenters: Vector3[];
+    /** Indexed by bond, then by stick within the bond. */
+    stickEnds: {
+        start: Vector3;
+        end: Vector3;
+    }[][];
+};
+
 type MoleculeModel = {
     molecule: Readonly<Molecule>;
     group: Group;
@@ -183,10 +199,13 @@ type MoleculeModel = {
     atomMeshes: Mesh<BufferGeometry, MeshStandardMaterial>[];
     atomCores: Mesh<BufferGeometry, MeshStandardMaterial>[];
     bondSticks: BondSticks[];
-    /** Each one moves a mesh's contact shading to where its occluders are now. */
-    contactShadingUpdates: (() => void)[];
-    /** Moves the reflections of the molecule in itself to where its parts are now. */
-    updateSelfReflections: () => void;
+    /**
+     * Moves contact shading and reflections of the molecule in itself to where its parts are now.
+     * World matrices must be up to date first.
+     */
+    updateShading: () => void;
+    setDisabledEffects: (disabledEffects: ReadonlyArray<RenderEffect>) => void;
+    dispose: () => void;
 };
 
 /**
@@ -318,10 +337,20 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
 
     const coreRadii = atomRadii.map((radius) => radius * atomCoreFraction);
 
+    /** Atoms of the same element share one geometry, as do sticks of the same radius. */
+    const sphereGeometries: Record<number, SphereGeometry> = {};
+    const stickGeometries: Record<number, CylinderGeometry> = {};
+
+    function getSphereGeometry(radius: number) {
+        return getOrSet(sphereGeometries, radius, () => {
+            return new SphereGeometry(radius, sphereSegments.around, sphereSegments.vertical);
+        });
+    }
+
     const atomParts = molecule.atoms.map((atom, atomIndex) => {
         const info: Readonly<ChemicalElement> = chemicalElements[atom.element];
         const mesh = new Mesh(
-            new SphereGeometry(assertWrap.isDefined(atomRadii[atomIndex]), 96, 64),
+            getSphereGeometry(assertWrap.isDefined(atomRadii[atomIndex])),
             new MeshPhysicalMaterial({
                 color: info.color ?? fallbackAtomColor,
                 /** How blurry the frosted glass makes what's behind it. */
@@ -344,7 +373,7 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
             material: mesh.material,
         });
         const core = new Mesh(
-            new SphereGeometry(assertWrap.isDefined(coreRadii[atomIndex]), 96, 64),
+            getSphereGeometry(assertWrap.isDefined(coreRadii[atomIndex])),
             new MeshStandardMaterial({
                 color: info.color ?? fallbackAtomColor,
                 roughness: 0.5,
@@ -394,8 +423,14 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
             return (stickIndex - (bond.order - 1) / 2) * multipleBondSpacing;
         }).map((offset) => {
             const mesh = new Mesh(
-                /** Open ended and double sided, so sticks are hollow like straws. */
-                new CylinderGeometry(radius, radius, 1, 64, 1, true),
+                /**
+                 * Open ended and single sided, since both ends sit inside atom cores. Double sided
+                 * transmission makes three.js draw every stick again each frame for what shows
+                 * through glass.
+                 */
+                getOrSet(stickGeometries, radius, () => {
+                    return new CylinderGeometry(radius, radius, 1, stickRadialSegments, 1, true);
+                }),
                 new MeshPhysicalMaterial({
                     color: bondColor,
                     roughness: 0.6,
@@ -403,12 +438,11 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
                     bumpMap: surfaceTexture,
                     /** Fainter than on atoms, since a stick's grain shows more along its length. */
                     bumpScale: surfaceBumpScale / 2,
-                    side: DoubleSide,
                     /**
                      * Transmission rather than `transparent`, since three.js leaves `transparent`
                      * objects out of what the glass atom shells show through them.
                      */
-                    transmission: 0.35,
+                    transmission: 0.15,
                 }),
             );
             addSurfaceNoise({
@@ -477,11 +511,13 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
     function getAtomOccluder({
         atomIndex,
         radii,
+        positions,
     }: Readonly<{
         atomIndex: number;
         radii: ReadonlyArray<number>;
+        positions: Readonly<PartPositions>;
     }>): Occluder {
-        const center = assertWrap.isDefined(atomMeshes[atomIndex]).getWorldPosition(new Vector3());
+        const center = assertWrap.isDefined(positions.atomCenters[atomIndex]);
         return {
             start: center,
             end: center,
@@ -489,6 +525,9 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
         };
     }
 
+    const contactShadingData = createContactShadingData({
+        materialCount: atomMeshes.length + atomCores.length + allSticks.length,
+    });
     /** Shells and cores both get contact shading, since bonds pass through each one's surface. */
     const atomContactShadingUpdates = [
         {
@@ -503,6 +542,7 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
         return meshes.map((mesh, atomIndex) => {
             const setOccluders = addContactShading({
                 material: mesh.material,
+                contactShadingData,
                 darkestBrightness: 0.75,
             });
             const atomPosition = toVector3(
@@ -521,30 +561,38 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
                                 contactReach
                     );
                 });
-            const touchingBondSticks = bondSticks.filter(({bond}) => {
-                return bond.atomIndexes.includes(atomIndex);
-            });
+            const touchingBondIndexes = molecule.bonds
+                .map((bond, bondIndex) => bondIndex)
+                .filter((bondIndex) => {
+                    return assertWrap
+                        .isDefined(molecule.bonds[bondIndex])
+                        .atomIndexes.includes(atomIndex);
+                });
 
-            return () => {
+            return (positions: Readonly<PartPositions>) => {
                 setOccluders([
                     ...touchingAtomIndexes.map((otherIndex) => {
                         return getAtomOccluder({
                             atomIndex: otherIndex,
                             radii,
+                            positions,
                         });
                     }),
-                    ...touchingBondSticks.flatMap(({bond, sticks}) => {
-                        return sticks.map((stick): Occluder => {
-                            return {
-                                /** Sticks are 1 unit tall, centered on their origin. */
-                                start: stick.localToWorld(new Vector3(0, -0.5, 0)),
-                                end: stick.localToWorld(new Vector3(0, 0.5, 0)),
-                                radius:
-                                    bond.order === BondOrder.Single
-                                        ? bondRadius
-                                        : multipleBondRadius,
-                            };
-                        });
+                    ...touchingBondIndexes.flatMap((bondIndex) => {
+                        const radius =
+                            assertWrap.isDefined(molecule.bonds[bondIndex]).order ===
+                            BondOrder.Single
+                                ? bondRadius
+                                : multipleBondRadius;
+                        return assertWrap
+                            .isDefined(positions.stickEnds[bondIndex])
+                            .map(({start, end}): Occluder => {
+                                return {
+                                    start,
+                                    end,
+                                    radius,
+                                };
+                            });
                     }),
                 ]);
             };
@@ -554,16 +602,18 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
         return sticks.map((stick) => {
             const setOccluders = addContactShading({
                 material: stick.material,
+                contactShadingData,
                 darkestBrightness: 0.7,
                 /** Wider than the default, so the band reads on a stick this thick. */
                 reach: 0.12,
             });
-            return () => {
+            return (positions: Readonly<PartPositions>) => {
                 setOccluders(
                     bond.atomIndexes.map((atomIndex) => {
                         return getAtomOccluder({
                             atomIndex,
                             radii: atomRadii,
+                            positions,
                         });
                     }),
                 );
@@ -579,27 +629,73 @@ function createMoleculeModel(molecule: Readonly<Molecule>): MoleculeModel {
         addFullyShadowedShine(mesh.material);
     });
 
+    const transmissionMaterials = [
+        ...atomMeshes,
+        ...allSticks.map(({stick}) => stick),
+    ]
+        .map((mesh) => mesh.material)
+        .filter((material) => material instanceof MeshPhysicalMaterial)
+        .map((material) => {
+            return {
+                material,
+                transmission: material.transmission,
+            };
+        });
+
     return {
         molecule,
         group,
         atomMeshes,
         atomCores,
         bondSticks,
-        contactShadingUpdates: [
-            ...atomContactShadingUpdates,
-            ...stickContactShadingUpdates,
-        ],
-        updateSelfReflections() {
-            selfReflections.update({
-                sphereCenters: atomMeshes.map((mesh) => mesh.getWorldPosition(new Vector3())),
-                cylinderEnds: allSticks.map(({stick}) => {
-                    return {
-                        /** Sticks are 1 unit tall, centered on their origin. */
-                        start: stick.localToWorld(new Vector3(0, -0.5, 0)),
-                        end: stick.localToWorld(new Vector3(0, 0.5, 0)),
-                    };
-                }),
+        setDisabledEffects(disabledEffects) {
+            const isSelfReflectionsEnabled = !disabledEffects.includes(
+                RenderEffect.SelfReflections,
+            );
+            if (isSelfReflectionsEnabled !== selfReflections.isEnabled()) {
+                selfReflections.setEnabled(isSelfReflectionsEnabled);
+                atomMeshes.forEach((mesh) => {
+                    mesh.material.needsUpdate = true;
+                });
+            }
+            const isTransmissionEnabled = !disabledEffects.includes(RenderEffect.Transmission);
+            transmissionMaterials.forEach(({material, transmission}) => {
+                material.transmission = isTransmissionEnabled ? transmission : 0;
             });
+        },
+        dispose() {
+            disposeGroup(group);
+            selfReflections.dispose();
+            contactShadingData.dispose();
+        },
+        updateShading() {
+            const positions: PartPositions = {
+                atomCenters: atomMeshes.map((mesh) => {
+                    return new Vector3().setFromMatrixPosition(mesh.matrixWorld);
+                }),
+                stickEnds: bondSticks.map(({sticks}) => {
+                    return sticks.map((stick) => {
+                        return {
+                            /** Sticks are 1 unit tall, centered on their origin. */
+                            start: new Vector3(0, -0.5, 0).applyMatrix4(stick.matrixWorld),
+                            end: new Vector3(0, 0.5, 0).applyMatrix4(stick.matrixWorld),
+                        };
+                    });
+                }),
+            };
+            atomContactShadingUpdates.forEach((updateContactShading) => {
+                updateContactShading(positions);
+            });
+            stickContactShadingUpdates.forEach((updateContactShading) => {
+                updateContactShading(positions);
+            });
+            contactShadingData.upload();
+            if (selfReflections.isEnabled()) {
+                selfReflections.update({
+                    sphereCenters: positions.atomCenters,
+                    cylinderEnds: positions.stickEnds.flat(),
+                });
+            }
         },
     };
 }
@@ -702,12 +798,18 @@ export function createMoleculeScene() {
         antialias: true,
         alpha: true,
     });
-    renderer.setPixelRatio(globalThis.devicePixelRatio);
     renderer.shadowMap.enabled = true;
+    /**
+     * What shows through glass is blurred anyway, so on high density screens it's rendered at CSS
+     * pixel size, a quarter of the pixels.
+     */
+    renderer.transmissionResolutionScale = Math.min(1, 1 / globalThis.devicePixelRatio);
 
     const scene = new Scene();
+    /** The animation loop updates world matrices itself before contact shading reads them. */
+    scene.matrixWorldAutoUpdate = false;
     scene.add(new AmbientLight(0xff_ff_ff, 0.6));
-    const camera = new PerspectiveCamera(45, 1, 0.01, 100);
+    const camera = new PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, Math.sin(cameraElevationRadians), Math.cos(cameraElevationRadians));
     scene.add(camera);
 
@@ -749,6 +851,23 @@ export function createMoleculeScene() {
     const turntable = new Group();
     turntable.quaternion.copy(startingOrientation);
     scene.add(turntable);
+    /**
+     * The turn is rebuilt from these two angles instead of stacking each drag step onto the last,
+     * so dragging in a circle lands back on the same orientation.
+     */
+    const turn = {
+        yawRadians: 0,
+        pitchRadians: 0,
+    };
+
+    function applyTurn() {
+        turntable.quaternion
+            .copy(startingOrientation)
+            .premultiply(new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), turn.yawRadians))
+            .premultiply(
+                new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), turn.pitchRadians),
+            );
+    }
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = false;
@@ -757,19 +876,64 @@ export function createMoleculeScene() {
         MIDDLE: MOUSE.PAN,
         RIGHT: null,
     };
-    controls.minDistance = 0.2;
+    /** With rotation disabled, this makes a two-finger touch zoom only, without panning. */
+    controls.touches = {
+        ONE: null,
+        TWO: TOUCH.DOLLY_ROTATE,
+    };
+    controls.minDistance = 2;
 
     const current: {
         model: MoleculeModel | undefined;
         enableVibration: boolean;
         selection: MoleculeSelection | undefined;
         onSelectionChange: ((selection: MoleculeSelection | undefined) => void) | undefined;
+        onRenderQualityChange: ((quality: Readonly<RenderQuality>) => void) | undefined;
+        rightInsetPixels: number;
     } = {
         model: undefined,
         enableVibration: false,
         selection: undefined,
         onSelectionChange: undefined,
+        onRenderQualityChange: undefined,
+        rightInsetPixels: 0,
     };
+
+    /** Capped at half the viewer so the molecule never centers off the left edge. */
+    function getRightInsetPixels(viewerWidth: number) {
+        return Math.min(current.rightInsetPixels, viewerWidth / 2);
+    }
+
+    /**
+     * Renders a slice of a wider view so the molecule's center lands in the middle of the uncovered
+     * area, while drag rotation still spins it in place.
+     */
+    function updateProjection() {
+        const viewerSize = renderer.getSize(new Vector2());
+        if (!viewerSize.x || !viewerSize.y) {
+            return;
+        }
+        const insetPixels = getRightInsetPixels(viewerSize.x);
+        camera.aspect = (viewerSize.x + insetPixels) / viewerSize.y;
+        camera.setViewOffset(
+            viewerSize.x + insetPixels,
+            viewerSize.y,
+            insetPixels,
+            0,
+            viewerSize.x,
+            viewerSize.y,
+        );
+    }
+
+    const qualityScaler = createRenderQualityScaler({
+        applyQuality({resolutionScale, disabledEffects}) {
+            renderer.setPixelRatio(globalThis.devicePixelRatio * resolutionScale);
+            const isShadowsEnabled = !disabledEffects.includes(RenderEffect.Shadows);
+            keyLight.castShadow = isShadowsEnabled;
+            ground.visible = isShadowsEnabled;
+            current.model?.setDisabledEffects(disabledEffects);
+        },
+    });
 
     function select(selection: Readonly<MoleculeSelection> | undefined) {
         if (current.model && current.selection) {
@@ -796,45 +960,96 @@ export function createMoleculeScene() {
         lastPosition: Vector2 | undefined;
         lastMoveMilliseconds: number;
         pixelsPerSecond: Vector2;
+        pointerId: number | undefined;
+        activePointerIds: number[];
+        /**
+         * Set once a second finger touches down, so lifting fingers after a pinch doesn't count as
+         * a click or a fling.
+         */
+        isMultiTouch: boolean;
+        /**
+         * Set once the pointer travels past `clickMoveTolerance`, so the press is no longer a
+         * click.
+         */
+        isOrbiting: boolean;
     } = {
         lastPosition: undefined,
         lastMoveMilliseconds: 0,
         pixelsPerSecond: new Vector2(),
+        pointerId: undefined,
+        activePointerIds: [],
+        isMultiTouch: false,
+        isOrbiting: false,
     };
     /** Undefined while the user holds the molecule still after grabbing it. */
     const spin: {
         radiansPerSecond: number | undefined;
+        lastTouchMilliseconds: number;
     } = {
         radiansPerSecond: autoSpinRadiansPerSecond,
+        lastTouchMilliseconds: 0,
     };
 
+    function releasePointer(pointerId: number) {
+        drag.activePointerIds = drag.activePointerIds.filter((id) => id !== pointerId);
+        if (pointerId === drag.pointerId) {
+            drag.lastPosition = undefined;
+            drag.pointerId = undefined;
+        }
+        if (!drag.activePointerIds.length) {
+            drag.isMultiTouch = false;
+        }
+    }
+
+    renderer.domElement.addEventListener('wheel', () => {
+        spin.lastTouchMilliseconds = performance.now();
+    });
     renderer.domElement.addEventListener('pointerdown', (event) => {
+        spin.lastTouchMilliseconds = performance.now();
+        drag.activePointerIds = [
+            ...drag.activePointerIds,
+            event.pointerId,
+        ];
+        if (drag.activePointerIds.length > 1) {
+            /** A second finger means a pinch zoom, which `OrbitControls` handles. */
+            drag.isMultiTouch = true;
+            drag.lastPosition = undefined;
+            drag.pointerId = undefined;
+            return;
+        }
         pointerDownPosition.set(event.clientX, event.clientY);
         if (event.button === 0) {
+            drag.pointerId = event.pointerId;
             drag.lastPosition = new Vector2(event.clientX, event.clientY);
             drag.lastMoveMilliseconds = event.timeStamp;
             drag.pixelsPerSecond.set(0, 0);
+            drag.isOrbiting = false;
         }
     });
     renderer.domElement.addEventListener('pointermove', (event) => {
-        if (!drag.lastPosition) {
+        if (!drag.lastPosition || event.pointerId !== drag.pointerId) {
+            return;
+        } else if (
+            !drag.isOrbiting &&
+            pointerDownPosition.distanceTo(new Vector2(event.clientX, event.clientY)) <=
+                clickMoveTolerance
+        ) {
             return;
         }
+        drag.isOrbiting = true;
         /** Same speed as `OrbitControls`: dragging the canvas's full height turns a full circle. */
         const radiansPerPixel = (2 * Math.PI) / renderer.domElement.clientHeight;
-        turntable.quaternion
-            .premultiply(
-                new Quaternion().setFromAxisAngle(
-                    new Vector3(0, 1, 0),
-                    (event.clientX - drag.lastPosition.x) * radiansPerPixel,
-                ),
-            )
-            .premultiply(
-                new Quaternion().setFromAxisAngle(
-                    new Vector3(1, 0, 0),
-                    (event.clientY - drag.lastPosition.y) * radiansPerPixel,
-                ),
-            );
+        turn.yawRadians += (event.clientX - drag.lastPosition.x) * radiansPerPixel;
+        /** Past straight up or down, horizontal drags would turn the molecule backward. */
+        turn.pitchRadians = Math.min(
+            Math.PI / 2,
+            Math.max(
+                -Math.PI / 2,
+                turn.pitchRadians + (event.clientY - drag.lastPosition.y) * radiansPerPixel,
+            ),
+        );
+        applyTurn();
+        spin.lastTouchMilliseconds = performance.now();
         const elapsedSeconds = (event.timeStamp - drag.lastMoveMilliseconds) / 1000;
         if (elapsedSeconds > 0) {
             drag.pixelsPerSecond.set(
@@ -846,25 +1061,28 @@ export function createMoleculeScene() {
         drag.lastMoveMilliseconds = event.timeStamp;
         spin.radiansPerSecond = undefined;
     });
-    renderer.domElement.addEventListener('pointercancel', () => {
-        drag.lastPosition = undefined;
+    renderer.domElement.addEventListener('pointercancel', (event) => {
+        releasePointer(event.pointerId);
     });
     renderer.domElement.addEventListener('pointerup', (event) => {
+        spin.lastTouchMilliseconds = performance.now();
+        const isDragPointer = event.pointerId === drag.pointerId && !drag.isMultiTouch;
+        const isOrbiting = drag.isOrbiting;
+        const lastPosition = drag.lastPosition;
+        releasePointer(event.pointerId);
+        if (!isDragPointer) {
+            return;
+        }
         if (
-            drag.lastPosition &&
+            lastPosition &&
             event.timeStamp - drag.lastMoveMilliseconds < flingMaxPauseMilliseconds &&
             drag.pixelsPerSecond.length() > flingPixelsPerSecond
         ) {
             spin.radiansPerSecond =
                 (drag.pixelsPerSecond.x * 2 * Math.PI) / renderer.domElement.clientHeight;
         }
-        drag.lastPosition = undefined;
         const model = current.model;
-        if (
-            !model ||
-            pointerDownPosition.distanceTo(new Vector2(event.clientX, event.clientY)) >
-                clickMoveTolerance
-        ) {
+        if (!model || isOrbiting) {
             return;
         }
         const canvasRect = renderer.domElement.getBoundingClientRect();
@@ -885,7 +1103,13 @@ export function createMoleculeScene() {
                 });
             })
             .find(check.isDefined);
-        select(check.deepEquals(hitSelection, current.selection) ? undefined : hitSelection);
+        const newSelection = check.deepEquals(hitSelection, current.selection)
+            ? undefined
+            : hitSelection;
+        if (newSelection) {
+            spin.radiansPerSecond = undefined;
+        }
+        select(newSelection);
     });
 
     const frameClock: {
@@ -898,6 +1122,16 @@ export function createMoleculeScene() {
         const frameSeconds =
             (timeMilliseconds - (frameClock.lastMilliseconds ?? timeMilliseconds)) / 1000;
         frameClock.lastMilliseconds = timeMilliseconds;
+        if (qualityScaler.recordFrame(frameSeconds)) {
+            current.onRenderQualityChange?.(qualityScaler.getQuality());
+        }
+        if (
+            spin.radiansPerSecond == undefined &&
+            !drag.activePointerIds.length &&
+            performance.now() - spin.lastTouchMilliseconds > idleSpinResumeMilliseconds
+        ) {
+            spin.radiansPerSecond = 0;
+        }
         if (spin.radiansPerSecond != undefined) {
             /** A fling keeps its direction as it eases down to the idle speed. */
             const idleRadiansPerSecond =
@@ -906,14 +1140,15 @@ export function createMoleculeScene() {
                 (idleRadiansPerSecond - spin.radiansPerSecond) *
                 Math.min(
                     1,
-                    flingSlowdown * Math.sqrt(Math.abs(spin.radiansPerSecond)) * frameSeconds,
+                    flingSlowdown *
+                        /** The floor lets a spin starting from a standstill ease up to speed. */
+                        Math.sqrt(
+                            Math.max(Math.abs(spin.radiansPerSecond), autoSpinRadiansPerSecond),
+                        ) *
+                        frameSeconds,
                 );
-            turntable.quaternion.premultiply(
-                new Quaternion().setFromAxisAngle(
-                    new Vector3(0, 1, 0),
-                    spin.radiansPerSecond * frameSeconds,
-                ),
-            );
+            turn.yawRadians += spin.radiansPerSecond * frameSeconds;
+            applyTurn();
         }
         controls.update();
         if (current.model) {
@@ -923,11 +1158,10 @@ export function createMoleculeScene() {
                 cameraPosition: current.model.group.worldToLocal(camera.position.clone()),
                 enableVibration: current.enableVibration,
             });
-            current.model.group.updateWorldMatrix(true, true);
-            current.model.contactShadingUpdates.forEach((updateContactShading) => {
-                updateContactShading();
-            });
-            current.model.updateSelfReflections();
+        }
+        scene.updateMatrixWorld();
+        if (current.model) {
+            current.model.updateShading();
             if (current.selection) {
                 pulseHighlight({
                     model: current.model,
@@ -947,6 +1181,13 @@ export function createMoleculeScene() {
         listenToSelection(onSelectionChange: (selection: MoleculeSelection | undefined) => void) {
             current.onSelectionChange = onSelectionChange;
         },
+        /** Only fires for changes the scene makes itself, not for `setRenderQuality`. */
+        listenToRenderQuality(onRenderQualityChange: (quality: Readonly<RenderQuality>) => void) {
+            current.onRenderQualityChange = onRenderQualityChange;
+        },
+        setRenderQuality(quality: Readonly<RenderQuality>) {
+            qualityScaler.setQuality(quality);
+        },
         setMolecule(molecule: Readonly<Molecule>) {
             if (current.model?.molecule === molecule) {
                 return;
@@ -954,14 +1195,30 @@ export function createMoleculeScene() {
             select(undefined);
             if (current.model) {
                 turntable.remove(current.model.group);
-                disposeGroup(current.model.group);
+                current.model.dispose();
             }
             current.model = createMoleculeModel(molecule);
+            current.model.setDisabledEffects(qualityScaler.getQuality().disabledEffects);
             turntable.add(current.model.group);
 
             const moleculeRadius = getMoleculeRadius(current.model.group);
+            const viewerSize = renderer.getSize(new Vector2());
+            const verticalHalfFov = (camera.fov * Math.PI) / 360;
+            /** In a portrait viewer, the sides cut the molecule off before the top and bottom do. */
+            const narrowestHalfFov = Math.min(
+                verticalHalfFov,
+                Math.atan(
+                    (Math.tan(verticalHalfFov) *
+                        (viewerSize.x - getRightInsetPixels(viewerSize.x))) /
+                        viewerSize.y,
+                ),
+            );
             const fitDistance =
-                (moleculeRadius / Math.sin((camera.fov * Math.PI) / 360)) * fitDistanceMargin;
+                (moleculeRadius / Math.sin(narrowestHalfFov)) *
+                fitDistanceMargin *
+                (Math.min(viewerSize.x, viewerSize.y) < smallScreenPixels
+                    ? smallScreenFitDistanceMargin
+                    : 1);
             camera.position.setLength(fitDistance);
             controls.maxDistance = fitDistance * 3;
 
@@ -981,14 +1238,17 @@ export function createMoleculeScene() {
                 return;
             }
             renderer.setSize(width, height, false);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
+            updateProjection();
+        },
+        setRightInset(pixels: number) {
+            current.rightInsetPixels = pixels;
+            updateProjection();
         },
         dispose() {
             renderer.setAnimationLoop(null);
             controls.dispose();
             if (current.model) {
-                disposeGroup(current.model.group);
+                current.model.dispose();
             }
             ground.geometry.dispose();
             ground.material.dispose();
@@ -996,3 +1256,5 @@ export function createMoleculeScene() {
         },
     };
 }
+
+export type MoleculeScene = ReturnType<typeof createMoleculeScene>;

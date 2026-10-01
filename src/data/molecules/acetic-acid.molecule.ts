@@ -1,10 +1,28 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const aceticAcid: Molecule = {
+const aceticAcid: Molecule = {
     name: 'Acetic Acid',
     description:
         'Two carbon atoms, one of them carrying an acid group made of a double-bonded oxygen and an OH. It is what gives vinegar its sour taste and sharp smell.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Liquid,
+        meltingPointCelsius: 16.6,
+        boilingPointCelsius: 117.9,
+        densityGramsPerCubicCentimeter: 1.049,
+        isWaterMiscible: true,
+        logP: -0.17,
+        dipoleMomentDebye: 1.74,
+        oralRatLethalDoseMilligramsPerKilogram: 3530,
+        hazardPictograms: [
+            GhsPictogram.Flammable,
+            GhsPictogram.Corrosive,
+        ],
+        smell: 'pungent, vinegar-like',
+        taste: 'burning',
+        habitat: 'Vinegar, fermented fruit juices, ocean water, and nearly all living cells',
+        evolvesInto: ['formic-acid'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -123,3 +141,5 @@ export const aceticAcid: Molecule = {
         },
     ],
 };
+
+export default aceticAcid;

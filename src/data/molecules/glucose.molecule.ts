@@ -1,10 +1,23 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 
-export const glucose: Molecule = {
+const glucose: Molecule = {
     name: 'Glucose',
     description:
         'A ring of five carbons and one oxygen, with hydroxyl groups sticking out around it. It is the sugar your body burns for energy and the one plants make from sunlight.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Solid,
+        meltingPointCelsius: 146,
+        densityGramsPerCubicCentimeter: 1.54,
+        waterSolubilityGramsPerLiter: 909,
+        logP: -3,
+        oralRatLethalDoseMilligramsPerKilogram: 25_800,
+        hazardPictograms: [],
+        yearDiscovered: 1747,
+        smell: 'odorless',
+        taste: 'sweet',
+        habitat: 'Fruits and plants via photosynthesis; human blood',
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -370,3 +383,5 @@ export const glucose: Molecule = {
         },
     ],
 };
+
+export default glucose;

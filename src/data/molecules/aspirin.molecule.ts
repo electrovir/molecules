@@ -1,10 +1,30 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const aspirin: Molecule = {
+const aspirin: Molecule = {
     name: 'Aspirin',
     description:
         'A benzene ring carrying an acid group and an acetyl group side by side. It relieves pain, fever and inflammation by blocking the enzymes that make pain and inflammation signals in the body.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Solid,
+        meltingPointCelsius: 135,
+        densityGramsPerCubicCentimeter: 1.4,
+        waterSolubilityGramsPerLiter: 3,
+        logP: 1.19,
+        oralRatLethalDoseMilligramsPerKilogram: 200,
+        hazardPictograms: [
+            GhsPictogram.Irritant,
+            GhsPictogram.HealthHazard,
+        ],
+        yearDiscovered: 1853,
+        smell: 'odorless',
+        taste: 'slightly bitter',
+        habitat: 'Made only in labs and factories',
+        evolvesInto: [
+            'salicylic-acid',
+            'acetic-acid',
+        ],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -325,3 +345,5 @@ export const aspirin: Molecule = {
         },
     ],
 };
+
+export default aspirin;

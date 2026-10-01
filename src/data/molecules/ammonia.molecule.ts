@@ -1,10 +1,31 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const ammonia: Molecule = {
+const ammonia: Molecule = {
     name: 'Ammonia',
     description:
         'A nitrogen atom bonded to three hydrogen atoms in a squat pyramid. It is the sharp smell in some cleaning products and the starting point for most fertilizer.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Gas,
+        meltingPointCelsius: -77.7,
+        boilingPointCelsius: -33.3,
+        densityGramsPerCubicCentimeter: 0.00077,
+        waterSolubilityGramsPerLiter: 530,
+        dipoleMomentDebye: 1.47,
+        oralRatLethalDoseMilligramsPerKilogram: 350,
+        hazardPictograms: [
+            GhsPictogram.CompressedGas,
+            GhsPictogram.Corrosive,
+            GhsPictogram.AcuteToxicity,
+            GhsPictogram.Irritant,
+            GhsPictogram.EnvironmentalHazard,
+        ],
+        yearDiscovered: 1756,
+        smell: 'pungent, suffocating',
+        habitat:
+            'Animal waste, decaying matter, the atmosphere, giant planets, and interstellar space',
+        evolvesInto: ['urea'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.N,
@@ -63,3 +84,5 @@ export const ammonia: Molecule = {
         },
     ],
 };
+
+export default ammonia;

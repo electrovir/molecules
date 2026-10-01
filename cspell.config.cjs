@@ -8,6 +8,7 @@ module.exports = {
     words: [
         ...baseConfig.words,
         'ångströms',
+        'debye',
         'raycaster',
         'waals',
     ],

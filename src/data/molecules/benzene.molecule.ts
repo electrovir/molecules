@@ -1,6 +1,6 @@
 import {createArray} from '@augment-vir/common';
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
 const carbonRingRadius = 1.39;
 const hydrogenRingRadius = carbonRingRadius + 1.09;
@@ -15,10 +15,28 @@ function getRingPosition({index, radius}: Readonly<{index: number; radius: numbe
     };
 }
 
-export const benzene: Molecule = {
+const benzene: Molecule = {
     name: 'Benzene',
     description:
         'Six carbon atoms in a flat ring, each holding one hydrogen. The ring is drawn with alternating single and double bonds, but in reality its electrons are shared evenly around the whole ring, making it unusually stable.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Liquid,
+        meltingPointCelsius: 5.5,
+        boilingPointCelsius: 80.1,
+        densityGramsPerCubicCentimeter: 0.877,
+        waterSolubilityGramsPerLiter: 1.79,
+        logP: 2.13,
+        dipoleMomentDebye: 0,
+        oralRatLethalDoseMilligramsPerKilogram: 3310,
+        hazardPictograms: [
+            GhsPictogram.Flammable,
+            GhsPictogram.Irritant,
+            GhsPictogram.HealthHazard,
+        ],
+        yearDiscovered: 1825,
+        smell: 'aromatic, gasoline-like',
+        habitat: 'Crude oil, coal, volcanoes, forest fires, and traces in some foods',
+    },
     atoms: [
         ...createArray(ringSize, (index) => {
             return {
@@ -66,3 +84,5 @@ export const benzene: Molecule = {
         }),
     ],
 };
+
+export default benzene;

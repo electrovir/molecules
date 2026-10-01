@@ -1,10 +1,30 @@
+// cspell:words guarana
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const caffeine: Molecule = {
+const caffeine: Molecule = {
     name: 'Caffeine',
     description:
         'Two fused rings of carbon and nitrogen, trimmed with oxygen atoms and methyl groups. It keeps you alert by blocking adenosine, the molecule that makes you feel sleepy.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Solid,
+        meltingPointCelsius: 236,
+        sublimationPointCelsius: 178,
+        densityGramsPerCubicCentimeter: 1.23,
+        waterSolubilityGramsPerLiter: 21.6,
+        logP: -0.07,
+        dipoleMomentDebye: 3.64,
+        oralRatLethalDoseMilligramsPerKilogram: 192,
+        hazardPictograms: [GhsPictogram.Irritant],
+        yearDiscovered: 1819,
+        smell: 'odorless',
+        taste: 'bitter',
+        habitat: 'Seeds, leaves and nuts of coffee, tea, cacao, kola, mate and guarana plants',
+        evolvesInto: [
+            'theobromine',
+            'theophylline',
+        ],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -377,3 +397,5 @@ export const caffeine: Molecule = {
         },
     ],
 };
+
+export default caffeine;

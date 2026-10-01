@@ -1,10 +1,26 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
-import {BondOrder, type Molecule} from '../molecule.js';
+import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 
-export const acetylene: Molecule = {
+const acetylene: Molecule = {
     name: 'Acetylene',
     description:
         'Two carbon atoms joined by a triple bond, with a hydrogen on each end, all in a straight line. It burns hot enough to cut and weld steel.',
+    stats: {
+        stateAtRoomTemperature: MatterState.Gas,
+        sublimationPointCelsius: -84,
+        densityGramsPerCubicCentimeter: 0.00118,
+        waterSolubilityGramsPerLiter: 1.2,
+        logP: 0.37,
+        dipoleMomentDebye: 0,
+        hazardPictograms: [
+            GhsPictogram.Flammable,
+            GhsPictogram.CompressedGas,
+        ],
+        yearDiscovered: 1836,
+        smell: 'faint, ethereal',
+        habitat: 'Wood smoke, bacteria that feed on it, and Titan',
+        evolvesInto: ['acetaldehyde'],
+    },
     atoms: [
         {
             element: ChemicalElementSymbol.C,
@@ -63,3 +79,5 @@ export const acetylene: Molecule = {
         },
     ],
 };
+
+export default acetylene;

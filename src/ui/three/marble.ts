@@ -1,5 +1,13 @@
-import {createArray} from '@augment-vir/common';
-import {type Color, type MeshStandardMaterial, ShaderChunk, Vector3, Vector4} from 'three';
+// cspell:words highp
+import {
+    type Color,
+    DataTexture,
+    FloatType,
+    type MeshStandardMaterial,
+    RGBAFormat,
+    ShaderChunk,
+    type Vector3,
+} from 'three';
 import {replaceOrThrow} from './shadowed-shine.js';
 
 /** Brightness of the spot on the far side from a light, where a glass ball focuses it. */
@@ -15,9 +23,23 @@ const innerGlowStrength = 0.1;
 const headOnReflectance = 0.1;
 /** Dims every reflection of the molecule in itself, so they hint rather than distract. */
 const selfReflectionStrength = 0.4;
-/** The shader loops over fixed-size uniform arrays, so shapes past these counts aren't reflected. */
+/** Every glass pixel checks each reflected shape, so shapes past these counts aren't reflected. */
 const maxReflectedSpheres = 32;
 const maxReflectedCylinders = 40;
+/**
+ * Rows of the texture holding the reflected shapes, one shape per column. A texture instead of
+ * uniform arrays, because three.js re-uploads uniform arrays for every mesh drawn, while a texture
+ * uploads once per frame.
+ */
+enum ReflectionRow {
+    SphereCenterAndRadius,
+    SphereColor,
+    CylinderStartAndRadius,
+    CylinderEnd,
+    CylinderColor,
+}
+const reflectionRowCount = Object.keys(ReflectionRow).length / 2;
+const reflectionColumnCount = Math.max(maxReflectedSpheres, maxReflectedCylinders);
 
 /**
  * Makes a material look like colored glass that light passes through: a bright spot on the side
@@ -125,34 +147,68 @@ export function createSelfReflections({
 }>) {
     const usedSpheres = spheres.slice(0, maxReflectedSpheres);
     const usedCylinders = cylinders.slice(0, maxReflectedCylinders);
+    const state = {
+        isEnabled: true,
+    };
+    const data = new Float32Array(reflectionColumnCount * reflectionRowCount * 4);
+
+    function setTexel({
+        row,
+        column,
+        values,
+    }: Readonly<{row: ReflectionRow; column: number; values: ReadonlyArray<number>}>) {
+        data.set(values, (row * reflectionColumnCount + column) * 4);
+    }
+
+    usedSpheres.forEach(({color, radius}, index) => {
+        setTexel({
+            row: ReflectionRow.SphereCenterAndRadius,
+            column: index,
+            values: [
+                0,
+                0,
+                0,
+                radius,
+            ],
+        });
+        setTexel({
+            row: ReflectionRow.SphereColor,
+            column: index,
+            values: color.toArray(),
+        });
+    });
+    usedCylinders.forEach(({color, radius}, index) => {
+        setTexel({
+            row: ReflectionRow.CylinderStartAndRadius,
+            column: index,
+            values: [
+                0,
+                0,
+                0,
+                radius,
+            ],
+        });
+        setTexel({
+            row: ReflectionRow.CylinderColor,
+            column: index,
+            values: color.toArray(),
+        });
+    });
+    const texture = new DataTexture(
+        data,
+        reflectionColumnCount,
+        reflectionRowCount,
+        RGBAFormat,
+        FloatType,
+    );
+    texture.needsUpdate = true;
+
     const uniforms = {
-        /** Each sphere's center, with its radius in `w`. */
-        reflectedSpheres: {
-            value: createArray(maxReflectedSpheres, (index) => {
-                return new Vector4(0, 0, 0, usedSpheres[index]?.radius ?? 0);
-            }),
-        },
-        reflectedSphereColors: {
-            value: createArray(maxReflectedSpheres, (index) => {
-                return usedSpheres[index]?.color.clone() ?? new Vector3();
-            }),
+        reflectionData: {
+            value: texture,
         },
         reflectedSphereCount: {
             value: usedSpheres.length,
-        },
-        /** Each cylinder's start, with its radius in `w`. */
-        reflectedCylinderStarts: {
-            value: createArray(maxReflectedCylinders, (index) => {
-                return new Vector4(0, 0, 0, usedCylinders[index]?.radius ?? 0);
-            }),
-        },
-        reflectedCylinderEnds: {
-            value: createArray(maxReflectedCylinders, () => new Vector3()),
-        },
-        reflectedCylinderColors: {
-            value: createArray(maxReflectedCylinders, (index) => {
-                return usedCylinders[index]?.color.clone() ?? new Vector3();
-            }),
         },
         reflectedCylinderCount: {
             value: usedCylinders.length,
@@ -170,18 +226,39 @@ export function createSelfReflections({
             cylinderEnds: ReadonlyArray<Readonly<{start: Vector3; end: Vector3}>>;
         }>) {
             sphereCenters.slice(0, maxReflectedSpheres).forEach((center, index) => {
-                uniforms.reflectedSpheres.value[index]
-                    ?.setX(center.x)
-                    .setY(center.y)
-                    .setZ(center.z);
+                setTexel({
+                    row: ReflectionRow.SphereCenterAndRadius,
+                    column: index,
+                    values: center.toArray(),
+                });
             });
             cylinderEnds.slice(0, maxReflectedCylinders).forEach(({start, end}, index) => {
-                uniforms.reflectedCylinderStarts.value[index]
-                    ?.setX(start.x)
-                    .setY(start.y)
-                    .setZ(start.z);
-                uniforms.reflectedCylinderEnds.value[index]?.copy(end);
+                setTexel({
+                    row: ReflectionRow.CylinderStartAndRadius,
+                    column: index,
+                    values: start.toArray(),
+                });
+                setTexel({
+                    row: ReflectionRow.CylinderEnd,
+                    column: index,
+                    values: end.toArray(),
+                });
             });
+            texture.needsUpdate = true;
+        },
+        dispose() {
+            texture.dispose();
+        },
+        isEnabled() {
+            return state.isEnabled;
+        },
+        /**
+         * Turning reflections off compiles them out of the shader, which also stops three.js from
+         * uploading their uniform arrays for every mesh. The materials using them need
+         * `needsUpdate` set afterward.
+         */
+        setEnabled(isEnabled: boolean) {
+            state.isEnabled = isEnabled;
         },
     };
 }
@@ -200,7 +277,7 @@ export function addSelfReflections({
     selfCylinderIndex = -1,
 }: Readonly<{
     material: MeshStandardMaterial;
-    reflections: Readonly<Pick<ReturnType<typeof createSelfReflections>, 'uniforms'>>;
+    reflections: Readonly<Pick<ReturnType<typeof createSelfReflections>, 'uniforms' | 'isEnabled'>>;
 }> &
     Readonly<
         Partial<{
@@ -214,6 +291,9 @@ export function addSelfReflections({
 
     material.onBeforeCompile = (shader, renderer) => {
         previousOnBeforeCompile(shader, renderer);
+        if (!reflections.isEnabled()) {
+            return;
+        }
         Object.assign(shader.uniforms, reflections.uniforms, {
             selfSphereIndex: {
                 value: selfSphereIndex,
@@ -235,13 +315,13 @@ export function addSelfReflections({
             .replace(
                 '#include <common>',
                 `#include <common>
-                uniform vec4 reflectedSpheres[${maxReflectedSpheres}];
-                uniform vec3 reflectedSphereColors[${maxReflectedSpheres}];
+                uniform highp sampler2D reflectionData;
                 uniform int reflectedSphereCount;
-                uniform vec4 reflectedCylinderStarts[${maxReflectedCylinders}];
-                uniform vec3 reflectedCylinderEnds[${maxReflectedCylinders}];
-                uniform vec3 reflectedCylinderColors[${maxReflectedCylinders}];
                 uniform int reflectedCylinderCount;
+
+                vec4 readReflectionData(int row, int column) {
+                    return texelFetch(reflectionData, ivec2(column, row), 0);
+                }
                 uniform int selfSphereIndex;
                 uniform int selfCylinderIndex;
                 varying vec3 vReflectionWorldPosition;
@@ -274,8 +354,9 @@ export function addSelfReflections({
                         if (index == selfSphereIndex) {
                             continue;
                         }
-                        float radius = reflectedSpheres[index].w;
-                        vec3 offset = vReflectionWorldPosition - reflectedSpheres[index].xyz;
+                        vec4 sphere = readReflectionData(${ReflectionRow.SphereCenterAndRadius}, index);
+                        float radius = sphere.w;
+                        vec3 offset = vReflectionWorldPosition - sphere.xyz;
                         float along = dot(offset, rayDirection);
                         float discriminant = along * along - (dot(offset, offset) - radius * radius);
                         if (discriminant <= 0.0) {
@@ -287,7 +368,7 @@ export function addSelfReflections({
                             /** Fades the outline so the reflected ball doesn't have a jagged edge. */
                             hitCoverage = smoothstep(0.0, 0.1, discriminant / (radius * radius));
                             hitColor = shadeReflectedSurface(
-                                reflectedSphereColors[index],
+                                readReflectionData(${ReflectionRow.SphereColor}, index).rgb,
                                 normalize(offset + rayDirection * hitDistance),
                                 rayDirection,
                                 lightDirection
@@ -302,9 +383,10 @@ export function addSelfReflections({
                         if (index == selfCylinderIndex) {
                             continue;
                         }
-                        float radius = reflectedCylinderStarts[index].w;
-                        vec3 start = reflectedCylinderStarts[index].xyz;
-                        vec3 axis = reflectedCylinderEnds[index] - start;
+                        vec4 cylinderStart = readReflectionData(${ReflectionRow.CylinderStartAndRadius}, index);
+                        float radius = cylinderStart.w;
+                        vec3 start = cylinderStart.xyz;
+                        vec3 axis = readReflectionData(${ReflectionRow.CylinderEnd}, index).xyz - start;
                         vec3 offset = vReflectionWorldPosition - start;
                         float axisLengthSquared = dot(axis, axis);
                         float axisAlongRay = dot(axis, rayDirection);
@@ -331,7 +413,7 @@ export function addSelfReflections({
                             nearestHit = hitDistance;
                             hitCoverage = 1.0;
                             hitColor = shadeReflectedSurface(
-                                reflectedCylinderColors[index],
+                                readReflectionData(${ReflectionRow.CylinderColor}, index).rgb,
                                 (offset + rayDirection * hitDistance - axis * hitAlongAxis / axisLengthSquared) /
                                     radius,
                                 rayDirection,
@@ -358,6 +440,6 @@ export function addSelfReflections({
      * wrapping this one would hide.
      */
     material.customProgramCacheKey = () => {
-        return `${previousCacheKey()}+self-reflections`;
+        return `${previousCacheKey()}+self-reflections-${reflections.isEnabled()}`;
     };
 }
