@@ -11,5 +11,9 @@ module.exports = {
         'debye',
         'raycaster',
         'waals',
+        'hyperlegible',
+        'occluder',
+        'occluders',
+        'texels',
     ],
 };

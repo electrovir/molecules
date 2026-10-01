@@ -1,0 +1,39 @@
+{
+    "name": "@molecules/frontend",
+    "private": true,
+    "license": "(MIT OR CC0-1.0)",
+    "sideEffects": false,
+    "type": "module",
+    "scripts": {
+        "build": "virmator frontend build",
+        "compile": "virmator compile",
+        "start": "virmator frontend",
+        "test": "virmator test web",
+        "test:coverage": "npm run test coverage",
+        "test:update": "npm test update"
+    },
+    "dependencies": {
+        "@augment-vir/assert": "^32.4.1",
+        "@augment-vir/common": "^32.5.0",
+        "element-vir": "^27.0.2",
+        "local-db-client": "^2.0.1",
+        "object-shape-tester": "^6.15.1",
+        "spa-router-vir": "^6.8.0",
+        "three": "^0.186.1",
+        "vira": "^33.0.0"
+    },
+    "devDependencies": {
+        "@augment-vir/test": "^32.4.1",
+        "@types/three": "^0.186.0",
+        "@web/dev-server-esbuild": "^2.0.0",
+        "@web/test-runner": "^1.0.0",
+        "@web/test-runner-playwright": "^1.0.0",
+        "esbuild": "^0.28.2",
+        "istanbul-smart-text-reporter": "^1.1.5",
+        "typescript": "^6.0.3",
+        "vite": "^8.3.0"
+    },
+    "engines": {
+        "node": ">=22"
+    }
+}

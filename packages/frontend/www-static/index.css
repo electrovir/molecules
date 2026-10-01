@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'Atkinson Hyperlegible Next';
+    src: url('./fonts/atkinson-hyperlegible-next-variable.woff2') format('woff2-variations');
+    font-weight: 200 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Atkinson Hyperlegible Mono';
+    src: url('./fonts/atkinson-hyperlegible-mono-variable.woff2') format('woff2-variations');
+    font-weight: 200 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+html,
+body {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
