@@ -44,6 +44,7 @@ export function createMoleculeRoute(routeName: string): FrontendRoute {
 export async function createFrontendState() {
     const localDbClient = await createMoleculesLocalDbClient();
     const router: FrontendRouter = new SpaRouter({
+        basePath: 'molecules',
         sanitizeRoute(rawRoute) {
             return createMoleculeRoute(
                 assertWrap.isDefined(moleculeRouteNames[getRouteMoleculeIndex(rawRoute)]),
