@@ -5,7 +5,7 @@ export async function createMoleculesLocalDbClient() {
     return await LocalDbClient.createClient(
         {
             /** The last render quality the frame rate settled on, so a reload starts there. */
-            settledRenderQuality: {
+            settledRenderQualityV2: {
                 shape: renderQualityShape,
             },
         },

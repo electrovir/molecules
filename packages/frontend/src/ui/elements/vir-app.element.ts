@@ -271,7 +271,7 @@ export const VirApp = defineElement()({
         return html`
             <${VirMoleculeViewer.assign({
                 molecule,
-                initialRenderQuality: frontendState.value.localDbClient.value.settledRenderQuality,
+                initialRenderQuality: frontendState.value.localDbClient.value.settledRenderQualityV2,
                 /**
                  * `overlayWidth` is the content width, so this adds the overlay's padding on both
                  * sides, its right margin, and the same gap on its left.
@@ -279,7 +279,7 @@ export const VirApp = defineElement()({
                 rightInsetPixels: state.overlayWidth && state.overlayWidth + 64,
             })}
                 ${listen(VirMoleculeViewer.events.renderQualityChange, (event) => {
-                    void frontendState.value.localDbClient.set.settledRenderQuality(event.detail);
+                    void frontendState.value.localDbClient.set.settledRenderQualityV2(event.detail);
                 })}
             ></${VirMoleculeViewer}>
             ${globalThis.document.fullscreenEnabled
