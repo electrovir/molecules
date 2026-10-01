@@ -1,14 +1,5 @@
 // cspell:words highp
-import {
-    type Color,
-    DataTexture,
-    FloatType,
-    type MeshStandardMaterial,
-    RGBAFormat,
-    ShaderChunk,
-    type Vector3,
-} from 'three';
-import {replaceOrThrow} from './shadowed-shine.js';
+import {type Color, DataTexture, FloatType, RGBAFormat, type Vector3} from 'three';
 
 /** Brightness of the spot on the far side from a light, where a glass ball focuses it. */
 const focusedSpotStrength = 0.35;
@@ -42,97 +33,38 @@ const reflectionRowCount = Object.keys(ReflectionRow).length / 2;
 const reflectionColumnCount = Math.max(maxReflectedSpheres, maxReflectedCylinders);
 
 /**
- * Makes a material look like colored glass that light passes through: a bright spot on the side
- * facing away from each light, where a glass ball focuses it like a lens, and a faint glow through
- * the middle. Both are the surface color, since the glass tints the light passing through it. Only
- * directional lights pass through.
- *
- * Keeps any `onBeforeCompile` the material already has, so it can be combined with other shader
- * tweaks.
+ * GLSL for colored glass that light passes through: a bright spot on the side facing away from the
+ * light, where a glass ball focuses it like a lens, and a faint glow through the middle. Both are
+ * the surface color, since the glass tints the light passing through it.
  */
-export function addMarbleGlow(material: MeshStandardMaterial) {
-    const previousOnBeforeCompile = material.onBeforeCompile.bind(material);
-    const previousCacheKey = material.customProgramCacheKey.bind(material);
-
-    material.onBeforeCompile = (shader, renderer) => {
-        previousOnBeforeCompile(shader, renderer);
-        shader.fragmentShader = shader.fragmentShader.replace(
-            '#include <lights_fragment_begin>',
-            `#include <lights_fragment_begin>
-            #if NUM_DIR_LIGHTS > 0
-                for (int index = 0; index < NUM_DIR_LIGHTS; index++) {
-                    float focusedSpot = pow(
-                        saturate(dot(geometryNormal, -directionalLights[index].direction)),
-                        ${focusedSpotTightness.toFixed(4)}
-                    );
-                    float innerGlow = saturate(dot(geometryNormal, geometryViewDir));
-                    reflectedLight.directDiffuse +=
-                        directionalLights[index].color *
-                        diffuseColor.rgb *
-                        RECIPROCAL_PI *
-                        (focusedSpot * ${focusedSpotStrength.toFixed(4)} +
-                            innerGlow * innerGlow * ${innerGlowStrength.toFixed(4)});
-                }
-            #endif`,
+export const marbleGlowGlsl = `
+    vec3 getMarbleGlow(
+        vec3 geometryNormal,
+        vec3 viewDirection,
+        vec3 towardLight,
+        vec3 lightColor,
+        vec3 diffuseColor
+    ) {
+        float focusedSpot = pow(
+            saturate(dot(geometryNormal, -towardLight)),
+            ${focusedSpotTightness.toFixed(4)}
         );
-    };
-    /**
-     * Three.js caches compiled shaders by `onBeforeCompile`'s source text, which another tweak
-     * wrapping this one would hide.
-     */
-    material.customProgramCacheKey = () => {
-        return `${previousCacheKey()}+marble-glow`;
-    };
-}
+        float innerGlow = saturate(dot(geometryNormal, viewDirection));
+        return lightColor *
+            diffuseColor *
+            RECIPROCAL_PI *
+            (focusedSpot * ${focusedSpotStrength.toFixed(4)} +
+                innerGlow * innerGlow * ${innerGlowStrength.toFixed(4)});
+    }
 
-/**
- * For a material with `transmission`: its edges are solid instead of see-through, the way a glass
- * ball shows a clear outline. `transmissionRoughness` blurs what shows through by a different
- * amount than the material's `roughness`, which otherwise sets both that blur and how spread out
- * its shine is.
- *
- * Keeps any `onBeforeCompile` the material already has, so it can be combined with other shader
- * tweaks.
- */
-export function addGlassShell({
-    material,
-    transmissionRoughness,
-}: Readonly<{
-    material: MeshStandardMaterial;
-    transmissionRoughness?: number | undefined;
-}>) {
-    const previousOnBeforeCompile = material.onBeforeCompile.bind(material);
-    const previousCacheKey = material.customProgramCacheKey.bind(material);
-
-    material.onBeforeCompile = (shader, renderer) => {
-        previousOnBeforeCompile(shader, renderer);
-        shader.fragmentShader = shader.fragmentShader.replace(
-            '#include <transmission_fragment>',
-            replaceOrThrow({
-                source: replaceOrThrow({
-                    source: ShaderChunk.transmission_fragment,
-                    search: 'vec4 transmitted =',
-                    replacement: `material.transmission *=
-                        1.0 - pow(1.0 - saturate(dot(normal, normalize(vViewPosition))), 3.0);
-                    vec4 transmitted =`,
-                }),
-                search: 'n, v, material.roughness,',
-                replacement: `n, v, ${
-                    transmissionRoughness == undefined
-                        ? 'material.roughness'
-                        : transmissionRoughness.toFixed(4)
-                },`,
-            }),
-        );
-    };
     /**
-     * Three.js caches compiled shaders by `onBeforeCompile`'s source text, which another tweak
-     * wrapping this one would hide.
+     * Scales how see-through glass is, so its edges are solid the way a glass ball shows a clear
+     * outline.
      */
-    material.customProgramCacheKey = () => {
-        return `${previousCacheKey()}+glass-shell-${transmissionRoughness ?? ''}`;
-    };
-}
+    float getGlassEdgeTransmission(vec3 normal, vec3 viewDirection) {
+        return 1.0 - pow(1.0 - saturate(dot(normal, viewDirection)), 3.0);
+    }
+`;
 
 /**
  * The shapes a molecule is made of, so each of its surfaces can reflect the others. Atoms are
@@ -253,8 +185,7 @@ export function createSelfReflections({
             return state.isEnabled;
         },
         /**
-         * Turning reflections off compiles them out of the shader, which also stops three.js from
-         * uploading their uniform arrays for every mesh. The materials using them need
+         * Turning reflections off compiles them out of the shader. The materials using them need
          * `needsUpdate` set afterward.
          */
         setEnabled(isEnabled: boolean) {
@@ -264,182 +195,118 @@ export function createSelfReflections({
 }
 
 /**
- * Reflects the rest of the molecule in a glossy material, stronger toward its edges like real
- * glass. Reflected shapes are lit only by the first directional light.
- *
- * Keeps any `onBeforeCompile` the material already has, so it can be combined with other shader
- * tweaks.
+ * GLSL that reflects the rest of the molecule in a glossy surface, stronger toward its edges like
+ * real glass. Reflected shapes are lit only by the given light. Needs the uniforms from
+ * {@link createSelfReflections}.
  */
-export function addSelfReflections({
-    material,
-    reflections,
-    selfSphereIndex = -1,
-    selfCylinderIndex = -1,
-}: Readonly<{
-    material: MeshStandardMaterial;
-    reflections: Readonly<Pick<ReturnType<typeof createSelfReflections>, 'uniforms' | 'isEnabled'>>;
-}> &
-    Readonly<
-        Partial<{
-            /** Which of the reflected shapes this material is on, so it doesn't reflect itself. */
-            selfSphereIndex: number | undefined;
-            selfCylinderIndex: number | undefined;
-        }>
-    >) {
-    const previousOnBeforeCompile = material.onBeforeCompile.bind(material);
-    const previousCacheKey = material.customProgramCacheKey.bind(material);
+export const selfReflectionsGlsl = `
+    uniform highp sampler2D reflectionData;
+    uniform int reflectedSphereCount;
+    uniform int reflectedCylinderCount;
 
-    material.onBeforeCompile = (shader, renderer) => {
-        previousOnBeforeCompile(shader, renderer);
-        if (!reflections.isEnabled()) {
-            return;
+    vec4 readReflectionData(int row, int column) {
+        return texelFetch(reflectionData, ivec2(column, row), 0);
+    }
+
+    vec3 shadeReflectedSurface(vec3 color, vec3 surfaceNormal, vec3 rayDirection, vec3 towardLight) {
+        float facing = saturate(dot(surfaceNormal, towardLight));
+        float shine = pow(saturate(dot(reflect(-towardLight, surfaceNormal), -rayDirection)), 40.0);
+        return color * (0.25 + 0.75 * facing) + vec3(shine * 0.6);
+    }
+
+    /** \`selfSphereIndex\` is which reflected sphere this surface is on, so it doesn't reflect itself. */
+    vec3 getSelfReflection(
+        vec3 position,
+        vec3 normal,
+        vec3 lookDirection,
+        vec3 towardLight,
+        int selfSphereIndex
+    ) {
+        vec3 rayDirection = reflect(lookDirection, normal);
+        float nearestHit = -1.0;
+        float hitCoverage = 0.0;
+        vec3 hitColor = vec3(0.0);
+
+        for (int index = 0; index < ${maxReflectedSpheres}; index++) {
+            if (index >= reflectedSphereCount) {
+                break;
+            }
+            if (index == selfSphereIndex) {
+                continue;
+            }
+            vec4 sphere = readReflectionData(${ReflectionRow.SphereCenterAndRadius}, index);
+            float radius = sphere.w;
+            vec3 offset = position - sphere.xyz;
+            float along = dot(offset, rayDirection);
+            float discriminant = along * along - (dot(offset, offset) - radius * radius);
+            if (discriminant <= 0.0) {
+                continue;
+            }
+            float hitDistance = -along - sqrt(discriminant);
+            if (hitDistance > 0.0 && (nearestHit < 0.0 || hitDistance < nearestHit)) {
+                nearestHit = hitDistance;
+                /** Fades the outline so the reflected ball doesn't have a jagged edge. */
+                hitCoverage = smoothstep(0.0, 0.1, discriminant / (radius * radius));
+                hitColor = shadeReflectedSurface(
+                    readReflectionData(${ReflectionRow.SphereColor}, index).rgb,
+                    normalize(offset + rayDirection * hitDistance),
+                    rayDirection,
+                    towardLight
+                );
+            }
         }
-        Object.assign(shader.uniforms, reflections.uniforms, {
-            selfSphereIndex: {
-                value: selfSphereIndex,
-            },
-            selfCylinderIndex: {
-                value: selfCylinderIndex,
-            },
-        });
-        shader.vertexShader = shader.vertexShader
-            .replace(
-                '#include <common>',
-                '#include <common>\nvarying vec3 vReflectionWorldPosition;',
-            )
-            .replace(
-                '#include <project_vertex>',
-                '#include <project_vertex>\nvReflectionWorldPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;',
-            );
-        shader.fragmentShader = shader.fragmentShader
-            .replace(
-                '#include <common>',
-                `#include <common>
-                uniform highp sampler2D reflectionData;
-                uniform int reflectedSphereCount;
-                uniform int reflectedCylinderCount;
 
-                vec4 readReflectionData(int row, int column) {
-                    return texelFetch(reflectionData, ivec2(column, row), 0);
-                }
-                uniform int selfSphereIndex;
-                uniform int selfCylinderIndex;
-                varying vec3 vReflectionWorldPosition;
+        for (int index = 0; index < ${maxReflectedCylinders}; index++) {
+            if (index >= reflectedCylinderCount) {
+                break;
+            }
+            vec4 cylinderStart = readReflectionData(${ReflectionRow.CylinderStartAndRadius}, index);
+            float radius = cylinderStart.w;
+            vec3 start = cylinderStart.xyz;
+            vec3 axis = readReflectionData(${ReflectionRow.CylinderEnd}, index).xyz - start;
+            vec3 offset = position - start;
+            float axisLengthSquared = dot(axis, axis);
+            float axisAlongRay = dot(axis, rayDirection);
+            float axisAlongOffset = dot(axis, offset);
+            float quadraticA = axisLengthSquared - axisAlongRay * axisAlongRay;
+            float quadraticB =
+                axisLengthSquared * dot(rayDirection, offset) - axisAlongOffset * axisAlongRay;
+            float quadraticC =
+                axisLengthSquared * dot(offset, offset) -
+                axisAlongOffset * axisAlongOffset -
+                radius * radius * axisLengthSquared;
+            float discriminant = quadraticB * quadraticB - quadraticA * quadraticC;
+            if (discriminant <= 0.0 || quadraticA < 1e-6) {
+                continue;
+            }
+            float hitDistance = (-quadraticB - sqrt(discriminant)) / quadraticA;
+            float hitAlongAxis = axisAlongOffset + hitDistance * axisAlongRay;
+            if (
+                hitDistance > 0.0 &&
+                hitAlongAxis > 0.0 &&
+                hitAlongAxis < axisLengthSquared &&
+                (nearestHit < 0.0 || hitDistance < nearestHit)
+            ) {
+                nearestHit = hitDistance;
+                hitCoverage = 1.0;
+                hitColor = shadeReflectedSurface(
+                    readReflectionData(${ReflectionRow.CylinderColor}, index).rgb,
+                    (offset + rayDirection * hitDistance - axis * hitAlongAxis / axisLengthSquared) /
+                        radius,
+                    rayDirection,
+                    towardLight
+                );
+            }
+        }
 
-                vec3 shadeReflectedSurface(vec3 color, vec3 surfaceNormal, vec3 rayDirection, vec3 lightDirection) {
-                    float facing = saturate(dot(surfaceNormal, lightDirection));
-                    float shine = pow(saturate(dot(reflect(-lightDirection, surfaceNormal), -rayDirection)), 40.0);
-                    return color * (0.25 + 0.75 * facing) + vec3(shine * 0.6);
-                }`,
-            )
-            .replace(
-                '#include <opaque_fragment>',
-                `#if NUM_DIR_LIGHTS > 0
-                {
-                    vec3 worldNormal = inverseTransformDirection(normal, viewMatrix);
-                    vec3 lookDirection = normalize(vReflectionWorldPosition - cameraPosition);
-                    vec3 rayDirection = reflect(lookDirection, worldNormal);
-                    vec3 lightDirection = inverseTransformDirection(
-                        directionalLights[0].direction,
-                        viewMatrix
-                    );
-                    float nearestHit = -1.0;
-                    float hitCoverage = 0.0;
-                    vec3 hitColor = vec3(0.0);
-
-                    for (int index = 0; index < ${maxReflectedSpheres}; index++) {
-                        if (index >= reflectedSphereCount) {
-                            break;
-                        }
-                        if (index == selfSphereIndex) {
-                            continue;
-                        }
-                        vec4 sphere = readReflectionData(${ReflectionRow.SphereCenterAndRadius}, index);
-                        float radius = sphere.w;
-                        vec3 offset = vReflectionWorldPosition - sphere.xyz;
-                        float along = dot(offset, rayDirection);
-                        float discriminant = along * along - (dot(offset, offset) - radius * radius);
-                        if (discriminant <= 0.0) {
-                            continue;
-                        }
-                        float hitDistance = -along - sqrt(discriminant);
-                        if (hitDistance > 0.0 && (nearestHit < 0.0 || hitDistance < nearestHit)) {
-                            nearestHit = hitDistance;
-                            /** Fades the outline so the reflected ball doesn't have a jagged edge. */
-                            hitCoverage = smoothstep(0.0, 0.1, discriminant / (radius * radius));
-                            hitColor = shadeReflectedSurface(
-                                readReflectionData(${ReflectionRow.SphereColor}, index).rgb,
-                                normalize(offset + rayDirection * hitDistance),
-                                rayDirection,
-                                lightDirection
-                            );
-                        }
-                    }
-
-                    for (int index = 0; index < ${maxReflectedCylinders}; index++) {
-                        if (index >= reflectedCylinderCount) {
-                            break;
-                        }
-                        if (index == selfCylinderIndex) {
-                            continue;
-                        }
-                        vec4 cylinderStart = readReflectionData(${ReflectionRow.CylinderStartAndRadius}, index);
-                        float radius = cylinderStart.w;
-                        vec3 start = cylinderStart.xyz;
-                        vec3 axis = readReflectionData(${ReflectionRow.CylinderEnd}, index).xyz - start;
-                        vec3 offset = vReflectionWorldPosition - start;
-                        float axisLengthSquared = dot(axis, axis);
-                        float axisAlongRay = dot(axis, rayDirection);
-                        float axisAlongOffset = dot(axis, offset);
-                        float quadraticA = axisLengthSquared - axisAlongRay * axisAlongRay;
-                        float quadraticB =
-                            axisLengthSquared * dot(rayDirection, offset) - axisAlongOffset * axisAlongRay;
-                        float quadraticC =
-                            axisLengthSquared * dot(offset, offset) -
-                            axisAlongOffset * axisAlongOffset -
-                            radius * radius * axisLengthSquared;
-                        float discriminant = quadraticB * quadraticB - quadraticA * quadraticC;
-                        if (discriminant <= 0.0 || quadraticA < 1e-6) {
-                            continue;
-                        }
-                        float hitDistance = (-quadraticB - sqrt(discriminant)) / quadraticA;
-                        float hitAlongAxis = axisAlongOffset + hitDistance * axisAlongRay;
-                        if (
-                            hitDistance > 0.0 &&
-                            hitAlongAxis > 0.0 &&
-                            hitAlongAxis < axisLengthSquared &&
-                            (nearestHit < 0.0 || hitDistance < nearestHit)
-                        ) {
-                            nearestHit = hitDistance;
-                            hitCoverage = 1.0;
-                            hitColor = shadeReflectedSurface(
-                                readReflectionData(${ReflectionRow.CylinderColor}, index).rgb,
-                                (offset + rayDirection * hitDistance - axis * hitAlongAxis / axisLengthSquared) /
-                                    radius,
-                                rayDirection,
-                                lightDirection
-                            );
-                        }
-                    }
-
-                    if (nearestHit > 0.0) {
-                        float reflectance = mix(
-                            ${headOnReflectance.toFixed(4)},
-                            1.0,
-                            pow(1.0 - saturate(dot(-lookDirection, worldNormal)), 5.0)
-                        );
-                        outgoingLight += hitColor * reflectance * hitCoverage * ${selfReflectionStrength.toFixed(4)};
-                    }
-                }
-                #endif
-                #include <opaque_fragment>`,
-            );
-    };
-    /**
-     * Three.js caches compiled shaders by `onBeforeCompile`'s source text, which another tweak
-     * wrapping this one would hide.
-     */
-    material.customProgramCacheKey = () => {
-        return `${previousCacheKey()}+self-reflections-${reflections.isEnabled()}`;
-    };
-}
+        if (nearestHit <= 0.0) {
+            return vec3(0.0);
+        }
+        float reflectance = mix(
+            ${headOnReflectance.toFixed(4)},
+            1.0,
+            pow(1.0 - saturate(dot(-lookDirection, normal)), 5.0)
+        );
+        return hitColor * reflectance * hitCoverage * ${selfReflectionStrength.toFixed(4)};
+    }
+`;

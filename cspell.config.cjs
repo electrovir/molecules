@@ -15,5 +15,6 @@ module.exports = {
         'occluder',
         'occluders',
         'texels',
+        'glsl',
     ],
 };
