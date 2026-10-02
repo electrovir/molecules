@@ -1,7 +1,7 @@
 // cspell:words rowspan
 import {assertWrap} from '@augment-vir/assert';
 import {asyncProp, css, defineElement, html, listen, nothing, onResize} from 'element-vir';
-import {lucideIcons, ViraIcon, viraTheme} from 'vira';
+import {lucideIcons, tooltip, ViraIcon, viraTheme} from 'vira';
 import {moleculeRouteNames} from '../../data/all-molecules.js';
 import {getMoleculeFormula, type Molecule} from '../../data/molecule.js';
 import {
@@ -189,6 +189,24 @@ export const VirApp = defineElement()({
             }
         }
 
+        .stat-tooltip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            max-width: 200px;
+            text-align: center;
+
+            & svg {
+                width: 96px;
+                height: 96px;
+            }
+
+            & p {
+                margin: 0;
+            }
+        }
+
         .evolutions {
             display: flex;
             flex-wrap: wrap;
@@ -356,7 +374,17 @@ export const VirApp = defineElement()({
                                                             </th>
                                                         `}
                                                   <td>
-                                                      <span class="stat-value">
+                                                      <span
+                                                          class="stat-value"
+                                                          ${value.description
+                                                              ? tooltip(html`
+                                                                    <div class="stat-tooltip">
+                                                                        ${value.icon ?? nothing}
+                                                                        <p>${value.description}</p>
+                                                                    </div>
+                                                                `)
+                                                              : nothing}
+                                                      >
                                                           ${value.icon ?? nothing} ${value.text}
                                                       </span>
                                                   </td>
