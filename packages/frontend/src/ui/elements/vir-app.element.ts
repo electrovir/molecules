@@ -1,7 +1,7 @@
 // cspell:words rowspan
 import {assertWrap} from '@augment-vir/assert';
 import {asyncProp, css, defineElement, html, listen, nothing, onResize} from 'element-vir';
-import {lucideIcons, tooltip, ViraIcon, viraTheme} from 'vira';
+import {lucideIcons, PopoverTrigger, tooltip, ViraIcon, viraTheme} from 'vira';
 import {moleculeRouteNames} from '../../data/all-molecules.js';
 import {getMoleculeFormula, type Molecule} from '../../data/molecule.js';
 import {
@@ -52,6 +52,10 @@ function listenToKeyboardPress(callback: () => void) {
         }
     });
 }
+
+const lastTouchEnd = {
+    timeStamp: -Infinity,
+};
 
 export const VirApp = defineElement()({
     tagName: 'vir-app',
@@ -358,7 +362,22 @@ export const VirApp = defineElement()({
                     ? html`
                           <h1>${molecule.name}</h1>
                           <span class="formula">${getMoleculeFormula(molecule.atoms)}</span>
-                          <div class="scroll-area">
+                          <div
+                              class="scroll-area"
+                              ${
+                                  /**
+                                   * Safari ignores `user-scalable=no` and only blocks double tap zooming under `touch-action: none`
+                                   * or `manipulation`, neither of which lets an area scroll without also allowing pinch zooming.
+                                   * Canceling the second tap's `touchend` stops the zoom, along with that tap's `click`.
+                                   */
+                                  listen('touchend', (event) => {
+                                      if (event.timeStamp - lastTouchEnd.timeStamp < 300) {
+                                          event.preventDefault();
+                                      }
+                                      lastTouchEnd.timeStamp = event.timeStamp;
+                                  })
+                              }
+                          >
                               <p>${molecule.structureDescription}</p>
                               <p>${molecule.realLifeDescription}</p>
                               <table>
@@ -377,12 +396,20 @@ export const VirApp = defineElement()({
                                                       <span
                                                           class="stat-value"
                                                           ${value.description
-                                                              ? tooltip(html`
-                                                                    <div class="stat-tooltip">
-                                                                        ${value.icon ?? nothing}
-                                                                        <p>${value.description}</p>
-                                                                    </div>
-                                                                `)
+                                                              ? tooltip(
+                                                                    html`
+                                                                        <div class="stat-tooltip">
+                                                                            ${value.icon ?? nothing}
+                                                                            <p>
+                                                                                ${value.description}
+                                                                            </p>
+                                                                        </div>
+                                                                    `,
+                                                                    {
+                                                                        trigger:
+                                                                            PopoverTrigger.Click,
+                                                                    },
+                                                                )
                                                               : nothing}
                                                       >
                                                           ${value.icon ?? nothing} ${value.text}
