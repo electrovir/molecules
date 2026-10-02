@@ -1,1 +1,0 @@
-import{t as e}from"./check-C_3PaQOF.js";function t(t,n){let r=[],i=!1;for(let a=0;a<t;a++){let t=n(a);e.isPromise(t)&&(i=!0),r.push(t)}return i?Promise.all(r):r}export{t};
