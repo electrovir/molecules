@@ -71,12 +71,6 @@ const startingOrientation = new Quaternion().setFromEuler(
  * toward the camera enough to still light the atoms' fronts.
  */
 const towardLight = new Vector3(1, 10, 2.5).normalize();
-const vibrationAmplitude = 0.05;
-/**
- * Slows vibrations so a wave number of 1595 cm⁻¹ (water's bend) plays at about 0.6 cycles per
- * second.
- */
-const vibrationTimeScale = 1 / 2500;
 /**
  * How far the shadow-catching ground sits below the lowest point any atom can be turned to, in
  * ångströms.
@@ -117,37 +111,6 @@ const idleSpinResumeMilliseconds = 5000;
 
 function toVector3({x, y, z}: Readonly<Coordinates>) {
     return new Vector3(x, y, z);
-}
-
-/**
- * Plays every vibration mode at once. Real vibrations run around 10^14 times per second and move
- * atoms a few percent of a bond length, so both speed and size are scaled to be visible.
- */
-function getVibratingAtomPositions({
-    molecule,
-    elapsedSeconds,
-}: Readonly<{
-    molecule: Readonly<Molecule>;
-    elapsedSeconds: number;
-}>) {
-    return molecule.atoms.map((atom, atomIndex) => {
-        return (molecule.vibrationModes ?? []).reduce((position, mode) => {
-            const displacement = mode.atomDisplacements[atomIndex];
-            return displacement
-                ? position.addScaledVector(
-                      toVector3(displacement),
-                      vibrationAmplitude *
-                          Math.sin(
-                              2 *
-                                  Math.PI *
-                                  mode.waveNumberPerCentimeter *
-                                  vibrationTimeScale *
-                                  elapsedSeconds,
-                          ),
-                  )
-                : position;
-        }, toVector3(atom.position));
-    });
 }
 
 /** One of a bond's sticks. A double bond has two, side by side. */
@@ -474,25 +437,16 @@ function createMoleculeModel({
         groundShadow,
         /** Must run after the camera moves and before rendering. */
         update({
-            elapsedSeconds,
-            enableVibration,
             localCameraPosition,
             localTowardLight,
         }: Readonly<{
-            elapsedSeconds: number;
-            enableVibration: boolean;
             localCameraPosition: Readonly<Vector3>;
             localTowardLight: Readonly<Vector3>;
         }>) {
             state.positions = getPartPositions({
                 molecule,
                 sticks,
-                atomPositions: enableVibration
-                    ? getVibratingAtomPositions({
-                          molecule,
-                          elapsedSeconds,
-                      })
-                    : restingPositions.map((position) => position.clone()),
+                atomPositions: restingPositions.map((position) => position.clone()),
                 cameraPosition: localCameraPosition,
             });
 
@@ -742,14 +696,12 @@ export function createMoleculeScene() {
 
     const current: {
         model: MoleculeModel | undefined;
-        enableVibration: boolean;
         selection: MoleculeSelection | undefined;
         onSelectionChange: ((selection: MoleculeSelection | undefined) => void) | undefined;
         onRenderQualityChange: ((quality: Readonly<RenderQuality>) => void) | undefined;
         rightInsetPixels: number;
     } = {
         model: undefined,
-        enableVibration: false,
         selection: undefined,
         onSelectionChange: undefined,
         onRenderQualityChange: undefined,
@@ -997,8 +949,6 @@ export function createMoleculeScene() {
                 .multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
                 .multiply(current.model.group.matrixWorld);
             current.model.update({
-                elapsedSeconds: timeMilliseconds / 1000,
-                enableVibration: current.enableVibration,
                 localCameraPosition: sceneUniforms.localCameraPosition.value,
                 localTowardLight: sceneUniforms.localTowardLight.value,
             });
@@ -1029,9 +979,6 @@ export function createMoleculeScene() {
 
     return {
         canvas: renderer.domElement,
-        setEnableVibration(enableVibration: boolean) {
-            current.enableVibration = enableVibration;
-        },
         listenToSelection(onSelectionChange: (selection: MoleculeSelection | undefined) => void) {
             current.onSelectionChange = onSelectionChange;
         },

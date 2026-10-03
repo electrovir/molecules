@@ -3,13 +3,6 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 
 const waterBondLength = 0.9584;
 const waterHalfBondAngle = ((104.45 / 2) * Math.PI) / 180;
-const sinHalfAngle = Math.sin(waterHalfBondAngle);
-const cosHalfAngle = Math.cos(waterHalfBondAngle);
-/**
- * Oxygen moves opposite the hydrogens, scaled down by this ratio, so the molecule's center of mass
- * stays put.
- */
-const hydrogenToOxygenMass = 1.008 / 15.999;
 
 const water: Molecule = {
     name: 'Water',
@@ -70,71 +63,6 @@ const water: Molecule = {
                 1,
             ],
             order: BondOrder.Single,
-        },
-    ],
-    vibrationModes: [
-        {
-            name: 'Symmetric stretch',
-            waveNumberPerCentimeter: 3657,
-            atomDisplacements: [
-                {
-                    x: sinHalfAngle,
-                    y: -cosHalfAngle,
-                    z: 0,
-                },
-                {
-                    x: -sinHalfAngle,
-                    y: -cosHalfAngle,
-                    z: 0,
-                },
-                {
-                    x: 0,
-                    y: 2 * cosHalfAngle * hydrogenToOxygenMass,
-                    z: 0,
-                },
-            ],
-        },
-        {
-            name: 'Asymmetric stretch',
-            waveNumberPerCentimeter: 3756,
-            atomDisplacements: [
-                {
-                    x: sinHalfAngle,
-                    y: -cosHalfAngle,
-                    z: 0,
-                },
-                {
-                    x: sinHalfAngle,
-                    y: cosHalfAngle,
-                    z: 0,
-                },
-                {
-                    x: -2 * sinHalfAngle * hydrogenToOxygenMass,
-                    y: 0,
-                    z: 0,
-                },
-            ],
-        },
-        {
-            name: 'Bend',
-            waveNumberPerCentimeter: 1595,
-            atomDisplacements: [
-                {
-                    x: cosHalfAngle,
-                    y: sinHalfAngle,
-                    z: 0,
-                },
-                {
-                    x: -cosHalfAngle,
-                    y: sinHalfAngle,
-                    z: 0,
-                },
-                {
-                    x: 0,
-                    y: -2 * sinHalfAngle * hydrogenToOxygenMass,
-                    z: 0,
-                },
-            ],
         },
     ],
 };

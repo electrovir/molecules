@@ -1,6 +1,7 @@
 import {assertWrap, check} from '@augment-vir/assert';
 import {Observable} from 'element-vir';
 import {type FullSpaRoute, PathTree, SpaRouter} from 'spa-router-vir';
+import {ViraThemeClient, ViraThemeSelection} from 'vira';
 import {moleculeRouteNames} from '../../data/all-molecules.js';
 import {createMoleculesLocalDbClient} from './frontend-clients/local-db.client.js';
 
@@ -52,11 +53,15 @@ export async function createFrontendState() {
         },
     });
 
+    const themeClient = new ViraThemeClient();
+    themeClient.setSelectedTheme(ViraThemeSelection.Dark);
+
     const frontendState = new Observable({
         equalityCheck: check.strictEquals,
         defaultValue: {
             router,
             localDbClient,
+            themeClient,
             currentRoute: router.readCurrentRoute(),
         },
     });

@@ -60,7 +60,6 @@ export const VirMoleculeViewer = defineElement<
         /** While `undefined`, a spinner shows over whichever molecule was last shown. */
         molecule: Readonly<Molecule> | undefined;
     } & PartialWithUndefined<{
-        enableVibration: boolean;
         /** Only read when the viewer is first created. After that the viewer adjusts it itself. */
         initialRenderQuality: Readonly<RenderQuality>;
         /** Width covered by other UI on the right, which the molecule is centered beside. */
@@ -187,7 +186,6 @@ export const VirMoleculeViewer = defineElement<
         if (state.moleculeScene && inputs.molecule) {
             state.moleculeScene.setMolecule(inputs.molecule);
         }
-        state.moleculeScene?.setEnableVibration(!!inputs.enableVibration);
         state.moleculeScene?.setRightInset(inputs.rightInsetPixels ?? 0);
 
         const selectionLabel =

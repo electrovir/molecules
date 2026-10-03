@@ -12,12 +12,6 @@ export type MoleculeAtom = {
     position: Coordinates;
 };
 
-export type VibrationMode = {
-    name: string;
-    waveNumberPerCentimeter: number;
-    atomDisplacements: Coordinates[];
-};
-
 export enum BondOrder {
     Single = 1,
     Double = 2,
@@ -78,7 +72,6 @@ export type Molecule = {
     stats: MoleculeStats;
     atoms: MoleculeAtom[];
     bonds: MoleculeBond[];
-    vibrationModes?: VibrationMode[] | undefined;
 };
 
 export function getMolarMass(atoms: ReadonlyArray<Readonly<Pick<MoleculeAtom, 'element'>>>) {

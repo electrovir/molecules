@@ -1,7 +1,21 @@
 // cspell:words rowspan
 import {assertWrap} from '@augment-vir/assert';
-import {asyncProp, css, defineElement, html, listen, nothing, onResize} from 'element-vir';
-import {lucideIcons, PopoverTrigger, tooltip, ViraIcon, viraTheme} from 'vira';
+import {
+    asyncProp,
+    css,
+    defineElement,
+    html,
+    listen,
+    nothing,
+    onResize,
+} from 'element-vir';
+import {
+    lucideIcons,
+    PopoverTrigger,
+    tooltip,
+    ViraIcon,
+    viraTheme,
+} from 'vira';
 import {moleculeRouteNames} from '../../data/all-molecules.js';
 import {getMoleculeFormula, type Molecule} from '../../data/molecule.js';
 import {
@@ -11,6 +25,7 @@ import {
     getRouteMoleculeIndex,
 } from '../frontend-state/frontend-state.js';
 import {getMoleculeStatRows} from '../molecule-stat-rows.js';
+import {VirMoleculeCry} from './vir-molecule-cry.element.js';
 import {VirMoleculeViewer} from './vir-molecule-viewer.element.js';
 
 function goToMolecule({
@@ -70,8 +85,9 @@ export const VirApp = defineElement()({
             position: relative;
             height: 100%;
             overflow: hidden;
-            background: radial-gradient(circle, #2a3448, #0f141e);
-            color: white;
+            background-color: ${viraTheme.colors['theme-default'].background.value};
+            background-image: radial-gradient(circle, #2a3448, #0f141e);
+            color: ${viraTheme.colors['theme-default'].foreground.value};
             font-family: 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, sans-serif;
         }
 
@@ -268,6 +284,7 @@ export const VirApp = defineElement()({
     },
     cleanup({state}) {
         state.frontendState?.value.router.destroy();
+        state.frontendState?.value.themeClient.destroy();
         state.frontendState?.destroy();
         state.fullscreenListenerAbort?.abort();
     },
@@ -366,9 +383,11 @@ export const VirApp = defineElement()({
                               class="scroll-area"
                               ${
                                   /**
-                                   * Safari ignores `user-scalable=no` and only blocks double tap zooming under `touch-action: none`
-                                   * or `manipulation`, neither of which lets an area scroll without also allowing pinch zooming.
-                                   * Canceling the second tap's `touchend` stops the zoom, along with that tap's `click`.
+                                   * Safari ignores `user-scalable=no` and only blocks double tap
+                                   * zooming under `touch-action: none` or `manipulation`, neither
+                                   * of which lets an area scroll without also allowing pinch
+                                   * zooming. Canceling the second tap's `touchend` stops the zoom,
+                                   * along with that tap's `click`.
                                    */
                                   listen('touchend', (event) => {
                                       if (event.timeStamp - lastTouchEnd.timeStamp < 300) {
@@ -380,6 +399,10 @@ export const VirApp = defineElement()({
                           >
                               <p>${molecule.structureDescription}</p>
                               <p>${molecule.realLifeDescription}</p>
+                              <${VirMoleculeCry.assign({
+                                  molecule,
+                                  seed: routeName,
+                              })}></${VirMoleculeCry}>
                               <table>
                                   ${getMoleculeStatRows(molecule).map((row) => {
                                       return row.values.map((value, index) => {
