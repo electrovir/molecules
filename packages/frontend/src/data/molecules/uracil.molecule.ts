@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1174. */
 const uracil: Molecule = {
     name: 'Uracil',
+    // cspell:disable-next-line
+    pronunciation: 'jˈʊɹəsˌɪl',
     structureDescription: 'A single ring of carbon and nitrogen.',
     realLifeDescription: 'It takes the place of thymine in RNA, where it pairs with adenine.',
     stats: {

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1183. */
 const vanillin: Molecule = {
     name: 'Vanillin',
+    // cspell:disable-next-line
+    pronunciation: 'vənˈɪlʌn',
     structureDescription: 'A benzene ring holding three different groups.',
     realLifeDescription:
         'It is the main flavor of vanilla. Most vanillin is made in factories, since real vanilla beans come from orchids that must be pollinated by hand.',

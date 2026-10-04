@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24408. */
 const bromine: Molecule = {
     name: 'Bromine',
+    // cspell:disable-next-line
+    pronunciation: 'bɹˈOmˌin',
     structureDescription: 'Two bromine atoms joined by a single bond.',
     realLifeDescription:
         'It is one of only two elements that are liquid at room temperature, a dark red liquid that gives off brown fumes. Its name comes from the Greek word for stench.',

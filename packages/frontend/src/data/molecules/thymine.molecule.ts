@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1135. */
 const thymine: Molecule = {
     name: 'Thymine',
+    // cspell:disable-next-line
+    pronunciation: 'θˈImˌin',
     structureDescription: 'A single ring of carbon and nitrogen.',
     realLifeDescription:
         'It is one of the four letters of DNA, where it pairs with adenine. It was first found in the thymus glands of calves, which gave it its name.',

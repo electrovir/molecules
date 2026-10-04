@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 177. */
 const acetaldehyde: Molecule = {
     name: 'Acetaldehyde',
+    // cspell:disable-next-line
+    pronunciation: 'ˌæsətˈældəhˌId',
     structureDescription: 'Two carbon atoms with a double bonded oxygen on the end.',
     realLifeDescription:
         'It adds to the smell of ripe fruit, and it turns into acetic acid, the sour part of vinegar.',

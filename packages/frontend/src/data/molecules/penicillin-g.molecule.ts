@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5904. */
 const penicillinG: Molecule = {
     name: 'Penicillin G',
+    // cspell:disable-next-line
+    pronunciation: 'pˌɛnəsˈɪlən ʤˈi',
     structureDescription:
         'A four-membered ring fused to a ring holding sulfur, with a side chain carrying a benzene ring.',
     realLifeDescription:

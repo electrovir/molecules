@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4101. */
 const methenamine: Molecule = {
     name: 'Methenamine',
+    // cspell:disable-next-line
+    pronunciation: 'mɪθˈɪnəmin',
     structureDescription: 'Six carbons and four nitrogens folded into a cage like adamantane.',
     realLifeDescription: 'It is the solid fuel in camping stove tablets and a urinary antiseptic.',
     stats: {

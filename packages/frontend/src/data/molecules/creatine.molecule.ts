@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 586. */
 const creatine: Molecule = {
     name: 'Creatine',
+    // cspell:disable-next-line
+    pronunciation: 'kɹˈiətˌin',
     structureDescription:
         'A small molecule with a carbon bonded to three nitrogens, linked to an acid group.',
     realLifeDescription:

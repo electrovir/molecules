@@ -1,9 +1,4 @@
 -   atoms view with bohr shells and point cloud + iso-surface overlay view
--   png generator of each molecule
--   more consistent default zoom, don't zoom in smaller molecules so far by default
--   split description into "structure description" and "real life description" (something like that). expand each molecule's real life description by one more sentence (when there is something reasonably interesting to add) and separate them with a new line, render them above the stats table
--   audit the stats table to make sure its actually interesting
 -   show PNGs of the evolution chain for each molecule, highlighting the currently selected one, allow click / tap to jump between them
 -   phone screen size support
--   add a "all molecules" view
 -   optimize further

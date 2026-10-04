@@ -5,6 +5,8 @@ const oxygenBondLength = 1.2075;
 
 const oxygen: Molecule = {
     name: 'Oxygen',
+    // cspell:disable-next-line
+    pronunciation: 'ˈɑksəʤᵊn',
     structureDescription: 'Two oxygen atoms joined by a double bond.',
     realLifeDescription:
         'It makes up about 21% of the air, and your cells use it to turn food into energy. Liquid oxygen is pale blue and sticks to magnets.',

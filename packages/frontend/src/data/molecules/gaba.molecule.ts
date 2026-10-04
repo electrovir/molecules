@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 119. */
 const gaba: Molecule = {
     name: 'GABA',
+    // cspell:disable-next-line
+    pronunciation: 'ɡˈæbə',
     structureDescription:
         'Short for gamma-aminobutyric acid, a four-carbon chain with a nitrogen group on one end and an acid group on the other.',
     realLifeDescription:

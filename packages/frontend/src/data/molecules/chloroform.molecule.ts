@@ -4,6 +4,9 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6212. */
 const chloroform: Molecule = {
     name: 'Chloroform',
+    /** The space keeps the "r" in the first syllable; without it Kokoro says "clara-form". */
+    // cspell:disable-next-line
+    pronunciation: 'klˈɔɹ Ofˌɔɹm',
     structureDescription: 'Methane with three hydrogens swapped for chlorines.',
     realLifeDescription: 'It was an early surgical anesthetic and is now a common lab solvent.',
     stats: {

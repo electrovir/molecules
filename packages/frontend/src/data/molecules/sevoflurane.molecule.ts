@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5206. */
 const sevoflurane: Molecule = {
     name: 'Sevoflurane',
+    // cspell:disable-next-line
+    pronunciation: 'sˌivəflˈʊɹˌAn',
     structureDescription: 'Three carbons and an oxygen covered in seven fluorine atoms.',
     realLifeDescription:
         'It is the sweet-smelling gas most often used to put patients to sleep for surgery today. Unlike older anesthetic gases, it does not irritate the throat, so even children can breathe it in through a mask.',

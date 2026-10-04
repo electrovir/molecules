@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 11174599. */
 const tetrodotoxin: Molecule = {
     name: 'Tetrodotoxin',
+    // cspell:disable-next-line
+    pronunciation: 'tɛtɹˌOdətˈɑksɪn',
     structureDescription: 'A compact cage of carbon, nitrogen, and oxygen covered in OH groups.',
     realLifeDescription:
         'It is the deadly nerve poison in pufferfish. Bacteria living in the fish make it, and some newts and blue-ringed octopuses carry it too.',

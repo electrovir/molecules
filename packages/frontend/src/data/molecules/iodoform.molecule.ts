@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6374. */
 const iodoform: Molecule = {
     name: 'Iodoform',
+    // cspell:disable-next-line
+    pronunciation: 'ˌIˈOdəfˌɔɹm',
     structureDescription: 'A carbon atom bonded to three iodine atoms and one hydrogen.',
     realLifeDescription:
         'It is a yellow antiseptic with a strong smell, once used to dress wounds. Dentists still use it in some root canal pastes.',

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 944. */
 const nitricAcid: Molecule = {
     name: 'Nitric Acid',
+    // cspell:disable-next-line
+    pronunciation: 'nˈItɹɪk ˈæsəd',
     structureDescription: 'A nitrogen atom holding three oxygens, one with a hydrogen.',
     realLifeDescription:
         'It is a strong acid used to make fertilizer and explosives. It turns skin yellow because it reacts with the proteins in it.',

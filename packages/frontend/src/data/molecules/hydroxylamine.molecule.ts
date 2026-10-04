@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 787. */
 const hydroxylamine: Molecule = {
     name: 'Hydroxylamine',
+    // cspell:disable-next-line
+    pronunciation: 'hˌIdɹˈɑksəlʌmˌin',
     structureDescription:
         'A nitrogen holding two hydrogens, bonded to an oxygen holding one hydrogen.',
     realLifeDescription: 'It is used to make nylon and to strip photoresist off computer chips.',

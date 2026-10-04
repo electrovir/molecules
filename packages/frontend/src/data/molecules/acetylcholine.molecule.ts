@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 187. */
 const acetylcholine: Molecule = {
     name: 'Acetylcholine',
+    // cspell:disable-next-line
+    pronunciation: 'əsˌɛtəlkˈOlˌin',
     structureDescription:
         'An acetic acid group joined through an ester link to a two-carbon chain ending in a nitrogen with three methyl groups.',
     realLifeDescription:

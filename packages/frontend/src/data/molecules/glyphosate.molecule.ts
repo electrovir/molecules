@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3496. */
 const glyphosate: Molecule = {
     name: 'Glyphosate',
+    // cspell:disable-next-line
+    pronunciation: 'ɡlˈIfəsˌAt',
     structureDescription:
         'A glycine molecule with a phosphonic acid group attached to its nitrogen.',
     realLifeDescription:

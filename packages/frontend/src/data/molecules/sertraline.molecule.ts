@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 68617. */
 const sertraline: Molecule = {
     name: 'Sertraline',
+    // cspell:disable-next-line
+    pronunciation: 'sˈɜɹtɹəlˌin',
     structureDescription:
         'A benzene ring with two chlorine atoms attached to a pair of fused rings carrying a methylamine group.',
     realLifeDescription: 'It is the antidepressant Zoloft.',

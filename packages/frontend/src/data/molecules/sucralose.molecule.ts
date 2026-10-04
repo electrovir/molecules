@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 71485. */
 const sucralose: Molecule = {
     name: 'Sucralose',
+    // cspell:disable-next-line
+    pronunciation: 'sˈukɹəlˌOs',
     structureDescription:
         'A sucrose molecule with three of its OH groups swapped for chlorine atoms.',
     realLifeDescription:

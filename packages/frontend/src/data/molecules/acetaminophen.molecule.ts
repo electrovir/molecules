@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1983. */
 const acetaminophen: Molecule = {
     name: 'Acetaminophen',
+    // cspell:disable-next-line
+    pronunciation: 'ˌʌsˌitəmˈɪnəfən',
     structureDescription:
         'A benzene ring with an oxygen-hydrogen group on one side and a nitrogen group on the other.',
     realLifeDescription: 'It is the pain reliever in Tylenol. Many countries call it paracetamol.',

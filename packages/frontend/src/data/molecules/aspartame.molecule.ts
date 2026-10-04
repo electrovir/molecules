@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 134601. */
 const aspartame: Molecule = {
     name: 'Aspartame',
+    // cspell:disable-next-line
+    pronunciation: 'ˈæspəɹtˌAm',
     structureDescription:
         'Two amino acids, aspartic acid and phenylalanine, joined together with a methyl group capping one end.',
     realLifeDescription: 'It is about 200 times sweeter than sugar and sweetens diet sodas.',

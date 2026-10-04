@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2153. */
 const theophylline: Molecule = {
     name: 'Theophylline',
+    // cspell:disable-next-line
+    pronunciation: 'θiˈɑfələn',
     structureDescription:
         'Two fused rings of carbon and nitrogen trimmed with oxygen atoms and two methyl groups, one methyl short of caffeine.',
     realLifeDescription: 'It is found in tea and opens airways in asthma medicine.',

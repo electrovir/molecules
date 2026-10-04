@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const whitePhosphorus: Molecule = {
     name: 'White Phosphorus',
+    // cspell:disable-next-line
+    pronunciation: 'wˈIt fˈɑsfəɹəs',
     structureDescription:
         'Four phosphorus atoms at the corners of a tetrahedron, each bonded to the other three.',
     realLifeDescription:

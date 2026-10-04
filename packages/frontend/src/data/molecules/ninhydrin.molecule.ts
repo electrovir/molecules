@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 10236. */
 const ninhydrin: Molecule = {
     name: 'Ninhydrin',
+    // cspell:disable-next-line
+    pronunciation: 'nˌɪnhˈIdɹɪn',
     structureDescription:
         'A benzene ring fused to a five-membered ring with two ketones and two OH groups.',
     realLifeDescription:

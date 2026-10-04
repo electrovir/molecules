@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24682. */
 const sulfurTrioxide: Molecule = {
     name: 'Sulfur Trioxide',
+    // cspell:disable-next-line
+    pronunciation: 'sˈʌlfəɹ tɹIˈɑksˌId',
     structureDescription: 'A sulfur atom double bonded to three oxygens in a flat triangle.',
     realLifeDescription:
         'It forms when sulfur dioxide from burning coal reacts in the air, and it turns into sulfuric acid in acid rain.',

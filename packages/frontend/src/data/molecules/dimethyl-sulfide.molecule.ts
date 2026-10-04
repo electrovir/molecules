@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1068. */
 const dimethylSulfide: Molecule = {
     name: 'Dimethyl Sulfide',
+    // cspell:disable-next-line
+    pronunciation: 'dImˈɛθɪl sˈʌlfˌId',
     structureDescription: 'A sulfur atom with a methyl group on each side.',
     realLifeDescription:
         'Ocean plankton make it, and it gives the seaside and cooked cabbage their smell. Seabirds follow its smell to find places full of food.',

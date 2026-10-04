@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 68827. */
 const artemisinin: Molecule = {
     name: 'Artemisinin',
+    // cspell:disable-next-line
+    pronunciation: 'ˌɑɹtəmˈɪsɪnɪn',
     structureDescription: 'Three rings with a bridge of two linked oxygens across one of them.',
     realLifeDescription:
         'It comes from sweet wormwood and is a frontline malaria medicine. Tu Youyou won a Nobel Prize for finding it after studying ancient Chinese medicine books.',

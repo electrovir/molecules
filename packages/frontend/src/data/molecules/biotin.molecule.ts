@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 171548. */
 const biotin: Molecule = {
     name: 'Biotin',
+    // cspell:disable-next-line
+    pronunciation: 'bˈIətᵊn',
     structureDescription:
         'A ring of carbon and nitrogen fused to a ring holding sulfur, with a carbon chain ending in an acid group.',
     realLifeDescription:

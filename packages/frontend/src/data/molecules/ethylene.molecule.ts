@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ethylene: Molecule = {
     name: 'Ethylene',
+    // cspell:disable-next-line
+    pronunciation: 'ˈɛθəlˌin',
     structureDescription:
         'Two carbon atoms joined by a double bond, each holding two hydrogens, all in one flat plane.',
     realLifeDescription:

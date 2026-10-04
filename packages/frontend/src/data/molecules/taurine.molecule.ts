@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1123. */
 const taurine: Molecule = {
     name: 'Taurine',
+    // cspell:disable-next-line
+    pronunciation: 'tˈɔɹin',
     structureDescription:
         'A two-carbon chain with an amine group on one end and a sulfonic acid group on the other.',
     realLifeDescription:

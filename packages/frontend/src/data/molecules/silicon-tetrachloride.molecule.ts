@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24816. */
 const siliconTetrachloride: Molecule = {
     name: 'Silicon Tetrachloride',
+    // cspell:disable-next-line
+    pronunciation: 'sˈɪləkˌɑn tˌɛtɹəklˈɔɹˌId',
     structureDescription:
         'A silicon atom bonded to four chlorine atoms at the corners of a tetrahedron.',
     realLifeDescription:

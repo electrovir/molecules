@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 6134. */
 const lactose: Molecule = {
     name: 'Lactose',
+    // cspell:disable-next-line
+    pronunciation: 'lˈæktˌOs',
     structureDescription: 'A galactose ring and a glucose ring joined through an oxygen bridge.',
     realLifeDescription:
         'It is the sugar in milk, and people without enough of the enzyme lactase cannot digest it. It is less sweet than table sugar.',

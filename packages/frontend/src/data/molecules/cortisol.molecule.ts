@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5754. */
 const cortisol: Molecule = {
     name: 'Cortisol',
+    // cspell:disable-next-line
+    pronunciation: 'kˈɔɹtəsˌɑl',
     structureDescription: 'Four fused rings of carbon decorated with oxygen atoms and OH groups.',
     realLifeDescription:
         'It is the main stress hormone, and creams that calm itchy skin contain it as hydrocortisone. Its level rises in the morning to help you wake up.',

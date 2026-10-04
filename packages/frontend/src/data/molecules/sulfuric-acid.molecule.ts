@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1118. */
 const sulfuricAcid: Molecule = {
     name: 'Sulfuric Acid',
+    // cspell:disable-next-line
+    pronunciation: 'səlfjˈuɹɪk ˈæsəd',
     structureDescription: 'A sulfur atom surrounded by four oxygens, two of which hold hydrogens.',
     realLifeDescription:
         'It is the most produced chemical in the world, used in car batteries and fertilizer. It pulls water out of things so strongly that it turns sugar into a tower of black carbon.',

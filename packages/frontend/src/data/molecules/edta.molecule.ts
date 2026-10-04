@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6049. */
 const edta: Molecule = {
     name: 'EDTA',
+    // cspell:disable-next-line
+    pronunciation: 'ˌi dˌi tˌi ˈA',
     structureDescription:
         'Two nitrogens joined by a two-carbon bridge, each holding two acetic acid arms.',
     realLifeDescription:

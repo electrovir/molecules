@@ -21,6 +21,7 @@
     ],
     "scripts": {
         "build": "npm run init && npm run build --workspace @molecules/frontend",
+        "build:thumbnails": "npm run build:thumbnails --workspace @molecules/scripts",
         "compile": "virmator compile",
         "format": "virmator format",
         "init": "npm run init --workspace @molecules/scripts",
@@ -35,6 +36,10 @@
         "test:lint": "virmator lint",
         "test:spelling": "virmator spellcheck",
         "test:update": "npm run compile && mono-vir for-each-async npm run test:update"
+    },
+    "dependencies": {
+        "@electrovir/color": "^2.0.0",
+        "vira": "^33.1.0"
     },
     "devDependencies": {
         "@eslint/js": "10.0.1",

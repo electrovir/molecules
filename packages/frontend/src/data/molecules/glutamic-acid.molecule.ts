@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 33032. */
 const glutamicAcid: Molecule = {
     name: 'Glutamic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'ɡlutˈæmɪk ˈæsəd',
     structureDescription: 'An amino acid with a second acid group on a longer side chain.',
     realLifeDescription:
         'It is responsible for the savory taste called umami, and its salt is MSG. Tomatoes, parmesan cheese and seaweed are naturally full of it.',

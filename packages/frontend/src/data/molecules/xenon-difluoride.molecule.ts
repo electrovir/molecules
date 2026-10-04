@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const xenonDifluoride: Molecule = {
     name: 'Xenon Difluoride',
+    // cspell:disable-next-line
+    pronunciation: 'zˈinˌɑn dIflˈɔɹId',
     structureDescription: 'A xenon atom with a fluorine atom on each side in a straight line.',
     realLifeDescription:
         'Xenon is a noble gas that was thought to never bond, and this white crystal is used to etch silicon.',

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 240. */
 const benzaldehyde: Molecule = {
     name: 'Benzaldehyde',
+    // cspell:disable-next-line
+    pronunciation: 'bɛnzˈældəhˌId',
     structureDescription: 'A benzene ring with an aldehyde group attached.',
     realLifeDescription:
         'It gives almonds and cherries their flavor and is the main ingredient in almond extract.',

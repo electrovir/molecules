@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5143. */
 const saccharin: Molecule = {
     name: 'Saccharin',
+    // cspell:disable-next-line
+    pronunciation: 'sˈækəɹən',
     structureDescription:
         'A benzene ring fused to a five-membered ring holding sulfur and nitrogen.',
     realLifeDescription:

@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 4201. */
 const minoxidil: Molecule = {
     name: 'Minoxidil',
+    // cspell:disable-next-line
+    pronunciation: 'mənˈɑksədˌɪl',
     structureDescription:
         'A ring of carbon and nitrogen with two amine groups and an oxygen, attached to a ring of five carbons and a nitrogen.',
     realLifeDescription:

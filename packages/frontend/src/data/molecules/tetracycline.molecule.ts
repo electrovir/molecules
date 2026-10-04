@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 54675776. */
 const tetracycline: Molecule = {
     name: 'Tetracycline',
+    // cspell:disable-next-line
+    pronunciation: 'tˌɛtɹəsˈIklˌin',
     structureDescription: 'Four fused six-membered rings covered in OH groups and ketones.',
     realLifeDescription:
         "It is an antibiotic, and it can stain children's growing teeth yellow. It glows yellow under ultraviolet light.",

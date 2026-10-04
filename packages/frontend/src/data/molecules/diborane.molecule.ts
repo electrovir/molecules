@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const diborane: Molecule = {
     name: 'Diborane',
+    // cspell:disable-next-line
+    pronunciation: 'dIbˈɔɹˌAn',
     structureDescription:
         'Two boron atoms held together by two hydrogens that bridge between them, with two more hydrogens on each boron.',
     realLifeDescription:

@@ -18,6 +18,8 @@ function getRingPosition({index, radius}: Readonly<{index: number; radius: numbe
 
 const benzene: Molecule = {
     name: 'Benzene',
+    // cspell:disable-next-line
+    pronunciation: 'bˈɛnzˌin',
     structureDescription: 'Six carbon atoms in a flat ring, each holding one hydrogen.',
     realLifeDescription:
         'The ring is drawn with alternating single and double bonds, but in reality its electrons are shared evenly around the whole ring, making it unusually stable. August Kekulé said he figured out its ring shape after dreaming of a snake biting its own tail.',

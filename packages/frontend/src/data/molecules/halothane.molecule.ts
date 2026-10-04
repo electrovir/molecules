@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3562. */
 const halothane: Molecule = {
     name: 'Halothane',
+    // cspell:disable-next-line
+    pronunciation: 'hˈæləθˌAn',
     structureDescription: 'Two carbons carrying three fluorines, a chlorine, and a bromine.',
     realLifeDescription:
         'It was a widely used anesthetic gas that put patients to sleep for surgery. Its sweet smell made it gentler to breathe in than older anesthetics.',

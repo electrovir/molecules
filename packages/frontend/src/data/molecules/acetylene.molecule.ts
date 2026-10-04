@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const acetylene: Molecule = {
     name: 'Acetylene',
+    // cspell:disable-next-line
+    pronunciation: 'əsˈɛtᵊlən',
     structureDescription:
         'Two carbon atoms joined by a triple bond, with a hydrogen on each end, all in a straight line.',
     realLifeDescription:

@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 25352. */
 const dinitrogenTetroxide: Molecule = {
     name: 'Dinitrogen Tetroxide',
+    // cspell:disable-next-line
+    pronunciation: 'dˌInˈItɹəʤən tɛtɹˈɑksˌId',
     structureDescription:
         'Two nitrogen atoms bonded together, each holding two oxygens, in a flat shape.',
     realLifeDescription:

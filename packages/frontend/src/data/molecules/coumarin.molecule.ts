@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 323. */
 const coumarin: Molecule = {
     name: 'Coumarin',
+    // cspell:disable-next-line
+    pronunciation: 'kˈuməɹən',
     structureDescription: 'A benzene ring fused to a ring holding an oxygen and a ketone.',
     realLifeDescription:
         'It gives fresh-cut hay and tonka beans their sweet smell, and cassia cinnamon contains it too. It is also used to give perfumes a warm, sweet scent.',

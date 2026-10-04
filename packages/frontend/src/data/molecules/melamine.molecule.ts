@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 7955. */
 const melamine: Molecule = {
     name: 'Melamine',
+    // cspell:disable-next-line
+    pronunciation: 'mˈɛləmˌin',
     structureDescription:
         'A ring of alternating carbon and nitrogen atoms with an amine group on each carbon.',
     realLifeDescription:

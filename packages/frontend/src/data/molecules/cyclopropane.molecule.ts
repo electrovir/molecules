@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6351. */
 const cyclopropane: Molecule = {
     name: 'Cyclopropane',
+    // cspell:disable-next-line
+    pronunciation: 'sˌIklOpɹˈOpˌAn',
     structureDescription:
         'Three carbon atoms bent into a triangle. The bonds are squeezed far from their natural angle, which makes the ring strained and reactive.',
     realLifeDescription:

@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6343. */
 const ethanethiol: Molecule = {
     name: 'Ethanethiol',
+    // cspell:disable-next-line
+    pronunciation: 'ˌɛθˌAnθˈIˌɔl',
     structureDescription: 'An ethyl group bonded to a sulfur with a hydrogen.',
     realLifeDescription:
         'It is added to natural gas, which has no smell on its own, so you can smell a leak. Noses can catch it even when there is only a tiny trace in the air.',

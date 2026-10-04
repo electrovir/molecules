@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4091. */
 const metformin: Molecule = {
     name: 'Metformin',
+    // cspell:disable-next-line
+    pronunciation: 'mɛtfˈɔɹmɪn',
     structureDescription:
         'Two linked carbons each bonded to three nitrogens, with two methyl groups on one end.',
     realLifeDescription:

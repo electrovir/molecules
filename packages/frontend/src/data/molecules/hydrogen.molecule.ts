@@ -5,6 +5,8 @@ const hydrogenBondLength = 0.7414;
 
 const hydrogen: Molecule = {
     name: 'Hydrogen',
+    // cspell:disable-next-line
+    pronunciation: 'hˈIdɹəʤᵊn',
     structureDescription: 'Two hydrogen atoms sharing a single bond.',
     realLifeDescription:
         'It is the simplest and lightest molecule there is, and burning it with oxygen produces nothing but water. Hydrogen atoms make up most of every star, including our Sun.',

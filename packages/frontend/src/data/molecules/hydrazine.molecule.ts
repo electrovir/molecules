@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 9321. */
 const hydrazine: Molecule = {
     name: 'Hydrazine',
+    // cspell:disable-next-line
+    pronunciation: 'hˈIdɹəzˌin',
     structureDescription: 'Two nitrogen atoms bonded together, each holding two hydrogens.',
     realLifeDescription:
         'It is a rocket fuel used to steer satellites and spacecraft. It splits apart over a hot metal catalyst, so it can make thrust without any oxygen.',

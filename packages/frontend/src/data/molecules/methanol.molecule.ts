@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 887. */
 const methanol: Molecule = {
     name: 'Methanol',
+    // cspell:disable-next-line
+    pronunciation: 'mˈɛθˌənˌɔl',
     structureDescription:
         'The smallest alcohol: a carbon atom with three hydrogens and an oxygen-hydrogen group.',
     realLifeDescription:

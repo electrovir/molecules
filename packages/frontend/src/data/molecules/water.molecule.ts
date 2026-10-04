@@ -6,6 +6,8 @@ const waterHalfBondAngle = ((104.45 / 2) * Math.PI) / 180;
 
 const water: Molecule = {
     name: 'Water',
+    // cspell:disable-next-line
+    pronunciation: 'wˈɔɾəɹ',
     structureDescription: 'Two hydrogen atoms bonded to one oxygen atom at a bent 104.45° angle.',
     realLifeDescription:
         'The bend makes the molecule polar, which gives water its high boiling point and its talent for dissolving things. It is one of the very few substances whose solid form floats on its liquid.',

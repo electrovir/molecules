@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 774. */
 const histamine: Molecule = {
     name: 'Histamine',
+    // cspell:disable-next-line
+    pronunciation: 'hˈɪstəmˌin',
     structureDescription: 'A ring holding two nitrogens with a short chain ending in nitrogen.',
     realLifeDescription:
         'It causes the itching and sneezing of allergies, which is what antihistamines block. Your stomach also uses it as a signal to make acid.',

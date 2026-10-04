@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 2764. */
 const ciprofloxacin: Molecule = {
     name: 'Ciprofloxacin',
+    // cspell:disable-next-line
+    pronunciation: 'sˌɪpɹəflˈɑksəsɪn',
     structureDescription:
         'Two fused rings with a fluorine, carrying a three-carbon ring and a ring of two nitrogens.',
     realLifeDescription: 'It is a common antibiotic for urinary infections.',

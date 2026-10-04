@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3676. */
 const lidocaine: Molecule = {
     name: 'Lidocaine',
+    // cspell:disable-next-line
+    pronunciation: 'lˈIdəkˌAn',
     structureDescription:
         'A benzene ring with two methyl groups, linked through an amide to a chain ending in a nitrogen with two ethyl groups.',
     realLifeDescription:

@@ -65,6 +65,15 @@ export type MoleculeStats = PartialWithUndefined<{
 
 export type Molecule = {
     name: string;
+    /**
+     * Kokoro phonemes (misaki US notation) that `npm run build:pronunciations` speaks to make this
+     * molecule's name clip. Most come from misaki's lexicon, tuned where Kokoro said them wrong by
+     * scoring against Google's dictionary clips.
+     *
+     * A space inside a word splits it where Kokoro would otherwise blend two sounds, such as the
+     * "eye-uh" in thiamine.
+     */
+    pronunciation: string;
     /** What the molecule is built from and its shape. */
     structureDescription: string;
     /** Where the molecule shows up in everyday life and what it does there. */

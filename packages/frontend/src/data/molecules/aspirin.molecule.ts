@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const aspirin: Molecule = {
     name: 'Aspirin',
+    // cspell:disable-next-line
+    pronunciation: 'ˈæspəɹən',
     structureDescription: 'A benzene ring carrying an acid group and an acetyl group side by side.',
     realLifeDescription:
         'It relieves pain, fever and inflammation by blocking the enzymes that make pain and inflammation signals in the body. People chewed willow bark, which holds a similar chemical, for pain thousands of years before aspirin was made.',

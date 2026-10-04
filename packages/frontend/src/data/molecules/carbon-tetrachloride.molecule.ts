@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5943. */
 const carbonTetrachloride: Molecule = {
     name: 'Carbon Tetrachloride',
+    // cspell:disable-next-line
+    pronunciation: 'kˈɑɹbən tˌɛtɹəklˈɔɹˌId',
     structureDescription:
         'A carbon atom with four chlorines pointing to the corners of a tetrahedron.',
     realLifeDescription:

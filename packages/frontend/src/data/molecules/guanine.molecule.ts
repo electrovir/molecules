@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 135398634. */
 const guanine: Molecule = {
     name: 'Guanine',
+    // cspell:disable-next-line
+    pronunciation: 'ɡwˈɑnˌin',
     structureDescription:
         'A double ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with cytosine.',
     realLifeDescription:

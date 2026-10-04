@@ -16,5 +16,9 @@ module.exports = {
         'occluders',
         'texels',
         'glsl',
+        'kokoro',
+        'misaki',
+        'huggingface',
+        'onnx',
     ],
 };

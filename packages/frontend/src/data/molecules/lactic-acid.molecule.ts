@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 612. */
 const lacticAcid: Molecule = {
     name: 'Lactic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'lˈæktɪk ˈæsəd',
     structureDescription: 'Three carbon atoms with an acid group and an oxygen-hydrogen group.',
     realLifeDescription:
         'Bacteria make it when they turn milk into yogurt, and your muscles make it during hard exercise. It gives sourdough bread and pickles their sour taste.',

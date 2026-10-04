@@ -1,6 +1,7 @@
 /**
  * Rewrites the frontend's `all-molecules.ts` from the `.molecule.ts` files in
- * `packages/frontend/src/data/molecules/`. Run it after adding, removing, or renaming a molecule:
+ * `packages/frontend/src/data/molecules/`. Run it after adding, removing, or renaming a molecule,
+ * or changing one's name or atoms:
  *
  *     npm run init
  */

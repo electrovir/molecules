@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3036. */
 const ddt: Molecule = {
     name: 'DDT',
+    // cspell:disable-next-line
+    pronunciation: 'dˌi, dˌi, tˈi',
     structureDescription:
         'Two benzene rings, each with a chlorine, attached to a carbon next to a carbon holding three chlorines.',
     realLifeDescription:

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 190. */
 const adenine: Molecule = {
     name: 'Adenine',
+    // cspell:disable-next-line
+    pronunciation: 'ˈædᵊnˌin',
     structureDescription:
         'A double ring of carbon and nitrogen and one of the four letters of DNA, where it pairs with thymine.',
     realLifeDescription: 'It is also part of ATP, the molecule cells use to carry energy.',

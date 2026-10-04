@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const hydrogenPeroxide: Molecule = {
     name: 'Hydrogen Peroxide',
+    // cspell:disable-next-line
+    pronunciation: 'hˈIdɹəʤᵊn pəɹˈɑksˌId',
     structureDescription:
         'Two oxygen atoms bonded to each other, each carrying a hydrogen, in a twisted shape.',
     realLifeDescription:

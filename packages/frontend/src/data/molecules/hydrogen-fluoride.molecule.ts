@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 14917. */
 const hydrogenFluoride: Molecule = {
     name: 'Hydrogen Fluoride',
+    // cspell:disable-next-line
+    pronunciation: 'hˈIdɹəʤᵊn flˈʊɹˌId',
     structureDescription: 'A hydrogen atom bonded to a fluorine atom.',
     realLifeDescription:
         'Dissolved in water it becomes an acid strong enough to etch glass. Factories use it to make Teflon, the slippery coating on nonstick pans.',

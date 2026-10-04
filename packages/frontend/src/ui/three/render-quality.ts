@@ -1,4 +1,5 @@
 import {check} from '@augment-vir/assert';
+import {type AnyDuration, convertDuration} from 'date-vir';
 import {defineShape, enumShape} from 'object-shape-tester';
 
 /** Effects that can be turned off to keep the frame rate up, in the order they get turned off. */
@@ -24,9 +25,14 @@ export const defaultRenderQuality: Readonly<RenderQuality> = {
 };
 
 /** Below this average frame rate, quality drops. */
-const minFramesPerSecond = 50;
-/** Frame rate is judged over this many frames at a time. */
-const samplesPerCheck = 6;
+const minFramesPerSecond = 40;
+/**
+ * Frame rate is averaged over this long at a time, so quality only drops after a sustained slowdown
+ * rather than a brief stutter.
+ */
+const checkDuration = {
+    seconds: 2,
+} as const satisfies AnyDuration;
 /**
  * Every quality change rebuilds shaders or reallocates buffers, and the slow frames that causes
  * would otherwise count against the new quality.
@@ -37,17 +43,23 @@ const resolutionStep = 0.2;
 const effectsResolutionScale = 0.6;
 const minResolutionScale = 0.4;
 /** Longer gaps than this are a hidden tab or a paused debugger, not slow rendering. */
-const maxSampleSeconds = 0.25;
+const maxSampleDuration = {
+    seconds: 0.25,
+} as const satisfies AnyDuration;
 /**
  * A screen can't show more than its refresh rate, so there's no way to tell how much headroom a
  * smooth frame rate has. Quality steps back up after this long at full speed, as a test.
  */
-const firstRaiseDelaySeconds = 30;
+const firstRaiseDelay = {
+    seconds: 30,
+} as const satisfies AnyDuration;
 /**
  * Each time a raise has to be undone, the wait before the next raise doubles, up to this, so a
  * device right at the edge settles instead of flipping back and forth.
  */
-const maxRaiseDelaySeconds = 30 * 60;
+const maxRaiseDelay = {
+    minutes: 30,
+} as const satisfies AnyDuration;
 
 function lowerQuality({resolutionScale, disabledEffects}: Readonly<RenderQuality>): RenderQuality {
     const nextEffect = effectRemovalOrder.find((effect) => !disabledEffects.includes(effect));
@@ -104,15 +116,21 @@ export function createRenderQualityScaler({
         quality: RenderQuality;
         samples: number[];
         framesToSkip: number;
-        smoothSeconds: number;
-        raiseDelaySeconds: number;
+        smoothDuration: {
+            seconds: number;
+        };
+        raiseDelay: {
+            seconds: number;
+        };
         wasLastChangeRaise: boolean;
     } = {
         quality: defaultRenderQuality,
         samples: [],
         framesToSkip: framesToSkipAfterChange,
-        smoothSeconds: 0,
-        raiseDelaySeconds: firstRaiseDelaySeconds,
+        smoothDuration: {
+            seconds: 0,
+        },
+        raiseDelay: firstRaiseDelay,
         wasLastChangeRaise: false,
     };
 
@@ -124,7 +142,9 @@ export function createRenderQualityScaler({
         };
         state.samples = [];
         state.framesToSkip = framesToSkipAfterChange;
-        state.smoothSeconds = 0;
+        state.smoothDuration = {
+            seconds: 0,
+        };
         applyQuality(state.quality);
     }
 
@@ -141,7 +161,7 @@ export function createRenderQualityScaler({
         },
         /** Returns `true` when this frame changed the quality. */
         recordFrame(frameSeconds: number) {
-            if (!frameSeconds || frameSeconds > maxSampleSeconds) {
+            if (!frameSeconds || frameSeconds > maxSampleDuration.seconds) {
                 return false;
             } else if (state.framesToSkip) {
                 state.framesToSkip--;
@@ -151,37 +171,47 @@ export function createRenderQualityScaler({
                 ...state.samples,
                 frameSeconds,
             ];
-            if (state.samples.length < samplesPerCheck) {
+            const sampleSeconds = state.samples.reduce((total, sample) => total + sample, 0);
+            if (sampleSeconds < checkDuration.seconds) {
                 return false;
             }
-            const sampleSeconds = state.samples.reduce((total, sample) => total + sample, 0);
             const framesPerSecond = state.samples.length / sampleSeconds;
             state.samples = [];
 
             if (framesPerSecond >= minFramesPerSecond) {
-                state.smoothSeconds += sampleSeconds;
-                if (state.smoothSeconds < state.raiseDelaySeconds) {
+                state.smoothDuration = {
+                    seconds: state.smoothDuration.seconds + sampleSeconds,
+                };
+                if (state.smoothDuration.seconds < state.raiseDelay.seconds) {
                     return false;
                 }
                 const raised = raiseQuality(state.quality);
                 if (check.deepEquals(raised, state.quality)) {
-                    state.smoothSeconds = 0;
+                    state.smoothDuration = {
+                        seconds: 0,
+                    };
                     return false;
                 }
                 state.wasLastChangeRaise = true;
                 setQuality(raised);
                 return true;
             }
-            state.smoothSeconds = 0;
+            state.smoothDuration = {
+                seconds: 0,
+            };
             const lowered = lowerQuality(state.quality);
             if (check.deepEquals(lowered, state.quality)) {
                 return false;
             }
             if (state.wasLastChangeRaise) {
-                state.raiseDelaySeconds = Math.min(
-                    maxRaiseDelaySeconds,
-                    state.raiseDelaySeconds * 2,
-                );
+                state.raiseDelay = {
+                    seconds: Math.min(
+                        convertDuration(maxRaiseDelay, {
+                            seconds: true,
+                        }).seconds,
+                        state.raiseDelay.seconds * 2,
+                    ),
+                };
             }
             state.wasLastChangeRaise = false;
             setQuality(lowered);

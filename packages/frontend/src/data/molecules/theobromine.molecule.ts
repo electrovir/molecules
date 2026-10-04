@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5429. */
 const theobromine: Molecule = {
     name: 'Theobromine',
+    // cspell:disable-next-line
+    pronunciation: 'θˌiəbɹˈOmin',
     structureDescription: 'A close cousin of caffeine, missing one carbon group.',
     realLifeDescription:
         'It is the main stimulant in chocolate, and is why chocolate is dangerous for dogs. Despite its name it has no bromine; it is named after the cacao tree, Theobroma, which means food of the gods.',

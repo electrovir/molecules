@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const carbonDioxide: Molecule = {
     name: 'Carbon Dioxide',
+    // cspell:disable-next-line
+    pronunciation: 'kˈɑɹbən dIˈɑksˌId',
     structureDescription: 'A carbon atom double-bonded to two oxygen atoms in a straight line.',
     realLifeDescription:
         'You breathe it out, plants take it in, and it traps heat in the atmosphere. Frozen solid, it is dry ice, which turns straight into gas without melting.',

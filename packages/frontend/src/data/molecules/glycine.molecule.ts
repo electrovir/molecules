@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 750. */
 const glycine: Molecule = {
     name: 'Glycine',
+    // cspell:disable-next-line
+    pronunciation: 'ɡlˈIsˌin',
     structureDescription: 'The simplest amino acid, with just a hydrogen as its side chain.',
     realLifeDescription:
         'It is one of the building blocks of every protein, and makes up about a third of collagen. It has even been found in comet dust brought back to Earth by a spacecraft.',

@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ethanol: Molecule = {
     name: 'Ethanol',
+    // cspell:disable-next-line
+    pronunciation: 'ˈɛθˌənˌɔl',
     structureDescription: 'Two carbon atoms in a chain with an OH group on the end.',
     realLifeDescription: 'It burns as a clean fuel and kills germs in hand sanitizer.',
     stats: {

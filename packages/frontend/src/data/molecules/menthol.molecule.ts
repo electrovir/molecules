@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1254. */
 const menthol: Molecule = {
     name: 'Menthol',
+    // cspell:disable-next-line
+    pronunciation: 'mˈɛnθˌɔl',
     structureDescription: 'A ring of six carbons with an oxygen-hydrogen group and two branches.',
     realLifeDescription:
         'It tricks cold-sensing nerves, which is why mint feels cool. It comes from peppermint and other mint plants.',

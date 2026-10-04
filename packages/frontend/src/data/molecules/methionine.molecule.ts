@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 6137. */
 const methionine: Molecule = {
     name: 'Methionine',
+    // cspell:disable-next-line
+    pronunciation: 'məθˈIʌnˌɪn',
     structureDescription: 'An amino acid with a side chain holding a sulfur atom.',
     realLifeDescription:
         'It is the first amino acid in almost every protein your cells make. Your body cannot make it, so you must get it from foods like eggs, fish, and nuts.',

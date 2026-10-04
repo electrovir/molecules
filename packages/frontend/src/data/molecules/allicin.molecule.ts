@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 65036. */
 const allicin: Molecule = {
     name: 'Allicin',
+    // cspell:disable-next-line
+    pronunciation: 'ˈæləsən',
     structureDescription:
         'Two sulfur atoms in a row, one carrying an oxygen, with a three-carbon allyl group on each end.',
     realLifeDescription:

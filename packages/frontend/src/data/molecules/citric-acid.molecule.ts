@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 311. */
 const citricAcid: Molecule = {
     name: 'Citric Acid',
+    // cspell:disable-next-line
+    pronunciation: 'sˈɪtɹɪk ˈæsəd',
     structureDescription: 'A six carbon molecule with three acid groups.',
     realLifeDescription:
         'It makes lemons and limes sour, and it is at the center of the cycle your cells use to release energy.',

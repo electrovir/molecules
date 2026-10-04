@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const nitrogen: Molecule = {
     name: 'Nitrogen',
+    // cspell:disable-next-line
+    pronunciation: 'nˈItɹəʤᵊn',
     structureDescription:
         'Two nitrogen atoms held together by a triple bond, one of the strongest bonds in chemistry.',
     realLifeDescription:

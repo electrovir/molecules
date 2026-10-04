@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1176. */
 const urea: Molecule = {
     name: 'Urea',
+    // cspell:disable-next-line
+    pronunciation: 'jʊɹˈiə',
     structureDescription:
         'A carbon atom double bonded to an oxygen and holding two nitrogen groups.',
     realLifeDescription:

@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 338. */
 const salicylicAcid: Molecule = {
     name: 'Salicylic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'sælɪsˈɪlɪk ˈæsəd',
     structureDescription:
         'A benzene ring holding an acid group and an oxygen-hydrogen group side by side.',
     realLifeDescription:

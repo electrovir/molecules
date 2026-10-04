@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5987. */
 const sulfamicAcid: Molecule = {
     name: 'Sulfamic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'sʌlfˈæmɪk ˈæsəd',
     structureDescription: 'A sulfur atom bonded to three oxygens and an amine group.',
     realLifeDescription:
         'It is the acid in many descalers that clear lime from coffee makers and toilets. It is a dry powder, which makes it safer to store and ship than liquid acids.',

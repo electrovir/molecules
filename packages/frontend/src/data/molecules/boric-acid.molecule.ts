@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const boricAcid: Molecule = {
     name: 'Boric Acid',
+    // cspell:disable-next-line
+    pronunciation: 'bˈɔɹɪk ˈæsəd',
     structureDescription: 'A boron atom bonded to three OH groups in a flat triangle.',
     realLifeDescription:
         'It is a mild antiseptic in eyewash and a common powder for killing cockroaches.',

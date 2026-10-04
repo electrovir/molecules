@@ -214,7 +214,10 @@ export const VirMoleculeCry = defineElement<{
                     }
                 })}
                 ${
-                    /** Keyboard activation is the only `click` whose `detail` (the click count) is `0`. */
+                    /**
+                     * Keyboard activation is the only `click` whose `detail` (the click count) is
+                     * `0`.
+                     */
                     listen('click', (event) => {
                         if (!event.detail) {
                             play();
@@ -238,7 +241,10 @@ export const VirMoleculeCry = defineElement<{
                             end: 1,
                         })}
                         fill="none"
-                        style=${css`stroke: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground.value};`}
+                        style=${css`
+                            stroke: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground
+                                .value};
+                        `}
                         stroke-width="7"
                     />
                     <path
@@ -253,7 +259,10 @@ export const VirMoleculeCry = defineElement<{
                         d=${getTickPath({
                             isRedZone: true,
                         })}
-                        style=${css`stroke: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground.value};`}
+                        style=${css`
+                            stroke: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground
+                                .value};
+                        `}
                         stroke-width="4"
                         stroke-linecap="round"
                     />
@@ -273,13 +282,24 @@ export const VirMoleculeCry = defineElement<{
                             y1=${pivot.y + 8}
                             x2=${pivot.x}
                             y2=${pivot.y - scaleRadius + 4}
-                            style=${css`stroke: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground.value};`}
+                            style=${css`
+                                stroke: ${viraTheme.colors['vira-red-foreground-placeholder']
+                                    .foreground.value};
+                            `}
                             stroke-width="5"
                             stroke-linecap="round"
                         />
                     </g>
                     <circle cx=${pivot.x} cy=${pivot.y} r="9" fill="currentColor" />
-                    <circle cx=${pivot.x} cy=${pivot.y} r="3.5" style=${css`fill: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground.value};`} />
+                    <circle
+                        cx=${pivot.x}
+                        cy=${pivot.y}
+                        r="3.5"
+                        style=${css`
+                            fill: ${viraTheme.colors['vira-red-foreground-placeholder'].foreground
+                                .value};
+                        `}
+                    />
                 </svg>
             </button>
         `;

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24404. */
 const phosphine: Molecule = {
     name: 'Phosphine',
+    // cspell:disable-next-line
+    pronunciation: 'fˈɑsfˌin',
     structureDescription: 'A phosphorus atom with three hydrogens, shaped like a short pyramid.',
     realLifeDescription: 'It is a toxic gas used to kill pests in stored grain.',
     stats: {

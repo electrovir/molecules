@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5819. */
 const thyroxine: Molecule = {
     name: 'Thyroxine',
+    // cspell:disable-next-line
+    pronunciation: 'θˌIɹˈɑksˌən',
     structureDescription:
         'Two benzene rings linked by an oxygen, carrying four iodine atoms, with an amino acid chain attached.',
     realLifeDescription:

@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5280489. */
 const betaCarotene: Molecule = {
     name: 'Beta-Carotene',
+    // cspell:disable-next-line
+    pronunciation: 'bˌAɾəkˈɛɹətin',
     structureDescription:
         'A long chain of alternating single and double bonds with a ring of six carbons on each end.',
     realLifeDescription:

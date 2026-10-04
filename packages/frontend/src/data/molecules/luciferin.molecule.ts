@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 92934. */
 const luciferin: Molecule = {
     name: 'Luciferin',
+    // cspell:disable-next-line
+    pronunciation: 'lusˈɪfəɹən',
     structureDescription:
         'A benzothiazole ring linked to a second ring holding sulfur and nitrogen, carrying an acid group.',
     realLifeDescription:

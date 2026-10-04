@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 22311. */
 const limonene: Molecule = {
     name: 'Limonene',
+    // cspell:disable-next-line
+    pronunciation: 'lˈɪmənˌin',
     structureDescription: 'A ring of six carbons with two double bonds and a branch.',
     realLifeDescription:
         'It gives oranges and lemons their citrus smell. It is also used in cleaning products because it dissolves grease.',

@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5329. */
 const sulfamethoxazole: Molecule = {
     name: 'Sulfamethoxazole',
+    // cspell:disable-next-line
+    pronunciation: 'sˌʌlfəməθˈɑksəzˌOl',
     structureDescription:
         'A benzene ring with an amine group, linked through a sulfonyl group to a ring holding nitrogen and oxygen.',
     realLifeDescription:

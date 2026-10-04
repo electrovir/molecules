@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 23953. */
 const silane: Molecule = {
     name: 'Silane',
+    // cspell:disable-next-line
+    pronunciation: 'sˈIlˌAn',
     structureDescription:
         'A silicon atom bonded to four hydrogens, like methane with silicon in place of carbon.',
     realLifeDescription: 'It catches fire on its own in air and is used to make computer chips.',

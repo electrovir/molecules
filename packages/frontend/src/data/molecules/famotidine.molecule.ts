@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5702160. */
 const famotidine: Molecule = {
     name: 'Famotidine',
+    // cspell:disable-next-line
+    pronunciation: 'fəmˈOtɪdˌin',
     structureDescription:
         'A ring of carbon, nitrogen, and sulfur attached to a chain with two more sulfur atoms.',
     realLifeDescription:

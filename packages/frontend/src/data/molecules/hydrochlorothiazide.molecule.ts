@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3639. */
 const hydrochlorothiazide: Molecule = {
     name: 'Hydrochlorothiazide',
+    // cspell:disable-next-line
+    pronunciation: 'hˌIdɹəklˌɔɹəθˈIəzˌId',
     structureDescription:
         'A benzene ring with a chlorine, fused to a ring of sulfur and nitrogen and carrying a second sulfonyl group.',
     realLifeDescription:

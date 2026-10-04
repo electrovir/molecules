@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 7843. */
 const butane: Molecule = {
     name: 'Butane',
+    // cspell:disable-next-line
+    pronunciation: 'bjˈutˌAn',
     structureDescription: 'A chain of four carbon atoms.',
     realLifeDescription:
         'It is the fuel inside disposable lighters, where you can see it sloshing as a liquid.',

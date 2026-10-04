@@ -1,5 +1,5 @@
 import {assertWrap, check} from '@augment-vir/assert';
-import {createArray} from '@augment-vir/common';
+import {createArray, type PartialWithUndefined} from '@augment-vir/common';
 import {
     Box3,
     Color,
@@ -20,6 +20,7 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {type ChemicalElement, chemicalElements} from '../../data/chemical-element.js';
 import {BondOrder, type Coordinates, type Molecule} from '../../data/molecule.js';
 import {type Capsule, createCapsuleRows} from './capsule-rows.js';
+import {findClearestYaw} from './clearest-yaw.js';
 import {contactReach, maxContactOccluders} from './contact-shading.js';
 import {createGroundShadow} from './ground-shadow.js';
 import {
@@ -59,9 +60,9 @@ const smallScreenFitDistanceMargin = 1.3;
 /** How far the camera looks down at the molecule, so the ground and its shadow aren't seen edge-on. */
 const cameraElevationRadians = (25 * Math.PI) / 180;
 /**
- * The first molecule's starting turn, kept across molecule changes: its +X end raised a little and
- * swung toward the camera, then its top tipped away from the camera, so a molecule laid out flat is
- * seen at an angle instead of side-on.
+ * The first molecule's starting turn, before its clearest yaw is added, kept across molecule
+ * changes: its +X end raised a little and swung toward the camera, then its top tipped away from
+ * the camera, so a molecule laid out flat is seen at an angle instead of side-on.
  */
 const startingOrientation = new Quaternion().setFromEuler(
     new Euler((-15 * Math.PI) / 180, (-20 * Math.PI) / 180, (10 * Math.PI) / 180),
@@ -434,6 +435,13 @@ function createMoleculeModel({
         molecule,
         group,
         radius,
+        /** Atom positions relative to the turntable's center. */
+        centeredAtoms: restingPositions.map((position, atomIndex) => {
+            return {
+                position: position.clone().sub(center),
+                radius: assertWrap.isDefined(atomRadii[atomIndex]),
+            };
+        }),
         groundShadow,
         /** Must run after the camera moves and before rendering. */
         update({
@@ -629,7 +637,17 @@ function createMoleculeModel({
 
 type MoleculeModel = ReturnType<typeof createMoleculeModel>;
 
-export function createMoleculeScene() {
+export function createMoleculeScene({
+    isSnapshot,
+}: Readonly<
+    PartialWithUndefined<{
+        /**
+         * Renders only on `captureImage` calls, with no spin, ground shadow, or automatic quality
+         * drops.
+         */
+        isSnapshot: boolean;
+    }>
+> = {}) {
     const renderer = new WebGLRenderer({
         antialias: true,
         alpha: true,
@@ -901,11 +919,13 @@ export function createMoleculeScene() {
 
     const frameClock: {
         lastMilliseconds: number | undefined;
+        isPaused: boolean;
     } = {
         lastMilliseconds: undefined,
+        isPaused: false,
     };
 
-    renderer.setAnimationLoop((timeMilliseconds) => {
+    function renderFrame(timeMilliseconds: number) {
         const frameSeconds =
             (timeMilliseconds - (frameClock.lastMilliseconds ?? timeMilliseconds)) / 1000;
         frameClock.lastMilliseconds = timeMilliseconds;
@@ -966,7 +986,7 @@ export function createMoleculeScene() {
                             ))) /
                         2,
             });
-            if (current.model.isShadowsEnabled()) {
+            if (!isSnapshot && current.model.isShadowsEnabled()) {
                 current.model.groundShadow.render({
                     renderer,
                     worldToLocal,
@@ -975,7 +995,11 @@ export function createMoleculeScene() {
             }
         }
         renderer.render(scene, camera);
-    });
+    }
+
+    if (!isSnapshot) {
+        renderer.setAnimationLoop(renderFrame);
+    }
 
     return {
         canvas: renderer.domElement,
@@ -994,6 +1018,7 @@ export function createMoleculeScene() {
                 return;
             }
             select(undefined);
+            const isFirstMolecule = !current.model;
             if (current.model) {
                 turntable.remove(current.model.group);
                 scene.remove(current.model.groundShadow.mesh);
@@ -1005,7 +1030,18 @@ export function createMoleculeScene() {
             });
             current.model.setDisabledEffects(qualityScaler.getQuality().disabledEffects);
             turntable.add(current.model.group);
-            scene.add(current.model.groundShadow.mesh);
+            if (!isSnapshot) {
+                scene.add(current.model.groundShadow.mesh);
+            }
+            if (isFirstMolecule) {
+                turn.yawRadians = findClearestYaw({
+                    atoms: current.model.centeredAtoms,
+                    baseOrientation: startingOrientation,
+                    pitchRadians: turn.pitchRadians,
+                    towardCamera: camera.position,
+                });
+                applyTurn();
+            }
 
             const moleculeRadius = current.model.radius;
             const viewerSize = renderer.getSize(new Vector2());
@@ -1031,6 +1067,29 @@ export function createMoleculeScene() {
             camera.far = controls.maxDistance + moleculeRadius * 3 + groundGap + 2;
             camera.updateProjectionMatrix();
         },
+        /**
+         * Renders a frame and reads it out as a PNG data URL in the same task, before the browser
+         * clears the canvas's drawing buffer. With `viewWindow`, only that square of the normal
+         * view, in CSS pixels, is rendered, stretched to fill the canvas. It may reach past the
+         * canvas edges.
+         */
+        captureImage(viewWindow?: Readonly<{left: number; top: number; size: number}> | undefined) {
+            if (viewWindow) {
+                const viewerSize = renderer.getSize(new Vector2());
+                camera.setViewOffset(
+                    viewerSize.x,
+                    viewerSize.y,
+                    viewWindow.left,
+                    viewWindow.top,
+                    viewWindow.size,
+                    viewWindow.size,
+                );
+            }
+            renderFrame(0);
+            const image = renderer.domElement.toDataURL('image/png');
+            updateProjection();
+            return image;
+        },
         resize({width, height}: Readonly<{width: number; height: number}>) {
             if (!width || !height) {
                 return;
@@ -1041,6 +1100,19 @@ export function createMoleculeScene() {
         setRightInset(pixels: number) {
             current.rightInsetPixels = pixels;
             updateProjection();
+        },
+        /** Stops and restarts drawing frames, keeping everything else as is. */
+        setPaused(isPaused: boolean) {
+            if (isSnapshot || isPaused === frameClock.isPaused) {
+                return;
+            }
+            frameClock.isPaused = isPaused;
+            /**
+             * Otherwise the first frame after resuming counts the whole pause as its duration,
+             * which the render quality scaler reads as a stall and the spin jumps across.
+             */
+            frameClock.lastMilliseconds = undefined;
+            renderer.setAnimationLoop(isPaused ? null : renderFrame);
         },
         dispose() {
             renderer.setAnimationLoop(null);

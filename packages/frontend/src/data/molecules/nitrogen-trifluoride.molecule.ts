@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24553. */
 const nitrogenTrifluoride: Molecule = {
     name: 'Nitrogen Trifluoride',
+    // cspell:disable-next-line
+    pronunciation: 'nˈItɹəʤᵊn tɹˌIflˈʊɹˌId',
     structureDescription: 'A nitrogen atom bonded to three fluorine atoms in a low pyramid.',
     realLifeDescription:
         'It cleans the machines that make computer screens and solar cells. It is a very powerful greenhouse gas, so factories try hard to keep it from escaping.',

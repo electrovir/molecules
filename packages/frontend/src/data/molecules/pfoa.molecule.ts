@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 9554. */
 const pfoa: Molecule = {
     name: 'PFOA',
+    // cspell:disable-next-line
+    pronunciation: 'pˌi ˌɛf ˌO ˈA',
     structureDescription:
         'A chain of eight carbons wrapped in fifteen fluorine atoms, ending in an acid group.',
     realLifeDescription:

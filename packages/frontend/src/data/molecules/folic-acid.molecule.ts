@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 135398658. */
 const folicAcid: Molecule = {
     name: 'Folic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'fˈɑlɪk ˈæsəd',
     structureDescription:
         'Two fused rings of carbon and nitrogen linked to a benzene ring and then to glutamic acid.',
     realLifeDescription:

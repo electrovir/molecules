@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5564. */
 const triclosan: Molecule = {
     name: 'Triclosan',
+    // cspell:disable-next-line
+    pronunciation: 'tɹˈIklˌʌsˌæn',
     structureDescription:
         'Two benzene rings linked by an oxygen, carrying three chlorine atoms and an OH group.',
     realLifeDescription:

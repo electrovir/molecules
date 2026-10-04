@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3016. */
 const diazepam: Molecule = {
     name: 'Diazepam',
+    // cspell:disable-next-line
+    pronunciation: 'dIˈæzəpˌæm',
     structureDescription:
         'A benzene ring with a chlorine fused to a seven-membered ring with two nitrogens, carrying another benzene ring.',
     realLifeDescription:

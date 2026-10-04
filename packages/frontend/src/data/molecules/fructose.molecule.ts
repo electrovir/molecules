@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 2723872. */
 const fructose: Molecule = {
     name: 'Fructose',
+    // cspell:disable-next-line
+    pronunciation: 'fɹˈuktˌOs',
     structureDescription: 'A sugar with the same atoms as glucose arranged differently.',
     realLifeDescription:
         'It is the sweetest natural sugar and is found in fruit and honey. Linked with glucose, it makes table sugar.',

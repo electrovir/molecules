@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4284. */
 const deet: Molecule = {
     name: 'DEET',
+    // cspell:disable-next-line
+    pronunciation: 'dˈit',
     structureDescription:
         'A benzene ring with a methyl group, attached to an amide nitrogen carrying two ethyl groups.',
     realLifeDescription:

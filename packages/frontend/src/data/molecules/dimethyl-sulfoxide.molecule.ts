@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 679. */
 const dimethylSulfoxide: Molecule = {
     name: 'Dimethyl Sulfoxide',
+    // cspell:disable-next-line
+    pronunciation: 'dˌImˈɛθɪl sʌlfˈɑksId',
     structureDescription: 'A sulfur atom holding an oxygen and two carbon groups.',
     realLifeDescription:
         'It dissolves an unusual range of things and passes through skin easily, carrying other molecules with it. Rubbing a little on skin can make a person taste garlic.',

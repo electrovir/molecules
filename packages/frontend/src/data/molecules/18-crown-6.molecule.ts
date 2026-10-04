@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 28557. */
 const crownEther18: Molecule = {
     name: '18-Crown-6',
+    // cspell:disable-next-line
+    pronunciation: 'ˌAtˈin kɹˈWn sˈɪks',
     structureDescription: 'A ring of twelve carbons and six oxygens shaped like a crown.',
     realLifeDescription:
         'Its oxygens point inward to grip a potassium ion in the middle. Charles Pedersen shared a Nobel Prize for discovering crown-shaped molecules like this one.',

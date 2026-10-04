@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5957. */
 const adenosineTriphosphate: Molecule = {
     name: 'Adenosine Triphosphate',
+    // cspell:disable-next-line
+    pronunciation: 'ədˈɛnəsˌin tɹIfˈɑsfˌAt',
     structureDescription:
         'Adenine and a ribose sugar ring attached to a chain of three phosphate groups.',
     realLifeDescription:

@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 29746. */
 const geosmin: Molecule = {
     name: 'Geosmin',
+    // cspell:disable-next-line
+    pronunciation: 'ʤiˈɑzmən',
     structureDescription: 'Two fused rings of carbon with an OH group and two methyl groups.',
     realLifeDescription:
         'Soil bacteria make it, and it is the earthy smell of rain on dry ground. Human noses are extremely sensitive to it, and it is why beets taste earthy.',

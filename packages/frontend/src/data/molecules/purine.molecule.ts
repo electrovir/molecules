@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1044. */
 const purine: Molecule = {
     name: 'Purine',
+    // cspell:disable-next-line
+    pronunciation: 'pjˈʊɹˌin',
     structureDescription:
         'A six-membered ring and a five-membered ring of carbon and nitrogen fused together.',
     realLifeDescription:

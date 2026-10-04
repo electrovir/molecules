@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 681. */
 const dopamine: Molecule = {
     name: 'Dopamine',
+    // cspell:disable-next-line
+    pronunciation: 'dˈOpəmˌin',
     structureDescription:
         'A ring holding two oxygen-hydrogen groups and a short chain ending in nitrogen.',
     realLifeDescription:

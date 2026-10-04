@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1004. */
 const phosphoricAcid: Molecule = {
     name: 'Phosphoric Acid',
+    // cspell:disable-next-line
+    pronunciation: 'fɑsfˈɔɹɪk ˈæsəd',
     structureDescription: 'A phosphorus atom surrounded by four oxygens, three holding hydrogens.',
     realLifeDescription:
         'It gives cola drinks their tang. It is also used to remove rust from iron and steel.',

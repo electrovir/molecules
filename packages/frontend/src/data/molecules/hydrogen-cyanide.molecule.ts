@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 768. */
 const hydrogenCyanide: Molecule = {
     name: 'Hydrogen Cyanide',
+    // cspell:disable-next-line
+    pronunciation: 'hˈIdɹəʤᵊn sˈIənˌId',
     structureDescription:
         'A hydrogen, a carbon and a nitrogen in a straight line, with a triple bond between the carbon and nitrogen.',
     realLifeDescription:

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5288826. */
 const morphine: Molecule = {
     name: 'Morphine',
+    // cspell:disable-next-line
+    pronunciation: 'mˈɔɹfˌin',
     structureDescription: 'Five fused rings of carbon, oxygen, and nitrogen with two OH groups.',
     realLifeDescription:
         'It comes from opium poppies and is one of the strongest painkillers. Doctors give it in careful doses to prevent misuse.',

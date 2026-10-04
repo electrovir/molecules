@@ -1,6 +1,8 @@
 import {assertWrap} from '@augment-vir/assert';
 import {type PartialWithUndefined} from '@augment-vir/common';
+import {colorCss} from '@electrovir/color';
 import {css, defineElement, defineElementEvent, html, onResize} from 'element-vir';
+import {themeDefaultKey} from 'theme-vir/dist/color-theme/color-theme.js';
 import {LoaderAnimated24Icon, ViraIcon, viraTheme} from 'vira';
 import {chemicalElements} from '../../data/chemical-element.js';
 import {BondOrder, type Molecule} from '../../data/molecule.js';
@@ -64,80 +66,90 @@ export const VirMoleculeViewer = defineElement<
         initialRenderQuality: Readonly<RenderQuality>;
         /** Width covered by other UI on the right, which the molecule is centered beside. */
         rightInsetPixels: number;
+        /** Hides the viewer and stops drawing, but keeps its 3D scene ready to show again. */
+        isHidden: boolean;
     }>
 >()({
     tagName: 'vir-molecule-viewer',
     events: {
         renderQualityChange: defineElementEvent<Readonly<RenderQuality>>(),
     },
-    styles: css`
-        :host {
-            display: block;
-            position: relative;
-            cursor: grab;
-        }
-
-        :host(:active) {
-            cursor: grabbing;
-        }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            touch-action: none;
-        }
-
-        .loading {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            visibility: hidden;
-            animation: show-loading 0s 500ms forwards;
-
-            & ${ViraIcon} {
-                width: 64px;
-                height: 64px;
-            }
-        }
-
-        @keyframes show-loading {
-            to {
-                visibility: visible;
-            }
-        }
-
-        .selection-label {
-            position: absolute;
-            left: 16px;
-            bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 16px 24px;
-            border-radius: 12px;
-            font-size: 1.75em;
-            background-color: color-mix(
-                in srgb,
-                ${viraTheme.colors['vira-grey-behind-bg-highest-contrast'].background.value} 80%,
-                transparent
-            );
-            color: ${viraTheme.colors['vira-grey-behind-bg-highest-contrast'].foreground.value};
-            pointer-events: none;
-
-            & strong {
-                font-size: 2em;
+    hostClasses: {
+        'vir-molecule-viewer-hidden'({inputs}) {
+            return !!inputs.isHidden;
+        },
+    },
+    styles({hostClasses}) {
+        return css`
+            :host {
+                display: block;
+                position: relative;
+                cursor: grab;
             }
 
-            & .details {
-                font-size: 0.85em;
-                opacity: 0.8;
+            ${hostClasses['vir-molecule-viewer-hidden'].selector} {
+                visibility: hidden;
             }
-        }
-    `,
+
+            :host(:active) {
+                cursor: grabbing;
+            }
+
+            canvas {
+                display: block;
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+
+            .loading {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                pointer-events: none;
+                visibility: hidden;
+                animation: show-loading 0s 500ms forwards;
+
+                & ${ViraIcon} {
+                    width: 64px;
+                    height: 64px;
+                }
+            }
+
+            @keyframes show-loading {
+                to {
+                    visibility: visible;
+                }
+            }
+
+            .selection-label {
+                position: absolute;
+                left: 16px;
+                bottom: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                padding: 16px 24px;
+                border-radius: 12px;
+                font-size: 28px;
+                ${colorCss(viraTheme.colors[themeDefaultKey])}
+                border: 3px solid ${viraTheme.colors['vira-grey-foreground-decoration'].foreground
+                    .value};
+                pointer-events: none;
+
+                & strong {
+                    font-size: 56px;
+                }
+
+                & .details {
+                    font-size: 24px;
+                    opacity: 0.8;
+                }
+            }
+        `;
+    },
     state() {
         return {
             moleculeScene: undefined satisfies MoleculeScene | undefined as
@@ -187,6 +199,7 @@ export const VirMoleculeViewer = defineElement<
             state.moleculeScene.setMolecule(inputs.molecule);
         }
         state.moleculeScene?.setRightInset(inputs.rightInsetPixels ?? 0);
+        state.moleculeScene?.setPaused(!!inputs.isHidden);
 
         const selectionLabel =
             state.selection && inputs.molecule
@@ -207,7 +220,7 @@ export const VirMoleculeViewer = defineElement<
             >
                 ${state.moleculeScene?.canvas}
             </div>
-            ${state.moleculeScene && inputs.molecule
+            ${(state.moleculeScene && inputs.molecule) || inputs.isHidden
                 ? ''
                 : html`
                       <div

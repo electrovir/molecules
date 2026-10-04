@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 65028. */
 const oseltamivir: Molecule = {
     name: 'Oseltamivir',
+    // cspell:disable-next-line
+    pronunciation: 'ˌOsɛltˈæmɪvˌɪɹ',
     structureDescription:
         'A ring of six carbons with an ester, an amine, an amide, and a branched ether.',
     realLifeDescription:

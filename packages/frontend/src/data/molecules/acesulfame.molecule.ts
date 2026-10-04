@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 36573. */
 const acesulfame: Molecule = {
     name: 'Acesulfame',
+    // cspell:disable-next-line
+    pronunciation: 'ˌAsəsˈʌlfˌAm',
     structureDescription:
         'A six-membered ring holding sulfur, nitrogen, and oxygen, with a ketone and a methyl group.',
     realLifeDescription:

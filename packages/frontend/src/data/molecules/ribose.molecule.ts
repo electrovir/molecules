@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 10975657. */
 const ribose: Molecule = {
     name: 'Ribose',
+    // cspell:disable-next-line
+    pronunciation: 'ɹˈIbˌOz',
     structureDescription: 'A five-carbon sugar that forms the backbone of RNA.',
     realLifeDescription:
         'A version missing one oxygen forms the backbone of DNA. It is also part of ATP, the molecule that carries energy around your cells.',

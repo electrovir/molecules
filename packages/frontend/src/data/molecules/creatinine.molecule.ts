@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 588. */
 const creatinine: Molecule = {
     name: 'Creatinine',
+    // cspell:disable-next-line
+    pronunciation: 'kɹiˈætənˌin',
     structureDescription:
         'A five-membered ring of carbon and nitrogen with a ketone and a methyl group.',
     realLifeDescription:

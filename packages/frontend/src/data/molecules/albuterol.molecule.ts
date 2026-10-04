@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2083. */
 const albuterol: Molecule = {
     name: 'Albuterol',
+    // cspell:disable-next-line
+    pronunciation: 'ælbjˈuɾəɹˌɔl',
     structureDescription:
         'A benzene ring with an OH group and a CH₂OH group, attached to a chain with an OH group and a bulky amine.',
     realLifeDescription:

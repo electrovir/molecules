@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 7439. */
 const carvone: Molecule = {
     name: 'Carvone',
+    // cspell:disable-next-line
+    pronunciation: 'kˈɑɹvˌOn',
     structureDescription:
         'A ring of six carbons with an oxygen, a double bond, and a short branch.',
     realLifeDescription:

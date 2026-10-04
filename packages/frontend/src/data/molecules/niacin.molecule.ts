@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 938. */
 const niacin: Molecule = {
     name: 'Niacin',
+    // cspell:disable-next-line
+    pronunciation: 'nˈIəsᵊn',
     structureDescription: 'A pyridine ring with an acid group attached.',
     realLifeDescription:
         'It is vitamin B3, and large doses make your skin flush red. Not getting enough of it causes a disease called pellagra.',

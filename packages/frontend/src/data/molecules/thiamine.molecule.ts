@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1130. */
 const thiamine: Molecule = {
     name: 'Thiamine',
+    // cspell:disable-next-line
+    pronunciation: 'θˈI əmˌin',
     structureDescription:
         'A ring of carbon and nitrogen linked by a carbon to a ring of sulfur, nitrogen, and carbon with a short OH chain.',
     realLifeDescription:

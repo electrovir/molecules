@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 284. */
 const formicAcid: Molecule = {
     name: 'Formic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'fˈɔɹmɪk ˈæsəd',
     structureDescription:
         'The simplest carboxylic acid: one carbon, two oxygens and two hydrogens.',
     realLifeDescription:

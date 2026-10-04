@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 54670067. */
 const ascorbicAcid: Molecule = {
     name: 'Ascorbic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'əskˈɔɹbɪk ˈæsəd',
     structureDescription:
         'Vitamin C: a ring of carbons and oxygens with several oxygen-hydrogen groups.',
     realLifeDescription:

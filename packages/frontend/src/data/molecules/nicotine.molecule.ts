@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 89594. */
 const nicotine: Molecule = {
     name: 'Nicotine',
+    // cspell:disable-next-line
+    pronunciation: 'nˈɪkətˌin',
     structureDescription: 'Two nitrogen-containing rings joined together.',
     realLifeDescription:
         'Tobacco plants make it to poison insects that eat its leaves. Farmers once sprayed it on crops as an insecticide.',

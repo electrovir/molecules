@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5971. */
 const allylIsothiocyanate: Molecule = {
     name: 'Allyl Isothiocyanate',
+    // cspell:disable-next-line
+    pronunciation: 'ˈælɪl ˌIsOθˌI OsˈIənˌAt',
     structureDescription:
         'A carbon double bonded to both a nitrogen and a sulfur, with a three-carbon allyl group on the nitrogen.',
     realLifeDescription:

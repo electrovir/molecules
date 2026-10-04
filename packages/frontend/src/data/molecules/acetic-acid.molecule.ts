@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const aceticAcid: Molecule = {
     name: 'Acetic Acid',
+    // cspell:disable-next-line
+    pronunciation: 'əsˈiɾɪk ˈæsəd',
     structureDescription:
         'Two carbon atoms, one of them carrying an acid group made of a double-bonded oxygen and an OH.',
     realLifeDescription:

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6371. */
 const phosgene: Molecule = {
     name: 'Phosgene',
+    // cspell:disable-next-line
+    pronunciation: 'fˈɑzʤˌin',
     structureDescription: 'A carbon double bonded to an oxygen and holding two chlorine atoms.',
     realLifeDescription:
         'It was a deadly World War I gas and is now used to make plastics like polycarbonate.',

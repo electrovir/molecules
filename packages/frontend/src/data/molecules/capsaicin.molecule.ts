@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1548943. */
 const capsaicin: Molecule = {
     name: 'Capsaicin',
+    // cspell:disable-next-line
+    pronunciation: 'kæpsˈAsən',
     structureDescription: 'A ring joined to a long carbon tail by a nitrogen link.',
     realLifeDescription:
         'It makes chili peppers hot by triggering the same nerves that sense heat. Birds cannot feel its heat, so they eat chili peppers and spread the seeds.',

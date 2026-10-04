@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3776. */
 const isopropylAlcohol: Molecule = {
     name: 'Isopropyl Alcohol',
+    // cspell:disable-next-line
+    pronunciation: 'ˌIsʌpɹˈOpᵊl ˈælkəhˌɔl',
     structureDescription: 'Three carbon atoms with an oxygen-hydrogen group on the middle one.',
     realLifeDescription:
         'It is rubbing alcohol, used to clean wounds and electronics. It evaporates quickly, which is why it feels cold on your skin.',

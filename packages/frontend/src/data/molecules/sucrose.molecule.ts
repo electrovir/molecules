@@ -5,6 +5,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5988. */
 const sucrose: Molecule = {
     name: 'Sucrose',
+    // cspell:disable-next-line
+    pronunciation: 'sˈukɹˌOs',
     structureDescription: 'A glucose and a fructose joined together.',
     realLifeDescription:
         'It is ordinary table sugar, made from sugarcane and sugar beets. Heating it until it melts and browns turns it into caramel.',

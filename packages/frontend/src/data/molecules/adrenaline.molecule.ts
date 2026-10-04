@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5816. */
 const adrenaline: Molecule = {
     name: 'Adrenaline',
+    // cspell:disable-next-line
+    pronunciation: 'ədɹˈɛnᵊlən',
     structureDescription: 'Dopamine with an extra oxygen and carbon group.',
     realLifeDescription:
         'Released during danger, it speeds up the heart and prepares the body to fight or run. Doctors also give it as a shot to stop severe allergic reactions.',

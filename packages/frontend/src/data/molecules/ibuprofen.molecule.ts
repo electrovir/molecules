@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3672. */
 const ibuprofen: Molecule = {
     name: 'Ibuprofen',
+    // cspell:disable-next-line
+    pronunciation: 'ˌIbjupɹˈOfən',
     structureDescription:
         'A benzene ring with a branched carbon chain on one side and an acid group on the other.',
     realLifeDescription:

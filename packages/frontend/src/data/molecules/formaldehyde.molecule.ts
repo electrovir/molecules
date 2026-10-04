@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const formaldehyde: Molecule = {
     name: 'Formaldehyde',
+    // cspell:disable-next-line
+    pronunciation: 'fɔɹmˈældəhˌId',
     structureDescription:
         'A carbon atom double-bonded to an oxygen and holding two hydrogens, all flat.',
     realLifeDescription:

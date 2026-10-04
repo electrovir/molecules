@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const caffeine: Molecule = {
     name: 'Caffeine',
+    // cspell:disable-next-line
+    pronunciation: 'kæfˈin',
     structureDescription:
         'Two fused rings of carbon and nitrogen, trimmed with oxygen atoms and methyl groups.',
     realLifeDescription:

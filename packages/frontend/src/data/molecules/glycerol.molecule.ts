@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 753. */
 const glycerol: Molecule = {
     name: 'Glycerol',
+    // cspell:disable-next-line
+    pronunciation: 'ɡlˈɪsəɹɔl',
     structureDescription: 'Three carbon atoms each holding an oxygen-hydrogen group.',
     realLifeDescription:
         'It is a sweet, syrupy liquid that forms the backbone of every fat molecule. It keeps soaps and lotions moist because it pulls water from the air.',

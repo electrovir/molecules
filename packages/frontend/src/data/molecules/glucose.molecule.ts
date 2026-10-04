@@ -3,6 +3,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 
 const glucose: Molecule = {
     name: 'Glucose',
+    // cspell:disable-next-line
+    pronunciation: 'ɡlˈukˌOs',
     structureDescription:
         'A ring of five carbons and one oxygen, with hydroxyl groups sticking out around it.',
     realLifeDescription:

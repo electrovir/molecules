@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const methane: Molecule = {
     name: 'Methane',
+    // cspell:disable-next-line
+    pronunciation: 'mˈɛθˌAn',
     structureDescription:
         'A carbon atom bonded to four hydrogen atoms that point to the corners of a tetrahedron.',
     realLifeDescription:

@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5202. */
 const serotonin: Molecule = {
     name: 'Serotonin',
+    // cspell:disable-next-line
+    pronunciation: 'sˌɛɹətˈOnən',
     structureDescription: 'A double ring with a short chain ending in nitrogen.',
     realLifeDescription:
         'It is a brain signal that affects mood, sleep and appetite, and most of it is actually made in the gut.',

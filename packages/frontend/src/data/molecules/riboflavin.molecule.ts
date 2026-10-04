@@ -4,6 +4,8 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 493570. */
 const riboflavin: Molecule = {
     name: 'Riboflavin',
+    // cspell:disable-next-line
+    pronunciation: 'ɹˈIbəflˌAvən',
     structureDescription:
         'Three fused rings of carbon and nitrogen attached to a chain of carbons covered in OH groups.',
     realLifeDescription:

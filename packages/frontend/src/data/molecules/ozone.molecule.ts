@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ozone: Molecule = {
     name: 'Ozone',
+    // cspell:disable-next-line
+    pronunciation: 'ˈOzˌOn',
     structureDescription: 'Three oxygen atoms in a bent chain.',
     realLifeDescription:
         'High in the atmosphere it shields the Earth from ultraviolet light, but at ground level it is an irritating pollutant. It gives the air its fresh smell after a thunderstorm.',

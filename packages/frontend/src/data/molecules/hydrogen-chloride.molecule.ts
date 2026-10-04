@@ -3,6 +3,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const hydrogenChloride: Molecule = {
     name: 'Hydrogen Chloride',
+    // cspell:disable-next-line
+    pronunciation: 'hˈIdɹəʤᵊn klˈɔɹˌId',
     structureDescription: 'A hydrogen atom bonded to a chlorine atom.',
     realLifeDescription:
         'Dissolved in water it becomes hydrochloric acid, the same acid your stomach uses to digest food. The gas fumes in moist air because it grabs water to form tiny acid droplets.',

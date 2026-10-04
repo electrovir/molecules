@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 33613. */
 const amoxicillin: Molecule = {
     name: 'Amoxicillin',
+    // cspell:disable-next-line
+    pronunciation: 'əmˌɑksəsˈɪlɪn',
     structureDescription:
         'A four-membered ring fused to a ring holding sulfur, with a side chain carrying a benzene ring with an OH group.',
     realLifeDescription:

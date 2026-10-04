@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const borazine: Molecule = {
     name: 'Borazine',
+    // cspell:disable-next-line
+    pronunciation: 'bˈɔɹəzˌin',
     structureDescription:
         'A flat ring of alternating boron and nitrogen atoms, each holding one hydrogen.',
     realLifeDescription:

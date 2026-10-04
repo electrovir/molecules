@@ -4,6 +4,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 948. */
 const nitrousOxide: Molecule = {
     name: 'Nitrous Oxide',
+    // cspell:disable-next-line
+    pronunciation: 'nˈItɹəs ˈɑksˌId',
     structureDescription: 'Two nitrogen atoms and an oxygen in a straight line.',
     realLifeDescription:
         'It is laughing gas, used by dentists and in whipped cream cans. It is also used to give race cars an extra boost of power.',

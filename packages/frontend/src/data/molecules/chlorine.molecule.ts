@@ -5,6 +5,8 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24526. */
 const chlorine: Molecule = {
     name: 'Chlorine',
+    // cspell:disable-next-line
+    pronunciation: 'klˈɔɹˌin',
     structureDescription: 'Two chlorine atoms joined by a single bond.',
     realLifeDescription:
         'It is a greenish yellow gas used to disinfect drinking water and swimming pools.',
