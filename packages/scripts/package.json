@@ -5,6 +5,7 @@
     "sideEffects": false,
     "type": "module",
     "scripts": {
+        "build": "runstorm --names pronunciations,thumbnails \"npm run build:pronunciations\" \"npm run build:thumbnails\"",
         "build:pronunciations": "tsx src/generate-pronunciations.script.ts",
         "build:thumbnails": "tsx src/render-molecule-images.script.ts",
         "compile": "virmator compile",
@@ -21,7 +22,7 @@
         "kokoro-js": "^1.2.1",
         "playwright": "^1.63.0",
         "prettier": "3.3.3",
-        "sharp": "^0.35.4",
+        "sharp": "^0.35.5",
         "url-vir": "^2.2.2",
         "vite": "^8.3.1"
     },

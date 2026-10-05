@@ -6,6 +6,11 @@ export const ncuConfig: RunOptions = {
     // exclude these
     reject: [
         ...baseNcuConfig.reject,
+        /**
+         * Must stay on the major version `kokoro-js` depends on, so both share one copy. With its
+         * own 4.x copy installed, the pronunciation script crashed inside `onnxruntime-node`.
+         */
+        '@huggingface/transformers',
     ],
     // include only these
     filter: [],
