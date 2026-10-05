@@ -1,4 +1,4 @@
-// cspell:words difluoride
+// cspell:words difluoride tetrafluoride
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 import xenonTetrafluoride from './xenon-tetrafluoride.molecule.js';

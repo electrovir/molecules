@@ -14,23 +14,26 @@ const innerGlowStrength = 0.1;
 const headOnReflectance = 0.1;
 /** Dims every reflection of the molecule in itself, so they hint rather than distract. */
 const selfReflectionStrength = 0.4;
-/** Every glass pixel checks each reflected shape, so shapes past these counts aren't reflected. */
+/**
+ * Every glass pixel checks this many of its ball's nearest balls and every stick, so balls farther
+ * away and sticks past the count aren't reflected.
+ */
 const maxReflectedSpheres = 32;
 const maxReflectedCylinders = 40;
 /**
- * Rows of the texture holding the reflected shapes, one shape per column. A texture instead of
+ * Rows of the texture holding the reflected sticks, one stick per column. A texture instead of
  * uniform arrays, because three.js re-uploads uniform arrays for every mesh drawn, while a texture
  * uploads once per frame.
  */
-enum ReflectionRow {
-    SphereCenterAndRadius,
-    SphereColor,
-    CylinderStartAndRadius,
-    CylinderEnd,
-    CylinderColor,
+enum CylinderRow {
+    StartAndRadius,
+    End,
+    Color,
 }
-const reflectionRowCount = Object.keys(ReflectionRow).length / 2;
-const reflectionColumnCount = Math.max(maxReflectedSpheres, maxReflectedCylinders);
+const cylinderRowCount = Object.keys(CylinderRow).length / 2;
+/** Each ball takes two texels in the sphere texture: center and radius, then color. */
+const spheresPerTableRow = 128;
+const neighborTexelsPerSphere = maxReflectedSpheres / 4;
 
 /**
  * GLSL for colored glass that light passes through: a bright spot on the side facing away from the
@@ -77,25 +80,37 @@ export function createSelfReflections({
     spheres: ReadonlyArray<Readonly<{color: Readonly<Color>; radius: number}>>;
     cylinders: ReadonlyArray<Readonly<{color: Readonly<Color>; radius: number}>>;
 }>) {
-    const usedSpheres = spheres.slice(0, maxReflectedSpheres);
     const usedCylinders = cylinders.slice(0, maxReflectedCylinders);
     const state = {
         isEnabled: true,
     };
-    const data = new Float32Array(reflectionColumnCount * reflectionRowCount * 4);
+    const sphereRowCount = Math.max(1, Math.ceil(spheres.length / spheresPerTableRow));
+    const sphereData = new Float32Array(spheresPerTableRow * 2 * sphereRowCount * 4);
+    const neighborData = new Float32Array(
+        neighborTexelsPerSphere * Math.max(1, spheres.length) * 4,
+    ).fill(-1);
+    const cylinderData = new Float32Array(maxReflectedCylinders * cylinderRowCount * 4);
 
-    function setTexel({
+    function setSphereTexel({
+        sphereIndex,
+        texel,
+        values,
+    }: Readonly<{sphereIndex: number; texel: 0 | 1; values: ReadonlyArray<number>}>) {
+        sphereData.set(values, (sphereIndex * 2 + texel) * 4);
+    }
+
+    function setCylinderTexel({
         row,
         column,
         values,
-    }: Readonly<{row: ReflectionRow; column: number; values: ReadonlyArray<number>}>) {
-        data.set(values, (row * reflectionColumnCount + column) * 4);
+    }: Readonly<{row: CylinderRow; column: number; values: ReadonlyArray<number>}>) {
+        cylinderData.set(values, (row * maxReflectedCylinders + column) * 4);
     }
 
-    usedSpheres.forEach(({color, radius}, index) => {
-        setTexel({
-            row: ReflectionRow.SphereCenterAndRadius,
-            column: index,
+    spheres.forEach(({color, radius}, sphereIndex) => {
+        setSphereTexel({
+            sphereIndex,
+            texel: 0,
             values: [
                 0,
                 0,
@@ -103,15 +118,15 @@ export function createSelfReflections({
                 radius,
             ],
         });
-        setTexel({
-            row: ReflectionRow.SphereColor,
-            column: index,
+        setSphereTexel({
+            sphereIndex,
+            texel: 1,
             values: color.toArray(),
         });
     });
     usedCylinders.forEach(({color, radius}, index) => {
-        setTexel({
-            row: ReflectionRow.CylinderStartAndRadius,
+        setCylinderTexel({
+            row: CylinderRow.StartAndRadius,
             column: index,
             values: [
                 0,
@@ -120,27 +135,78 @@ export function createSelfReflections({
                 radius,
             ],
         });
-        setTexel({
-            row: ReflectionRow.CylinderColor,
+        setCylinderTexel({
+            row: CylinderRow.Color,
             column: index,
             values: color.toArray(),
         });
     });
-    const texture = new DataTexture(
-        data,
-        reflectionColumnCount,
-        reflectionRowCount,
+
+    const sphereTexture = new DataTexture(
+        sphereData,
+        spheresPerTableRow * 2,
+        sphereRowCount,
         RGBAFormat,
         FloatType,
     );
-    texture.needsUpdate = true;
+    const neighborTexture = new DataTexture(
+        neighborData,
+        neighborTexelsPerSphere,
+        Math.max(1, spheres.length),
+        RGBAFormat,
+        FloatType,
+    );
+    const cylinderTexture = new DataTexture(
+        cylinderData,
+        maxReflectedCylinders,
+        cylinderRowCount,
+        RGBAFormat,
+        FloatType,
+    );
+    [
+        sphereTexture,
+        neighborTexture,
+        cylinderTexture,
+    ].forEach((texture) => {
+        texture.needsUpdate = true;
+    });
+
+    /** Lists, for each ball, the balls whose surfaces are closest to its own. */
+    function writeNeighbors(sphereCenters: ReadonlyArray<Readonly<Vector3>>) {
+        sphereCenters.forEach((center, sphereIndex) => {
+            const ownRadius = spheres[sphereIndex]?.radius ?? 0;
+            const nearest = sphereCenters
+                .map((otherCenter, otherIndex) => {
+                    return {
+                        otherIndex,
+                        gap:
+                            otherCenter.distanceTo(center) -
+                            ownRadius -
+                            (spheres[otherIndex]?.radius ?? 0),
+                    };
+                })
+                .filter(({otherIndex}) => otherIndex !== sphereIndex)
+                .sort((first, second) => first.gap - second.gap)
+                .slice(0, maxReflectedSpheres);
+            const offset = sphereIndex * maxReflectedSpheres;
+            neighborData.fill(-1, offset, offset + maxReflectedSpheres);
+            neighborData.set(
+                nearest.map(({otherIndex}) => otherIndex),
+                offset,
+            );
+        });
+        neighborTexture.needsUpdate = true;
+    }
 
     const uniforms = {
-        reflectionData: {
-            value: texture,
+        reflectedSpheres: {
+            value: sphereTexture,
         },
-        reflectedSphereCount: {
-            value: usedSpheres.length,
+        reflectedSphereNeighbors: {
+            value: neighborTexture,
+        },
+        reflectedCylinders: {
+            value: cylinderTexture,
         },
         reflectedCylinderCount: {
             value: usedCylinders.length,
@@ -149,37 +215,59 @@ export function createSelfReflections({
 
     return {
         uniforms,
-        /** Must be called again whenever the shapes move. Takes them in the order they were given. */
+        /**
+         * Must be called again whenever the shapes move. Takes them in the order they were given.
+         * Finding each ball's nearest balls is slow for big scenes, so balls that keep moving can
+         * skip it with `keepNeighbors` and refresh them now and then instead.
+         */
         update({
             sphereCenters,
             cylinderEnds,
+            keepNeighbors,
         }: Readonly<{
             sphereCenters: ReadonlyArray<Readonly<Vector3>>;
             cylinderEnds: ReadonlyArray<Readonly<{start: Vector3; end: Vector3}>>;
+            keepNeighbors?: boolean | undefined;
         }>) {
-            sphereCenters.slice(0, maxReflectedSpheres).forEach((center, index) => {
-                setTexel({
-                    row: ReflectionRow.SphereCenterAndRadius,
-                    column: index,
-                    values: center.toArray(),
-                });
+            sphereCenters.forEach((center, sphereIndex) => {
+                sphereData.set(center.toArray(), sphereIndex * 2 * 4);
             });
+            sphereTexture.needsUpdate = true;
+            if (!keepNeighbors) {
+                writeNeighbors(sphereCenters);
+            }
             cylinderEnds.slice(0, maxReflectedCylinders).forEach(({start, end}, index) => {
-                setTexel({
-                    row: ReflectionRow.CylinderStartAndRadius,
+                setCylinderTexel({
+                    row: CylinderRow.StartAndRadius,
                     column: index,
                     values: start.toArray(),
                 });
-                setTexel({
-                    row: ReflectionRow.CylinderEnd,
+                setCylinderTexel({
+                    row: CylinderRow.End,
                     column: index,
                     values: end.toArray(),
                 });
             });
-            texture.needsUpdate = true;
+            cylinderTexture.needsUpdate = true;
+        },
+        /** Changes how one ball looks in the others' reflections. */
+        setSphereStyle({
+            sphereIndex,
+            color,
+            radius,
+        }: Readonly<{sphereIndex: number; color: Readonly<Color>; radius: number}>) {
+            sphereData[sphereIndex * 2 * 4 + 3] = radius;
+            setSphereTexel({
+                sphereIndex,
+                texel: 1,
+                values: color.toArray(),
+            });
+            sphereTexture.needsUpdate = true;
         },
         dispose() {
-            texture.dispose();
+            sphereTexture.dispose();
+            neighborTexture.dispose();
+            cylinderTexture.dispose();
         },
         isEnabled() {
             return state.isEnabled;
@@ -200,12 +288,24 @@ export function createSelfReflections({
  * {@link createSelfReflections}.
  */
 export const selfReflectionsGlsl = `
-    uniform highp sampler2D reflectionData;
-    uniform int reflectedSphereCount;
+    uniform highp sampler2D reflectedSpheres;
+    uniform highp sampler2D reflectedSphereNeighbors;
+    uniform highp sampler2D reflectedCylinders;
     uniform int reflectedCylinderCount;
 
-    vec4 readReflectionData(int row, int column) {
-        return texelFetch(reflectionData, ivec2(column, row), 0);
+    vec4 readReflectedSphere(int sphereIndex, int texel) {
+        return texelFetch(
+            reflectedSpheres,
+            ivec2(
+                (sphereIndex % ${spheresPerTableRow}) * 2 + texel,
+                sphereIndex / ${spheresPerTableRow}
+            ),
+            0
+        );
+    }
+
+    vec4 readReflectedCylinder(int row, int column) {
+        return texelFetch(reflectedCylinders, ivec2(column, row), 0);
     }
 
     vec3 shadeReflectedSurface(vec3 color, vec3 surfaceNormal, vec3 rayDirection, vec3 towardLight) {
@@ -214,7 +314,7 @@ export const selfReflectionsGlsl = `
         return color * (0.25 + 0.75 * facing) + vec3(shine * 0.6);
     }
 
-    /** \`selfSphereIndex\` is which reflected sphere this surface is on, so it doesn't reflect itself. */
+    /** \`selfSphereIndex\` is which reflected sphere this surface is on. */
     vec3 getSelfReflection(
         vec3 position,
         vec3 normal,
@@ -228,13 +328,13 @@ export const selfReflectionsGlsl = `
         vec3 hitColor = vec3(0.0);
 
         for (int index = 0; index < ${maxReflectedSpheres}; index++) {
-            if (index >= reflectedSphereCount) {
+            int sphereIndex = int(
+                texelFetch(reflectedSphereNeighbors, ivec2(index / 4, selfSphereIndex), 0)[index % 4]
+            );
+            if (sphereIndex < 0) {
                 break;
             }
-            if (index == selfSphereIndex) {
-                continue;
-            }
-            vec4 sphere = readReflectionData(${ReflectionRow.SphereCenterAndRadius}, index);
+            vec4 sphere = readReflectedSphere(sphereIndex, 0);
             float radius = sphere.w;
             vec3 offset = position - sphere.xyz;
             float along = dot(offset, rayDirection);
@@ -248,7 +348,7 @@ export const selfReflectionsGlsl = `
                 /** Fades the outline so the reflected ball doesn't have a jagged edge. */
                 hitCoverage = smoothstep(0.0, 0.1, discriminant / (radius * radius));
                 hitColor = shadeReflectedSurface(
-                    readReflectionData(${ReflectionRow.SphereColor}, index).rgb,
+                    readReflectedSphere(sphereIndex, 1).rgb,
                     normalize(offset + rayDirection * hitDistance),
                     rayDirection,
                     towardLight
@@ -260,10 +360,10 @@ export const selfReflectionsGlsl = `
             if (index >= reflectedCylinderCount) {
                 break;
             }
-            vec4 cylinderStart = readReflectionData(${ReflectionRow.CylinderStartAndRadius}, index);
+            vec4 cylinderStart = readReflectedCylinder(${CylinderRow.StartAndRadius}, index);
             float radius = cylinderStart.w;
             vec3 start = cylinderStart.xyz;
-            vec3 axis = readReflectionData(${ReflectionRow.CylinderEnd}, index).xyz - start;
+            vec3 axis = readReflectedCylinder(${CylinderRow.End}, index).xyz - start;
             vec3 offset = position - start;
             float axisLengthSquared = dot(axis, axis);
             float axisAlongRay = dot(axis, rayDirection);
@@ -290,7 +390,7 @@ export const selfReflectionsGlsl = `
                 nearestHit = hitDistance;
                 hitCoverage = 1.0;
                 hitColor = shadeReflectedSurface(
-                    readReflectionData(${ReflectionRow.CylinderColor}, index).rgb,
+                    readReflectedCylinder(${CylinderRow.Color}, index).rgb,
                     (offset + rayDirection * hitDistance - axis * hitAlongAxis / axisLengthSquared) /
                         radius,
                     rayDirection,

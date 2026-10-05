@@ -11,7 +11,7 @@ import {
     ViraSize,
     viraTheme,
 } from 'vira';
-import {getAudioOutput} from '../../audio/audio-output.js';
+import {playPronunciation} from '../../audio/pronunciation.js';
 import {moleculeRouteNames, moleculeSummaries} from '../../data/all-molecules.js';
 import {findChainStart} from '../../data/evolution-chains.js';
 import {type Molecule} from '../../data/molecule.js';
@@ -40,45 +40,6 @@ function goToMolecule({
             ),
         ),
     );
-}
-
-/** Shared by every press, so a new press cuts off the name still being said. */
-const nameAudio: {
-    source: AudioBufferSourceNode | undefined;
-    pressCount: number;
-} = {
-    source: undefined,
-    pressCount: 0,
-};
-
-/**
- * Plays the molecule's pre-recorded name, generated from dictionary pronunciations instead of
- * leaving the device's voice to guess at chemical names and acronyms.
- */
-async function sayName(routeName: string) {
-    /**
-     * Web Audio instead of an `<audio>` element: media elements claim the OS media session, so the
-     * system media keys would replay the name.
-     */
-    const {context, masterVolume} = getAudioOutput();
-    nameAudio.source?.stop();
-    nameAudio.source = undefined;
-    nameAudio.pressCount++;
-    const pressCount = nameAudio.pressCount;
-
-    const response = await fetch(createStaticFileUrl('pronunciations', `${routeName}.mp3`));
-    const buffer = await context.decodeAudioData(await response.arrayBuffer());
-
-    /** A newer press started while this one was still loading. */
-    if (nameAudio.pressCount !== pressCount) {
-        return;
-    }
-
-    const source = context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(masterVolume);
-    source.start();
-    nameAudio.source = source;
 }
 
 /**
@@ -532,12 +493,22 @@ export const VirMoleculePage = defineElement<
                                 title="Say the name"
                                 ${listen('pointerup', (event) => {
                                     if (event.button === 0) {
-                                        void sayName(routeName);
+                                        void playPronunciation(
+                                            createStaticFileUrl(
+                                                'pronunciations',
+                                                `${routeName}.mp3`,
+                                            ),
+                                        );
                                     }
                                 })}
                                 ${listen('click', (event) => {
                                     if (!event.detail) {
-                                        void sayName(routeName);
+                                        void playPronunciation(
+                                            createStaticFileUrl(
+                                                'pronunciations',
+                                                `${routeName}.mp3`,
+                                            ),
+                                        );
                                     }
                                 })}
                             ></${ViraButton}>

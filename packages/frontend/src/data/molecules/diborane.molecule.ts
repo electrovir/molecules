@@ -1,4 +1,4 @@
-// cspell:words diborane
+// cspell:words borazine diborane
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 import borazine from './borazine.molecule.js';

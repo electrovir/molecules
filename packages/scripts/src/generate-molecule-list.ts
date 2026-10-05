@@ -1,4 +1,4 @@
-// cspell:words Pokédex
+// cspell:words pokédex
 import {removeSuffix} from '@augment-vir/common';
 import {
     getMoleculeFormula,

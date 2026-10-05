@@ -1,3 +1,4 @@
+// cspell:words glyphosate
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 import creatine from './creatine.molecule.js';

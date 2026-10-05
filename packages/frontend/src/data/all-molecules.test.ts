@@ -41,10 +41,12 @@ describe('moleculeRouteNames', () => {
 
         /** Annotated because the recursion leaves TypeScript nothing to infer from. */
         function getDescendants(molecule: Readonly<Molecule>): Molecule[] {
-            return (molecule.stats.evolvesInto ?? []).flatMap((evolution) => [
-                evolution,
-                ...getDescendants(evolution),
-            ]);
+            return (molecule.stats.evolvesInto ?? []).flatMap((evolution) => {
+                return [
+                    evolution,
+                    ...getDescendants(evolution),
+                ];
+            });
         }
 
         assert.deepEquals(
@@ -74,18 +76,26 @@ describe('moleculeRouteNames', () => {
     it('only evolves into more complex molecules', async () => {
         const molecules = await loadAllMolecules();
 
-        function isMoreComplex(first: Readonly<Molecule>, second: Readonly<Molecule>) {
+        function isMoreComplex({
+            molecule,
+            than,
+        }: Readonly<{molecule: Readonly<Molecule>; than: Readonly<Molecule>}>) {
             return (
-                first.atoms.length > second.atoms.length ||
-                (first.atoms.length === second.atoms.length &&
-                    getTotalBondOrder(first.bonds) > getTotalBondOrder(second.bonds))
+                molecule.atoms.length > than.atoms.length ||
+                (molecule.atoms.length === than.atoms.length &&
+                    getTotalBondOrder(molecule.bonds) > getTotalBondOrder(than.bonds))
             );
         }
 
         assert.deepEquals(
             molecules.flatMap((molecule) => {
                 return (molecule.stats.evolvesInto ?? [])
-                    .filter((evolution) => !isMoreComplex(evolution, molecule))
+                    .filter((evolution) => {
+                        return !isMoreComplex({
+                            molecule: evolution,
+                            than: molecule,
+                        });
+                    })
                     .map((evolution) => `${molecule.name} -> ${evolution.name}`);
             }),
             [],

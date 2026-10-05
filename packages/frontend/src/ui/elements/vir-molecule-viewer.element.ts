@@ -1,14 +1,18 @@
 import {assertWrap} from '@augment-vir/assert';
 import {type PartialWithUndefined} from '@augment-vir/common';
 import {colorCss} from '@electrovir/color';
-import {css, defineElement, defineElementEvent, html, onResize} from 'element-vir';
+import {css, defineElement, defineElementEvent, html, onResize, unsafeCSS} from 'element-vir';
 import {themeDefaultKey} from 'theme-vir/dist/color-theme/color-theme.js';
-import {LoaderAnimated24Icon, ViraIcon, viraTheme} from 'vira';
-import {chemicalElements} from '../../data/chemical-element.js';
+import {LoaderAnimated24Icon, ViraIcon, ViraLink, viraTheme} from 'vira';
+import {expandOrbitals} from '../../data/atom-orbitals.js';
+import {chemicalElements, type ChemicalElementSymbol} from '../../data/chemical-element.js';
 import {BondOrder, type Molecule} from '../../data/molecule.js';
+import {createAtomRoute, type FrontendRouter} from '../frontend-state/frontend-state.js';
+import {getOrbitalCssColor} from '../orbital-colors.js';
 import {type MoleculeScene} from '../three/molecule-scene.js';
 import {type MoleculeSelection, MoleculeSelectionType} from '../three/molecule-selection.js';
 import {type RenderQuality} from '../three/render-quality.js';
+import {VirAtomThumbnail} from './vir-atom-thumbnail.element.js';
 
 const bondOrderLabels: Record<
     BondOrder,
@@ -31,12 +35,19 @@ const bondOrderLabels: Record<
     },
 };
 
-function getSelectionLabel({
+function getMoleculeSelectionLabel({
     molecule,
     selection,
 }: Readonly<{
     molecule: Readonly<Molecule>;
-    selection: Readonly<MoleculeSelection>;
+    selection: Readonly<
+        Extract<
+            MoleculeSelection,
+            {
+                type: MoleculeSelectionType.Atom | MoleculeSelectionType.Bond;
+            }
+        >
+    >;
 }>) {
     if (selection.type === MoleculeSelectionType.Atom) {
         const element =
@@ -44,21 +55,66 @@ function getSelectionLabel({
         return {
             title: element.symbol,
             details: `${element.name} · ${element.atomicNumber}`,
+            startSymbol: element.symbol,
+            endSymbol: undefined,
         };
     }
 
     const bond = assertWrap.isDefined(molecule.bonds[selection.bondIndex]);
     const bondLabel = bondOrderLabels[bond.order];
+    const startSymbol = assertWrap.isDefined(molecule.atoms[bond.atomIndexes[0]]).element;
+    const endSymbol = assertWrap.isDefined(molecule.atoms[bond.atomIndexes[1]]).element;
     return {
-        title: bond.atomIndexes
-            .map((atomIndex) => assertWrap.isDefined(molecule.atoms[atomIndex]).element)
-            .join(bondLabel.symbol),
+        title: [
+            startSymbol,
+            endSymbol,
+        ].join(bondLabel.symbol),
         details: `${bondLabel.name} bond`,
+        startSymbol,
+        endSymbol,
     };
+}
+
+function getAtomSelectionLabel({
+    symbol,
+    selection,
+}: Readonly<{
+    symbol: ChemicalElementSymbol;
+    selection: Readonly<
+        Extract<
+            MoleculeSelection,
+            {
+                type: MoleculeSelectionType.Nucleus | MoleculeSelectionType.Orbital;
+            }
+        >
+    >;
+}>) {
+    const element = chemicalElements[symbol];
+    if (selection.type === MoleculeSelectionType.Nucleus) {
+        return {
+            title: 'Nucleus',
+            details: `${element.atomicNumber} protons · ${element.massNumber - element.atomicNumber} neutrons`,
+            color: undefined,
+        };
+    }
+    const orbital = expandOrbitals(symbol).find(
+        (eachOrbital) => eachOrbital.id === selection.orbitalId,
+    );
+    return orbital
+        ? {
+              title: html`
+                  ${orbital.n}${orbital.shape}
+                  <sub>${orbital.subscript}</sub>
+              `,
+              details: `${orbital.occupancy} ${orbital.occupancy === 1 ? 'electron' : 'electrons'} · shell ${orbital.n}`,
+              color: getOrbitalCssColor(orbital),
+          }
+        : undefined;
 }
 
 export const VirMoleculeViewer = defineElement<
     {
+        router: Pick<FrontendRouter, 'createRouteUrl' | 'setRouteOnDirectNavigation'>;
         /** While `undefined`, a spinner shows over whichever molecule was last shown. */
         molecule: Readonly<Molecule> | undefined;
     } & PartialWithUndefined<{
@@ -68,11 +124,19 @@ export const VirMoleculeViewer = defineElement<
         rightInsetPixels: number;
         /** Hides the viewer and stops drawing, but keeps its 3D scene ready to show again. */
         isHidden: boolean;
+        /** Shows this element's atom instead of `molecule`. */
+        atomSymbol: ChemicalElementSymbol;
+        /** The atom orbital to show alone. Every orbital shows when omitted. */
+        selectedOrbitalId: string;
+        /** How strongly the atom's orbital clouds show, from 0 to 1. */
+        orbitalOpacity: number;
     }>
 >()({
     tagName: 'vir-molecule-viewer',
     events: {
         renderQualityChange: defineElementEvent<Readonly<RenderQuality>>(),
+        /** Tapping an atom's electron picks its orbital. `undefined` shows every orbital. */
+        orbitalSelect: defineElementEvent<string | undefined>(),
     },
     hostClasses: {
         'vir-molecule-viewer-hidden'({inputs}) {
@@ -129,8 +193,8 @@ export const VirMoleculeViewer = defineElement<
                 left: 16px;
                 bottom: 16px;
                 display: flex;
-                flex-direction: column;
-                gap: 4px;
+                align-items: center;
+                gap: 24px;
                 padding: 16px 24px;
                 border-radius: 12px;
                 font-size: 28px;
@@ -146,6 +210,24 @@ export const VirMoleculeViewer = defineElement<
                 & .details {
                     font-size: 24px;
                     opacity: 0.8;
+                }
+
+                & .selection-text {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                }
+
+                & .orbital-swatch {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                }
+
+                & ${ViraLink} {
+                    pointer-events: auto;
+                    cursor: pointer;
+                    text-decoration: none;
                 }
             }
         `;
@@ -178,7 +260,17 @@ export const VirMoleculeViewer = defineElement<
                     }),
                 );
             });
-            moleculeScene.listenToSelection((selection) => {
+            moleculeScene.listenToSelection((selection, {isPicked}) => {
+                if (isPicked && inputs.atomSymbol) {
+                    dispatch(
+                        new events.orbitalSelect({
+                            detail:
+                                selection?.type === MoleculeSelectionType.Orbital
+                                    ? selection.orbitalId
+                                    : undefined,
+                        }),
+                    );
+                }
                 updateState({
                     selection,
                 });
@@ -195,19 +287,54 @@ export const VirMoleculeViewer = defineElement<
         });
     },
     render({inputs, state}) {
-        if (state.moleculeScene && inputs.molecule) {
+        if (state.moleculeScene && inputs.atomSymbol) {
+            state.moleculeScene.setAtom(inputs.atomSymbol);
+            state.moleculeScene.setOrbitalSelection(inputs.selectedOrbitalId);
+            state.moleculeScene.setOrbitalOpacity(inputs.orbitalOpacity ?? 0.7);
+        } else if (state.moleculeScene && inputs.molecule) {
             state.moleculeScene.setMolecule(inputs.molecule);
         }
         state.moleculeScene?.setRightInset(inputs.rightInsetPixels ?? 0);
         state.moleculeScene?.setPaused(!!inputs.isHidden);
 
-        const selectionLabel =
-            state.selection && inputs.molecule
-                ? getSelectionLabel({
+        const selection = state.selection;
+        const moleculeSelectionLabel =
+            (selection?.type === MoleculeSelectionType.Atom ||
+                selection?.type === MoleculeSelectionType.Bond) &&
+            inputs.molecule &&
+            !inputs.atomSymbol
+                ? getMoleculeSelectionLabel({
                       molecule: inputs.molecule,
-                      selection: state.selection,
+                      selection,
                   })
                 : undefined;
+        const atomSelectionLabel =
+            (selection?.type === MoleculeSelectionType.Nucleus ||
+                selection?.type === MoleculeSelectionType.Orbital) &&
+            inputs.atomSymbol
+                ? getAtomSelectionLabel({
+                      symbol: inputs.atomSymbol,
+                      selection,
+                  })
+                : undefined;
+
+        function renderAtomLink(symbol: ChemicalElementSymbol) {
+            return html`
+                <${ViraLink.assign({
+                    route: {
+                        route: createAtomRoute(symbol),
+                        router: inputs.router,
+                    },
+                    disableLinkStyles: true,
+                })}
+                    title=${chemicalElements[symbol].name}
+                >
+                    <${VirAtomThumbnail.assign({
+                        symbol,
+                    })}></${VirAtomThumbnail}>
+                </${ViraLink}>
+            `;
+        }
 
         return html`
             <div
@@ -220,7 +347,7 @@ export const VirMoleculeViewer = defineElement<
             >
                 ${state.moleculeScene?.canvas}
             </div>
-            ${(state.moleculeScene && inputs.molecule) || inputs.isHidden
+            ${(state.moleculeScene && (inputs.molecule || inputs.atomSymbol)) || inputs.isHidden
                 ? ''
                 : html`
                       <div
@@ -235,11 +362,39 @@ export const VirMoleculeViewer = defineElement<
                           })}></${ViraIcon}>
                       </div>
                   `}
-            ${selectionLabel
+            ${moleculeSelectionLabel
                 ? html`
                       <div class="selection-label">
-                          <strong>${selectionLabel.title}</strong>
-                          <span class="details">${selectionLabel.details}</span>
+                          ${renderAtomLink(moleculeSelectionLabel.startSymbol)}
+                          <div class="selection-text">
+                              <strong>${moleculeSelectionLabel.title}</strong>
+                              <span class="details">${moleculeSelectionLabel.details}</span>
+                          </div>
+                          ${moleculeSelectionLabel.endSymbol
+                              ? renderAtomLink(moleculeSelectionLabel.endSymbol)
+                              : ''}
+                      </div>
+                  `
+                : ''}
+            ${atomSelectionLabel
+                ? html`
+                      <div class="selection-label">
+                          ${atomSelectionLabel.color
+                              ? html`
+                                    <span
+                                        class="orbital-swatch"
+                                        style=${css`
+                                            background-color: ${unsafeCSS(
+                                                atomSelectionLabel.color,
+                                            )};
+                                        `}
+                                    ></span>
+                                `
+                              : ''}
+                          <div class="selection-text">
+                              <strong>${atomSelectionLabel.title}</strong>
+                              <span class="details">${atomSelectionLabel.details}</span>
+                          </div>
                       </div>
                   `
                 : ''}

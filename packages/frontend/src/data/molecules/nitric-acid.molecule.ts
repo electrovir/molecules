@@ -1,3 +1,4 @@
+// cspell:words nitromethane
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 import nitromethane from './nitromethane.molecule.js';

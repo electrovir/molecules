@@ -1,4 +1,0 @@
--   atoms view with bohr shells and point cloud + iso-surface overlay view
--   show PNGs of the evolution chain for each molecule, highlighting the currently selected one, allow click / tap to jump between them
--   phone screen size support
--   optimize further

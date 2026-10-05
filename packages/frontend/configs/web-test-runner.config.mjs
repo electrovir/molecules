@@ -15,6 +15,7 @@ const webTestRunnerConfig = {
         ...baseConfig.coverageConfig,
         exclude: [
             ...baseConfig.coverageConfig.exclude,
+            'src/audio/**',
             'src/ui/**',
         ],
     },

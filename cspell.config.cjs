@@ -20,5 +20,8 @@ module.exports = {
         'misaki',
         'huggingface',
         'onnx',
+        'subshell',
+        'subshells',
+        'wavefunction',
     ],
 };

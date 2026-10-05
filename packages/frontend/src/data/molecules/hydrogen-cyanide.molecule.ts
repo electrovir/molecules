@@ -1,4 +1,4 @@
-// cspell:words cyanogenic
+// cspell:words cyanogenic edta
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 import edta from './edta.molecule.js';

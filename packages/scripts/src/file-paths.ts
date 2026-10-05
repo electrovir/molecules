@@ -10,3 +10,4 @@ export const allMoleculesFilePath = join(frontendDataDirPath, 'all-molecules.ts'
 export const frontendViteConfigFilePath = join(frontendDirPath, 'configs', 'vite.config.ts');
 export const moleculeImagesDirPath = join(frontendDirPath, 'www-static', 'molecule-images');
 export const pronunciationsDirPath = join(frontendDirPath, 'www-static', 'pronunciations');
+export const atomPronunciationsDirPath = join(pronunciationsDirPath, 'atoms');

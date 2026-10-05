@@ -1,3 +1,4 @@
+// cspell:words ethanethiol octasulfur
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
 import ethanethiol from './ethanethiol.molecule.js';

@@ -4,6 +4,12 @@ import {type FullSpaRoute, PathTree, SpaRouter} from 'spa-router-vir';
 import {joinUrlPaths, parseUrl} from 'url-vir';
 import {ViraThemeClient, ViraThemeSelection} from 'vira';
 import {moleculeRouteNames, moleculeSummaries} from '../../data/all-molecules.js';
+import {chemicalElements, type ChemicalElementSymbol} from '../../data/chemical-element.js';
+import {
+    elementSymbols,
+    findElementByRouteName,
+    getElementRouteName,
+} from '../../data/periodic-table.js';
 import {createMoleculesLocalDbClient} from './frontend-clients/local-db.client.js';
 import {determineScreenSize} from './screen-size.js';
 
@@ -18,6 +24,13 @@ export const frontendPathTree = new PathTree({
         },
         'all-molecules': {},
         evolutions: {},
+        atom: {
+            allowBare: true,
+            children: {
+                ':atom-name': {},
+            },
+        },
+        atoms: {},
     },
 });
 
@@ -64,6 +77,25 @@ export function createMoleculeRoute(routeName: string): FrontendRoute {
     };
 }
 
+/** The route's element. Paths without a known element name give hydrogen. */
+export function getRouteElementSymbol(route: Readonly<Pick<FullSpaRoute, 'paths'>>) {
+    return (
+        (route.paths[0] === 'atom' && route.paths[1]
+            ? findElementByRouteName(route.paths[1])
+            : undefined) ?? assertWrap.isDefined(elementSymbols[0])
+    );
+}
+
+export function createAtomRoute(symbol: ChemicalElementSymbol): FrontendRoute {
+    return {
+        paths: frontendPathTree.paths.children.atom.children[':atom-name'].fill(
+            getElementRouteName(symbol),
+        ).fullPaths,
+        search: undefined,
+        hash: undefined,
+    };
+}
+
 /** Finishes sanitizing paths that already match {@link frontendPathTree}, by their top level path. */
 const routeSanitizers: Record<FrontendPaths[0], (paths: FrontendPaths) => FrontendRoute> = {
     /** The path tree accepts any molecule name, so unknown names fall back to the first molecule. */
@@ -92,6 +124,21 @@ const routeSanitizers: Record<FrontendPaths[0], (paths: FrontendPaths) => Fronte
             hash: undefined,
         };
     },
+    /** The path tree accepts any atom name, so unknown names fall back to hydrogen. */
+    atom(paths) {
+        return createAtomRoute(
+            getRouteElementSymbol({
+                paths,
+            }),
+        );
+    },
+    atoms(paths) {
+        return {
+            paths,
+            search: undefined,
+            hash: undefined,
+        };
+    },
 };
 
 const routeTitles: Record<FrontendPaths[0], (paths: FrontendPaths) => string> = {
@@ -104,7 +151,23 @@ const routeTitles: Record<FrontendPaths[0], (paths: FrontendPaths) => string> = 
     evolutions() {
         return 'Evolutions';
     },
+    atom(paths) {
+        return chemicalElements[
+            getRouteElementSymbol({
+                paths,
+            })
+        ].name;
+    },
+    atoms() {
+        return 'Periodic Table';
+    },
 };
+
+/** Molecule and atom pages, which the list pages' buttons toggle back to. */
+const detailPages: ReadonlyArray<FrontendPaths[0]> = [
+    'molecule',
+    'atom',
+];
 
 export async function createFrontendState(hostElement: Readonly<HTMLElement>) {
     const localDbClient = await createMoleculesLocalDbClient();
@@ -120,13 +183,19 @@ export async function createFrontendState(hostElement: Readonly<HTMLElement>) {
     const themeClient = new ViraThemeClient();
     themeClient.setSelectedTheme(ViraThemeSelection.Dark);
 
+    const initialRoute = router.readCurrentRoute();
+
     const frontendState = new Observable({
         equalityCheck: check.strictEquals,
         defaultValue: {
             router,
             localDbClient,
             themeClient,
-            currentRoute: router.readCurrentRoute(),
+            currentRoute: initialRoute,
+            /** The last molecule or atom page visited. */
+            lastDetailRoute: detailPages.includes(initialRoute.paths[0])
+                ? initialRoute
+                : createMoleculeRoute(assertWrap.isDefined(moleculeRouteNames[0])),
             screenSize: determineScreenSize({
                 currentScreenSize: undefined,
                 elementWidth: hostElement.clientWidth,
@@ -142,6 +211,9 @@ export async function createFrontendState(hostElement: Readonly<HTMLElement>) {
         frontendState.setValue({
             ...frontendState.value,
             currentRoute,
+            lastDetailRoute: detailPages.includes(currentRoute.paths[0])
+                ? currentRoute
+                : frontendState.value.lastDetailRoute,
         });
     });
 

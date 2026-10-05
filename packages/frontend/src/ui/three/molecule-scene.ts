@@ -1,8 +1,6 @@
 import {assertWrap, check} from '@augment-vir/assert';
-import {createArray, type PartialWithUndefined} from '@augment-vir/common';
+import {type PartialWithUndefined} from '@augment-vir/common';
 import {
-    Box3,
-    Color,
     DepthTexture,
     Euler,
     FloatType,
@@ -20,37 +18,16 @@ import {
     WebGLRenderTarget,
 } from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {type ChemicalElement, chemicalElements} from '../../data/chemical-element.js';
-import {BondOrder, type Coordinates, type Molecule} from '../../data/molecule.js';
-import {type Capsule, createCapsuleRows} from './capsule-rows.js';
+import {type ChemicalElementSymbol} from '../../data/chemical-element.js';
+import {type Molecule} from '../../data/molecule.js';
+import {type AtomModel, createAtomModel} from './atom-model.js';
+import {groundGap, towardLight} from './ball-and-stick-model.js';
 import {findClearestYaw} from './clearest-yaw.js';
-import {contactReach, maxContactOccluders} from './contact-shading.js';
-import {createGroundShadow} from './ground-shadow.js';
-import {
-    createAtomImpostors,
-    createStickImpostors,
-    frontDepthLayer,
-    type ImpostorSceneUniforms,
-} from './impostors.js';
-import {createSelfReflections} from './marble.js';
+import {frontDepthLayer, type ImpostorSceneUniforms} from './impostors.js';
+import {createMoleculeModel, type MoleculeModel} from './molecule-model.js';
 import {type MoleculeSelection, MoleculeSelectionType} from './molecule-selection.js';
-import {createRenderQualityScaler, RenderEffect, type RenderQuality} from './render-quality.js';
-import {createShadowCasters} from './shadow-casters.js';
+import {createRenderQualityScaler, type RenderQuality} from './render-quality.js';
 
-/** Ball-and-stick atoms are drawn much smaller than their van der Waals radius so bonds show. */
-const atomRadiusScale = 0.3;
-/**
- * How much of an atom's radius is its colored core. The rest is a see-through glass shell, so bonds
- * show where they pass into the atom.
- */
-const atomCoreFraction = 0.95;
-const bondRadius = 0.1;
-const multipleBondRadius = 0.06;
-const multipleBondSpacing = 0.2;
-const bondColor = 0xb3_b3_b3;
-/** PubChem has no color or van der Waals radius for the superheavy elements (Fm and beyond). */
-const fallbackAtomColor = 0xff_14_93;
-const fallbackVanDerWaalsRadius = 2;
 /** Extra room around the molecule when zooming the camera to fit it. */
 const fitDistanceMargin = 1.2;
 /**
@@ -71,32 +48,12 @@ const cameraElevationRadians = (25 * Math.PI) / 180;
 const startingOrientation = new Quaternion().setFromEuler(
     new Euler((-15 * Math.PI) / 180, (-20 * Math.PI) / 180, (10 * Math.PI) / 180),
 );
-/**
- * Nearly overhead so the ground shadow lands under the molecule rather than behind it, but tipped
- * toward the camera enough to still light the atoms' fronts.
- */
-const towardLight = new Vector3(1, 10, 2.5).normalize();
-/**
- * How far the shadow-catching ground sits below the lowest point any atom can be turned to, in
- * ångströms.
- */
-const groundGap = 0.5;
-const groundShadowOpacity = 0.35;
-const highlightColor = 0xff_d5_4f;
 /** Selected atoms and bonds glow in their own color, pulsing between these intensities. */
 const highlightGlow = {
     min: 0.15,
     max: 0.5,
     pulsesPerSecond: 0.8,
 };
-/**
- * The glow's intensity is divided by the color's brightness, relative to this, so white atoms don't
- * wash out while dark ones barely glow. Carbon's grey is about this bright, so it keeps the raw
- * intensities.
- */
-const highlightGlowReferenceLuminance = 0.28;
-/** Keeps very dark colors from getting an extreme boost. */
-const highlightGlowMaxBoost = 3;
 /** Pointer travel, in pixels, beyond which a press counts as an orbit drag instead of a click. */
 const clickMoveTolerance = 12;
 /** The idle turntable spin around the vertical axis. */
@@ -113,566 +70,6 @@ const flingMaxPauseMilliseconds = 80;
 const flingSlowdown = 1.35;
 /** After this long without touching the molecule, it starts spinning again. */
 const idleSpinResumeMilliseconds = 5000;
-
-function toVector3({x, y, z}: Readonly<Coordinates>) {
-    return new Vector3(x, y, z);
-}
-
-/** One of a bond's sticks. A double bond has two, side by side. */
-type Stick = {
-    bondIndex: number;
-    /** How far the stick sits to the side of the bond's axis. */
-    offset: number;
-    radius: number;
-};
-
-/**
- * Places a stick along its bond. A multi-stick bond is turned around its own axis so its sticks
- * spread across the screen and never hide behind each other.
- */
-function getStickEnds({
-    molecule,
-    stick,
-    atomPositions,
-    cameraPosition,
-}: Readonly<{
-    molecule: Readonly<Molecule>;
-    stick: Readonly<Stick>;
-    atomPositions: ReadonlyArray<Readonly<Vector3>>;
-    /** In the molecule's own space, which turns with the molecule. */
-    cameraPosition: Readonly<Vector3>;
-}>) {
-    const bond = assertWrap.isDefined(molecule.bonds[stick.bondIndex]);
-    const [
-        start,
-        end,
-    ] = bond.atomIndexes.map((atomIndex) => {
-        return assertWrap.isDefined(
-            atomPositions[atomIndex],
-            `Bond in '${molecule.name}' references missing atom ${atomIndex}.`,
-        );
-    }) satisfies ReadonlyArray<Readonly<Vector3>> as [
-        Readonly<Vector3>,
-        Readonly<Vector3>,
-    ];
-    const bondDirection = end.clone().sub(start).normalize();
-    const spreadDirection = new Vector3().crossVectors(
-        bondDirection,
-        cameraPosition.clone().sub(start.clone().add(end).multiplyScalar(0.5)),
-    );
-    /**
-     * Single bonds have nothing to spread, and a bond pointing straight at the camera looks the
-     * same at any spread.
-     */
-    const side =
-        bond.order === BondOrder.Single || spreadDirection.lengthSq() < 1e-9
-            ? new Vector3(1, 0, 0).applyQuaternion(
-                  new Quaternion().setFromUnitVectors(new Vector3(0, 1, 0), bondDirection),
-              )
-            : spreadDirection.normalize();
-    return {
-        start: start.clone().addScaledVector(side, stick.offset),
-        end: end.clone().addScaledVector(side, stick.offset),
-        side,
-    };
-}
-
-function getGlowBoost(color: Readonly<Color>) {
-    const luminance = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
-    return Math.min(highlightGlowMaxBoost, highlightGlowReferenceLuminance / (luminance || 1));
-}
-
-/** Distance along the ray to where it enters the sphere, if it does. */
-function intersectSphere({
-    origin,
-    direction,
-    center,
-    radius,
-}: Readonly<{
-    origin: Readonly<Vector3>;
-    direction: Readonly<Vector3>;
-    center: Readonly<Vector3>;
-    radius: number;
-}>) {
-    const offset = origin.clone().sub(center);
-    const along = offset.dot(direction);
-    const discriminant = along * along - (offset.lengthSq() - radius * radius);
-    const distance = -along - Math.sqrt(discriminant);
-    return discriminant > 0 && distance > 0 ? distance : undefined;
-}
-
-/** Distance along the ray to where it enters the open-ended cylinder, if it does. */
-function intersectCylinder({
-    origin,
-    direction,
-    start,
-    end,
-    radius,
-}: Readonly<{
-    origin: Readonly<Vector3>;
-    direction: Readonly<Vector3>;
-    start: Readonly<Vector3>;
-    end: Readonly<Vector3>;
-    radius: number;
-}>) {
-    const axis = end.clone().sub(start);
-    const offset = origin.clone().sub(start);
-    const axisLengthSquared = axis.lengthSq();
-    const axisAlongRay = axis.dot(direction);
-    const axisAlongOffset = axis.dot(offset);
-    const quadraticA = axisLengthSquared - axisAlongRay * axisAlongRay;
-    const quadraticB = axisLengthSquared * direction.dot(offset) - axisAlongOffset * axisAlongRay;
-    const quadraticC =
-        axisLengthSquared * offset.lengthSq() -
-        axisAlongOffset * axisAlongOffset -
-        radius * radius * axisLengthSquared;
-    const discriminant = quadraticB * quadraticB - quadraticA * quadraticC;
-    if (discriminant <= 0 || quadraticA < 1e-9) {
-        return undefined;
-    }
-    const distance = (-quadraticB - Math.sqrt(discriminant)) / quadraticA;
-    const hitAlongAxis = axisAlongOffset + distance * axisAlongRay;
-    return distance > 0 && hitAlongAxis > 0 && hitAlongAxis < axisLengthSquared
-        ? distance
-        : undefined;
-}
-
-function createMoleculeModel({
-    molecule,
-    sceneUniforms,
-}: Readonly<{
-    molecule: Readonly<Molecule>;
-    sceneUniforms: Readonly<ImpostorSceneUniforms>;
-}>) {
-    const group = new Group();
-    const atomCount = molecule.atoms.length;
-    const atomRadii = molecule.atoms.map((atom) => {
-        const info: Readonly<ChemicalElement> = chemicalElements[atom.element];
-        return (info.vanDerWaalsRadius ?? fallbackVanDerWaalsRadius) * atomRadiusScale;
-    });
-    const atomColors = molecule.atoms.map((atom) => {
-        const info: Readonly<ChemicalElement> = chemicalElements[atom.element];
-        return new Color(info.color ?? fallbackAtomColor);
-    });
-    const stickColor = new Color(bondColor);
-    const sticks: Stick[] = molecule.bonds.flatMap((bond, bondIndex) => {
-        return createArray(bond.order, (stickIndex) => {
-            return {
-                bondIndex,
-                offset: (stickIndex - (bond.order - 1) / 2) * multipleBondSpacing,
-                radius: bond.order === BondOrder.Single ? bondRadius : multipleBondRadius,
-            };
-        });
-    });
-    const bondStickIndexes = molecule.bonds.map((bond, bondIndex) => {
-        return sticks.flatMap((stick, stickIndex) => {
-            return stick.bondIndex === bondIndex ? [stickIndex] : [];
-        });
-    });
-    const partCount = atomCount + sticks.length;
-
-    const restingPositions = molecule.atoms.map((atom) => toVector3(atom.position));
-    const center = new Box3()
-        .setFromPoints(
-            restingPositions.flatMap((position, atomIndex) => {
-                const radius = assertWrap.isDefined(atomRadii[atomIndex]);
-                return [
-                    position.clone().subScalar(radius),
-                    position.clone().addScalar(radius),
-                ];
-            }),
-        )
-        .getCenter(new Vector3());
-    /** Center the molecule so turning rotates around its middle rather than its first atom. */
-    group.position.copy(center).negate();
-    /** Tighter than the box's bounding sphere, which pads flat molecules like benzene. */
-    const radius = Math.max(
-        ...restingPositions.map((position, atomIndex) => {
-            return position.distanceTo(center) + assertWrap.isDefined(atomRadii[atomIndex]);
-        }),
-    );
-
-    const contactOccluders = createCapsuleRows({
-        rowCount: partCount,
-        maxCapsulesPerRow: maxContactOccluders,
-    });
-    const shadowCasters = createShadowCasters({
-        partCount,
-    });
-    const selfReflections = createSelfReflections({
-        spheres: atomColors.map((color, atomIndex) => {
-            return {
-                color,
-                radius: assertWrap.isDefined(atomRadii[atomIndex]) * atomCoreFraction,
-            };
-        }),
-        cylinders: sticks.map((stick) => {
-            return {
-                color: stickColor,
-                radius: stick.radius,
-            };
-        }),
-    });
-    const highlight = new Color(highlightColor);
-    const atoms = createAtomImpostors({
-        atomCount,
-        sceneUniforms,
-        contactOccluders: contactOccluders.texture,
-        shadowCasters: shadowCasters.rowsTexture,
-        selfReflections,
-        highlightColor: highlight,
-        coreFraction: atomCoreFraction,
-    });
-    const stickImpostors = createStickImpostors({
-        stickCount: sticks.length,
-        atomCount,
-        sceneUniforms,
-        contactOccluders: contactOccluders.texture,
-        shadowCasters: shadowCasters.rowsTexture,
-        highlightColor: highlight,
-        stickColor,
-    });
-    /** Sticks draw after atoms, so what shows through them is already drawn. */
-    group.add(
-        atoms.depthMesh,
-        atoms.mesh,
-        atoms.outlineMesh,
-        stickImpostors.mesh,
-        stickImpostors.outlineMesh,
-    );
-    stickImpostors.mesh.visible = sticks.length > 0;
-    atomRadii.forEach((atomRadius, atomIndex) => {
-        atoms.attributes.radius.setX(atomIndex, atomRadius);
-        const color = assertWrap.isDefined(atomColors[atomIndex]);
-        atoms.attributes.color.setXYZ(atomIndex, color.r, color.g, color.b);
-    });
-    sticks.forEach((stick, stickIndex) => {
-        stickImpostors.attributes.radius.setX(stickIndex, stick.radius);
-    });
-
-    /** Contact shading only checks the parts that can touch, found once from the resting shape. */
-    const touchingAtomIndexes = restingPositions.map((position, atomIndex) => {
-        return restingPositions
-            .map((otherPosition, otherIndex) => otherIndex)
-            .filter((otherIndex) => {
-                return (
-                    otherIndex !== atomIndex &&
-                    position.distanceTo(assertWrap.isDefined(restingPositions[otherIndex])) <
-                        assertWrap.isDefined(atomRadii[atomIndex]) +
-                            assertWrap.isDefined(atomRadii[otherIndex]) +
-                            contactReach
-                );
-            });
-    });
-    const touchingStickIndexes = restingPositions.map((position, atomIndex) => {
-        return sticks.flatMap((stick, stickIndex) => {
-            return assertWrap
-                .isDefined(molecule.bonds[stick.bondIndex])
-                .atomIndexes.includes(atomIndex)
-                ? [stickIndex]
-                : [];
-        });
-    });
-    /**
-     * The molecule never changes shape, so only the sticks of multi-stick bonds move, as they turn
-     * to face the camera. Everything else is written once.
-     */
-    const movingStickIndexes = sticks.flatMap((stick, stickIndex) => {
-        return assertWrap.isDefined(molecule.bonds[stick.bondIndex]).order === BondOrder.Single
-            ? []
-            : [stickIndex];
-    });
-    const movingContactAtomIndexes = touchingStickIndexes.flatMap((stickIndexes, atomIndex) => {
-        return stickIndexes.some((stickIndex) => movingStickIndexes.includes(stickIndex))
-            ? [atomIndex]
-            : [];
-    });
-
-    /** Each part's start then end, with an atom's start and end both at its center. */
-    const partEnds = new Float32Array(partCount * 6);
-    /** An atom's whole glass shell catches shadows, but only its colored core blocks light. */
-    const receiverRadii = Float32Array.from([
-        ...atomRadii,
-        ...sticks.map((stick) => stick.radius),
-    ]);
-    const casterRadii = Float32Array.from([
-        ...atomRadii.map((atomRadius) => atomRadius * atomCoreFraction),
-        ...sticks.map((stick) => stick.radius),
-    ]);
-
-    const groundShadow = createGroundShadow({
-        casters: shadowCasters.allCastersTexture,
-        ends: partEnds,
-        casterRadii,
-        towardLight,
-        opacity: groundShadowOpacity,
-    });
-    groundShadow.setFootprint({
-        groundHeight: -radius - groundGap,
-        moleculeRadius: radius,
-    });
-
-    const state = {
-        stickEnds: sticks.map((stick) => {
-            return getStickEnds({
-                molecule,
-                stick,
-                atomPositions: restingPositions,
-                cameraPosition: new Vector3(0, 0, 1),
-            });
-        }),
-        isShadowsEnabled: true,
-        hasGlow: false,
-    };
-
-    function getAtomCapsule(atomIndex: number): Capsule {
-        return {
-            start: assertWrap.isDefined(restingPositions[atomIndex]),
-            end: assertWrap.isDefined(restingPositions[atomIndex]),
-            radius: assertWrap.isDefined(atomRadii[atomIndex]),
-            isAtom: true,
-        };
-    }
-
-    function getStickCapsule(stickIndex: number): Capsule {
-        const ends = assertWrap.isDefined(state.stickEnds[stickIndex]);
-        return {
-            start: ends.start,
-            end: ends.end,
-            radius: assertWrap.isDefined(sticks[stickIndex]).radius,
-            isAtom: false,
-        };
-    }
-
-    function writeAtomContactRow(atomIndex: number) {
-        contactOccluders.setRow({
-            row: atomIndex,
-            capsules: [
-                ...assertWrap
-                    .isDefined(touchingAtomIndexes[atomIndex])
-                    .map((otherIndex) => getAtomCapsule(otherIndex)),
-                ...assertWrap
-                    .isDefined(touchingStickIndexes[atomIndex])
-                    .map((stickIndex) => getStickCapsule(stickIndex)),
-            ],
-        });
-    }
-
-    function writeStick(stickIndex: number) {
-        const {start, end, side} = assertWrap.isDefined(state.stickEnds[stickIndex]);
-        stickImpostors.attributes.start.setXYZ(stickIndex, start.x, start.y, start.z);
-        stickImpostors.attributes.end.setXYZ(stickIndex, end.x, end.y, end.z);
-        stickImpostors.attributes.side.setXYZ(stickIndex, side.x, side.y, side.z);
-        partEnds.set(
-            [
-                ...start.toArray(),
-                ...end.toArray(),
-            ],
-            (atomCount + stickIndex) * 6,
-        );
-    }
-
-    restingPositions.forEach((atomCenter, atomIndex) => {
-        atoms.attributes.center.setXYZ(atomIndex, atomCenter.x, atomCenter.y, atomCenter.z);
-        partEnds.set(
-            [
-                ...atomCenter.toArray(),
-                ...atomCenter.toArray(),
-            ],
-            atomIndex * 6,
-        );
-        writeAtomContactRow(atomIndex);
-    });
-    sticks.forEach((stick, stickIndex) => {
-        writeStick(stickIndex);
-        contactOccluders.setRow({
-            row: atomCount + stickIndex,
-            capsules: assertWrap
-                .isDefined(molecule.bonds[stick.bondIndex])
-                .atomIndexes.map((atomIndex) => getAtomCapsule(atomIndex)),
-        });
-    });
-    contactOccluders.upload();
-    selfReflections.update({
-        sphereCenters: restingPositions,
-        cylinderEnds: state.stickEnds,
-    });
-
-    return {
-        molecule,
-        group,
-        radius,
-        /** Atom positions relative to the turntable's center. */
-        centeredAtoms: restingPositions.map((position, atomIndex) => {
-            return {
-                position: position.clone().sub(center),
-                radius: assertWrap.isDefined(atomRadii[atomIndex]),
-            };
-        }),
-        groundShadow,
-        /** Must run after the camera moves and before rendering. */
-        update({
-            localCameraPosition,
-            localTowardLight,
-        }: Readonly<{
-            localCameraPosition: Readonly<Vector3>;
-            localTowardLight: Readonly<Vector3>;
-        }>) {
-            if (movingStickIndexes.length) {
-                state.stickEnds = state.stickEnds.map((ends, stickIndex) => {
-                    return movingStickIndexes.includes(stickIndex)
-                        ? getStickEnds({
-                              molecule,
-                              stick: assertWrap.isDefined(sticks[stickIndex]),
-                              atomPositions: restingPositions,
-                              cameraPosition: localCameraPosition,
-                          })
-                        : ends;
-                });
-                movingStickIndexes.forEach((stickIndex) => writeStick(stickIndex));
-                stickImpostors.attributes.start.needsUpdate = true;
-                stickImpostors.attributes.end.needsUpdate = true;
-                stickImpostors.attributes.side.needsUpdate = true;
-                movingContactAtomIndexes.forEach((atomIndex) => writeAtomContactRow(atomIndex));
-                contactOccluders.upload();
-                if (selfReflections.isEnabled()) {
-                    selfReflections.update({
-                        sphereCenters: restingPositions,
-                        cylinderEnds: state.stickEnds,
-                    });
-                }
-            }
-
-            if (state.isShadowsEnabled) {
-                shadowCasters.update({
-                    ends: partEnds,
-                    receiverRadii,
-                    casterRadii,
-                    isAtom(part) {
-                        return part < atomCount;
-                    },
-                    towardLight: localTowardLight,
-                });
-            }
-        },
-        /** Lights up the selection, if any, and turns off every other part's glow. */
-        setGlow({
-            selection,
-            glow,
-        }: Readonly<{selection: Readonly<MoleculeSelection> | undefined; glow: number}>) {
-            if (selection == undefined && !state.hasGlow) {
-                return;
-            }
-            const selected =
-                selection == undefined
-                    ? {
-                          atomIndexes: [],
-                          stickIndexes: [],
-                      }
-                    : selection.type === MoleculeSelectionType.Atom
-                      ? {
-                            atomIndexes: [selection.atomIndex],
-                            stickIndexes: [],
-                        }
-                      : {
-                            atomIndexes: [],
-                            stickIndexes: assertWrap.isDefined(
-                                bondStickIndexes[selection.bondIndex],
-                            ),
-                        };
-            atoms.attributes.glow.array.fill(0);
-            stickImpostors.attributes.glow.array.fill(0);
-            selected.atomIndexes.forEach((atomIndex) => {
-                atoms.attributes.glow.setX(
-                    atomIndex,
-                    glow * getGlowBoost(assertWrap.isDefined(atomColors[atomIndex])),
-                );
-            });
-            selected.stickIndexes.forEach((stickIndex) => {
-                stickImpostors.attributes.glow.setX(stickIndex, glow * getGlowBoost(stickColor));
-            });
-            atoms.attributes.glow.needsUpdate = true;
-            stickImpostors.attributes.glow.needsUpdate = true;
-            atoms.outlineMesh.visible = selected.atomIndexes.length > 0;
-            stickImpostors.outlineMesh.visible = selected.stickIndexes.length > 0;
-            state.hasGlow = selection != undefined;
-        },
-        /** Finds the nearest atom or bond along a ray in the molecule's own space. */
-        pick({
-            origin,
-            direction,
-        }: Readonly<{
-            origin: Readonly<Vector3>;
-            direction: Readonly<Vector3>;
-        }>) {
-            const hits = [
-                ...restingPositions.map((atomCenter, atomIndex) => {
-                    return {
-                        distance: intersectSphere({
-                            origin,
-                            direction,
-                            center: atomCenter,
-                            radius: assertWrap.isDefined(atomRadii[atomIndex]),
-                        }),
-                        selection: {
-                            type: MoleculeSelectionType.Atom,
-                            atomIndex,
-                        } satisfies MoleculeSelection,
-                    };
-                }),
-                ...state.stickEnds.map(({start, end}, stickIndex) => {
-                    const stick = assertWrap.isDefined(sticks[stickIndex]);
-                    return {
-                        distance: intersectCylinder({
-                            origin,
-                            direction,
-                            start,
-                            end,
-                            radius: stick.radius,
-                        }),
-                        selection: {
-                            type: MoleculeSelectionType.Bond,
-                            bondIndex: stick.bondIndex,
-                        } satisfies MoleculeSelection,
-                    };
-                }),
-            ];
-            return hits
-                .filter((hit) => hit.distance != undefined)
-                .toSorted(
-                    (first, second) => (first.distance ?? Infinity) - (second.distance ?? Infinity),
-                )[0]?.selection;
-        },
-        setDisabledEffects(disabledEffects: ReadonlyArray<RenderEffect>) {
-            const isSelfReflectionsEnabled = !disabledEffects.includes(
-                RenderEffect.SelfReflections,
-            );
-            selfReflections.setEnabled(isSelfReflectionsEnabled);
-            atoms.setSelfReflectionsEnabled(isSelfReflectionsEnabled);
-            const isTransmissionEnabled = !disabledEffects.includes(RenderEffect.Transmission);
-            atoms.setTransmissionEnabled(isTransmissionEnabled);
-            stickImpostors.setTransmissionEnabled(isTransmissionEnabled);
-            state.isShadowsEnabled = !disabledEffects.includes(RenderEffect.Shadows);
-            groundShadow.mesh.visible = state.isShadowsEnabled;
-            if (!state.isShadowsEnabled) {
-                shadowCasters.clear();
-            }
-        },
-        isShadowsEnabled() {
-            return state.isShadowsEnabled;
-        },
-        dispose() {
-            atoms.dispose();
-            stickImpostors.dispose();
-            contactOccluders.dispose();
-            shadowCasters.dispose();
-            selfReflections.dispose();
-            groundShadow.dispose();
-        },
-    };
-}
-
-type MoleculeModel = ReturnType<typeof createMoleculeModel>;
 
 export function createMoleculeScene({
     isSnapshot,
@@ -757,15 +154,26 @@ export function createMoleculeScene({
     controls.minDistance = 2;
 
     const current: {
-        model: MoleculeModel | undefined;
+        model: MoleculeModel | AtomModel | undefined;
+        /** The current atom's orbital shown alone. */
+        orbitalSelection: string | undefined;
+        /** Kept here so it carries over when the atom changes. */
+        orbitalOpacity: number;
         selection: MoleculeSelection | undefined;
-        onSelectionChange: ((selection: MoleculeSelection | undefined) => void) | undefined;
+        onSelectionChange:
+            | ((
+                  selection: MoleculeSelection | undefined,
+                  params: Readonly<{isPicked: boolean}>,
+              ) => void)
+            | undefined;
         onRenderQualityChange: ((quality: Readonly<RenderQuality>) => void) | undefined;
         rightInsetPixels: number;
         /** The distance the camera was last fit to, which the user's zoom is relative to. */
         fitDistance: number | undefined;
     } = {
         model: undefined,
+        orbitalSelection: undefined,
+        orbitalOpacity: 0.08,
         selection: undefined,
         onSelectionChange: undefined,
         onRenderQualityChange: undefined,
@@ -844,10 +252,48 @@ export function createMoleculeScene({
         },
     });
 
-    /** The animation loop lights up the selection. */
-    function select(selection: Readonly<MoleculeSelection> | undefined) {
+    function isAtomModel(model: MoleculeModel | AtomModel | undefined): model is AtomModel {
+        return !!model && 'setOrbitalSelection' in model;
+    }
+
+    /**
+     * The animation loop lights up the selection. On an atom, selecting an orbital or the nucleus
+     * also replaces the orbital shown alone.
+     */
+    function select(
+        selection: Readonly<MoleculeSelection> | undefined,
+        {isPicked}: Readonly<{isPicked: boolean}>,
+    ) {
         current.selection = selection;
-        current.onSelectionChange?.(selection);
+        if (isAtomModel(current.model)) {
+            current.orbitalSelection =
+                selection?.type === MoleculeSelectionType.Orbital ? selection.orbitalId : undefined;
+            current.model.setOrbitalSelection(current.orbitalSelection);
+        }
+        current.onSelectionChange?.(selection, {
+            isPicked,
+        });
+    }
+
+    /** Swaps in a new molecule or atom, disposing the old one. */
+    function showModel(model: MoleculeModel | AtomModel) {
+        select(undefined, {
+            isPicked: false,
+        });
+        if (current.model) {
+            turntable.remove(current.model.group);
+            scene.remove(current.model.groundShadow.mesh);
+            current.model.dispose();
+        }
+        current.model = model;
+        current.orbitalSelection = undefined;
+        model.setDisabledEffects(qualityScaler.getQuality().disabledEffects);
+        turntable.add(model.group);
+        if (!isSnapshot) {
+            scene.add(model.groundShadow.mesh);
+        }
+        current.fitDistance = undefined;
+        fitCamera();
     }
 
     const raycaster = new Raycaster();
@@ -880,9 +326,15 @@ export function createMoleculeScene({
     /** Undefined while the user holds the molecule still after grabbing it. */
     const spin: {
         radiansPerSecond: number | undefined;
+        /**
+         * An atom's electrons take the idle spin, so a flung atom spins on its own and slows to a
+         * stop.
+         */
+        atomFlingRadiansPerSecond: number;
         lastTouchMilliseconds: number;
     } = {
         radiansPerSecond: autoSpinRadiansPerSecond,
+        atomFlingRadiansPerSecond: 0,
         lastTouchMilliseconds: 0,
     };
 
@@ -956,6 +408,7 @@ export function createMoleculeScene({
         drag.lastPosition.set(event.clientX, event.clientY);
         drag.lastMoveMilliseconds = event.timeStamp;
         spin.radiansPerSecond = undefined;
+        spin.atomFlingRadiansPerSecond = 0;
     });
     renderer.domElement.addEventListener('pointercancel', (event) => {
         releasePointer(event.pointerId);
@@ -974,8 +427,14 @@ export function createMoleculeScene({
             event.timeStamp - drag.lastMoveMilliseconds < flingMaxPauseMilliseconds &&
             drag.pixelsPerSecond.length() > flingPixelsPerSecond
         ) {
-            spin.radiansPerSecond =
+            const flingRadiansPerSecond =
                 (drag.pixelsPerSecond.x * 2 * Math.PI) / renderer.domElement.clientHeight;
+            if (isAtomModel(current.model)) {
+                spin.atomFlingRadiansPerSecond = flingRadiansPerSecond;
+                spin.radiansPerSecond = 0;
+            } else {
+                spin.radiansPerSecond = flingRadiansPerSecond;
+            }
         }
         const model = current.model;
         if (!model || isOrbiting) {
@@ -996,10 +455,14 @@ export function createMoleculeScene({
         const newSelection = check.deepEquals(hitSelection as any, current.selection)
             ? undefined
             : hitSelection;
-        if (newSelection) {
+        /** The nucleus sits still at the center, so the electrons can keep orbiting around it. */
+        if (newSelection && newSelection.type !== MoleculeSelectionType.Nucleus) {
             spin.radiansPerSecond = undefined;
+            spin.atomFlingRadiansPerSecond = 0;
         }
-        select(newSelection);
+        select(newSelection, {
+            isPicked: true,
+        });
     });
 
     const frameClock: {
@@ -1039,11 +502,34 @@ export function createMoleculeScene({
                         ) *
                         frameSeconds,
                 );
-            turn.yawRadians += spin.radiansPerSecond * frameSeconds;
+            if (!isAtomModel(current.model)) {
+                turn.yawRadians += spin.radiansPerSecond * frameSeconds;
+                applyTurn();
+            }
+        }
+        if (spin.atomFlingRadiansPerSecond && isAtomModel(current.model)) {
+            spin.atomFlingRadiansPerSecond -=
+                spin.atomFlingRadiansPerSecond *
+                Math.min(
+                    1,
+                    flingSlowdown *
+                        Math.sqrt(
+                            Math.max(
+                                Math.abs(spin.atomFlingRadiansPerSecond),
+                                autoSpinRadiansPerSecond,
+                            ),
+                        ) *
+                        frameSeconds,
+                );
+            if (Math.abs(spin.atomFlingRadiansPerSecond) < autoSpinRadiansPerSecond / 10) {
+                spin.atomFlingRadiansPerSecond = 0;
+            }
+            turn.yawRadians += spin.atomFlingRadiansPerSecond * frameSeconds;
             applyTurn();
         }
         controls.update();
         scene.updateMatrixWorld();
+        renderer.getDrawingBufferSize(drawingBufferSize);
         if (current.model) {
             worldToLocal.copy(current.model.group.matrixWorld).invert();
             sceneUniforms.localCameraPosition.value
@@ -1056,6 +542,11 @@ export function createMoleculeScene({
             current.model.update({
                 localCameraPosition: sceneUniforms.localCameraPosition.value,
                 localTowardLight: sceneUniforms.localTowardLight.value,
+                /** An atom's idle motion is its electrons orbiting, paced like the idle spin. */
+                orbitSeconds:
+                    ((spin.radiansPerSecond ?? 0) / autoSpinRadiansPerSecond) * frameSeconds,
+                pointPixelsPerUnit:
+                    drawingBufferSize.y / (2 * Math.tan((camera.fov * Math.PI) / 360)),
             });
             current.model.setGlow({
                 selection: current.selection,
@@ -1079,7 +570,6 @@ export function createMoleculeScene({
                 });
             }
         }
-        renderer.getDrawingBufferSize(drawingBufferSize);
         frontDepthTarget.setSize(drawingBufferSize.x, drawingBufferSize.y);
         camera.layers.set(frontDepthLayer);
         renderer.setRenderTarget(frontDepthTarget);
@@ -1095,7 +585,13 @@ export function createMoleculeScene({
 
     return {
         canvas: renderer.domElement,
-        listenToSelection(onSelectionChange: (selection: MoleculeSelection | undefined) => void) {
+        /** `isPicked` is set for selections made by tapping the model. */
+        listenToSelection(
+            onSelectionChange: (
+                selection: MoleculeSelection | undefined,
+                params: Readonly<{isPicked: boolean}>,
+            ) => void,
+        ) {
             current.onSelectionChange = onSelectionChange;
         },
         /** Only fires for changes the scene makes itself, not for `setRenderQuality`. */
@@ -1106,37 +602,59 @@ export function createMoleculeScene({
             qualityScaler.setQuality(quality);
         },
         setMolecule(molecule: Readonly<Molecule>) {
-            if (current.model?.molecule === molecule) {
+            if (current.model?.source === molecule) {
                 return;
             }
-            select(undefined);
-            const isFirstMolecule = !current.model;
-            if (current.model) {
-                turntable.remove(current.model.group);
-                scene.remove(current.model.groundShadow.mesh);
-                current.model.dispose();
-            }
-            current.model = createMoleculeModel({
+            const isFirstModel = !current.model;
+            const model = createMoleculeModel({
                 molecule,
                 sceneUniforms,
             });
-            current.model.setDisabledEffects(qualityScaler.getQuality().disabledEffects);
-            turntable.add(current.model.group);
-            if (!isSnapshot) {
-                scene.add(current.model.groundShadow.mesh);
-            }
-            if (isFirstMolecule) {
+            showModel(model);
+            if (isFirstModel) {
                 turn.yawRadians = findClearestYaw({
-                    atoms: current.model.centeredAtoms,
+                    atoms: model.centeredAtoms,
                     baseOrientation: startingOrientation,
                     pitchRadians: turn.pitchRadians,
                     towardCamera: camera.position,
                 });
                 applyTurn();
             }
-
-            current.fitDistance = undefined;
-            fitCamera();
+        },
+        setAtom(symbol: ChemicalElementSymbol) {
+            if (current.model?.source === symbol) {
+                return;
+            }
+            const model = createAtomModel({
+                symbol,
+                sceneUniforms,
+            });
+            model.setOrbitalOpacity(current.orbitalOpacity);
+            showModel(model);
+        },
+        /** Shows only one of the atom's orbitals, or all of them when `undefined`. */
+        setOrbitalSelection(orbitalId: string | undefined) {
+            if (!isAtomModel(current.model) || orbitalId === current.orbitalSelection) {
+                return;
+            }
+            select(
+                orbitalId == undefined
+                    ? undefined
+                    : {
+                          type: MoleculeSelectionType.Orbital,
+                          orbitalId,
+                      },
+                {
+                    isPicked: false,
+                },
+            );
+        },
+        /** How strongly the atom's orbital clouds show, from 0 to 1. */
+        setOrbitalOpacity(opacity: number) {
+            current.orbitalOpacity = opacity;
+            if (isAtomModel(current.model)) {
+                current.model.setOrbitalOpacity(opacity);
+            }
         },
         /**
          * Renders a frame and reads it out as a PNG data URL in the same task, before the browser

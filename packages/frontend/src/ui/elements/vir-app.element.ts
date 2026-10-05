@@ -1,4 +1,5 @@
-import {assertWrap} from '@augment-vir/assert';
+import {assertWrap, check} from '@augment-vir/assert';
+import {getObjectTypedEntries} from '@augment-vir/common';
 import {
     asyncProp,
     css,
@@ -8,22 +9,64 @@ import {
     listen,
     nothing,
 } from 'element-vir';
-import {lucideIcons, ViraButton, ViraColorVariant, ViraSize, viraTheme} from 'vira';
+import {
+    lucideIcons,
+    ViraButton,
+    ViraColorVariant,
+    type ViraIconSvg,
+    ViraSize,
+    viraTheme,
+} from 'vira';
 import {moleculeRouteNames} from '../../data/all-molecules.js';
+import {type ChemicalElementSymbol} from '../../data/chemical-element.js';
 import {type Molecule} from '../../data/molecule.js';
 import {
     createFrontendState,
-    createMoleculeRoute,
     type FrontendPaths,
     frontendPathTree,
     type FrontendStateObservable,
+    getRouteElementSymbol,
     getRouteMoleculeIndex,
 } from '../frontend-state/frontend-state.js';
 import {ScreenSize} from '../frontend-state/screen-size.js';
 import {VirAllMolecules} from './vir-all-molecules.element.js';
+import {VirAtomPage} from './vir-atom-page.element.js';
 import {VirEvolutionChains} from './vir-evolution-chains.element.js';
 import {VirMoleculePage} from './vir-molecule-page.element.js';
 import {VirMoleculeViewer} from './vir-molecule-viewer.element.js';
+import {VirPeriodicTable} from './vir-periodic-table.element.js';
+
+type ListPage = Exclude<FrontendPaths[0], 'molecule' | 'atom'>;
+
+/** Pages drawn over the 3D viewer. */
+const detailPages = [
+    'molecule',
+    'atom',
+] as const satisfies ReadonlyArray<FrontendPaths[0]>;
+
+const listPageButtons: Record<
+    ListPage,
+    {
+        icon: ViraIconSvg;
+        title: string;
+        /** Leaves the page reachable by URL but drops its button. */
+        isHidden?: boolean | undefined;
+    }
+> = {
+    'all-molecules': {
+        icon: lucideIcons.LayoutGrid,
+        title: 'All molecules',
+    },
+    evolutions: {
+        icon: lucideIcons.GitFork,
+        title: 'Evolutions',
+        isHidden: true,
+    },
+    atoms: {
+        icon: lucideIcons.Atom,
+        title: 'Periodic table',
+    },
+};
 
 export const VirApp = defineElement()({
     tagName: 'vir-app',
@@ -31,7 +74,7 @@ export const VirApp = defineElement()({
         'vir-app-list-page'({state}) {
             return (
                 !!state.frontendState &&
-                state.frontendState.value.currentRoute.paths[0] !== 'molecule'
+                !check.isIn(state.frontendState.value.currentRoute.paths[0], detailPages)
             );
         },
     },
@@ -72,7 +115,7 @@ export const VirApp = defineElement()({
                 gap: 8px;
             }
 
-            ${VirAllMolecules}, ${VirEvolutionChains} {
+            ${VirAllMolecules}, ${VirEvolutionChains}, ${VirPeriodicTable} {
                 align-self: stretch;
                 flex-grow: 1;
                 min-height: 0;
@@ -92,6 +135,11 @@ export const VirApp = defineElement()({
             isFullscreen: !!globalThis.document.fullscreenElement,
             overlayWidth: 0,
             overlayHeaderHeight: 0,
+            /** Each element's selected orbital, kept while visiting other elements. */
+            orbitalSelections: {} satisfies Partial<
+                Record<ChemicalElementSymbol, string>
+            > as Partial<Record<ChemicalElementSymbol, string>>,
+            orbitalOpacity: 0.08,
             documentListenerAbort: undefined satisfies AbortController | undefined as
                 | AbortController
                 | undefined,
@@ -140,25 +188,15 @@ export const VirApp = defineElement()({
 
         const currentPage = frontendState.value.currentRoute.paths[0];
 
-        /** Goes to the given list page, or back to the last molecule when already on it. */
-        function toggleListPage(page: Exclude<FrontendPaths[0], 'molecule'>) {
+        /** Goes to the given list page, or back to the last molecule or atom when already on it. */
+        function toggleListPage(page: ListPage) {
             frontendState?.value.router.setRoute(
                 currentPage === page
-                    ? createMoleculeRoute(
-                          state.molecule.lastParams || assertWrap.isDefined(moleculeRouteNames[0]),
-                      )
+                    ? frontendState.value.lastDetailRoute
                     : {
                           paths: frontendPathTree.paths.children[page].fullPaths,
                       },
             );
-        }
-
-        function toggleAllMolecules() {
-            toggleListPage('all-molecules');
-        }
-
-        function toggleEvolutions() {
-            toggleListPage('evolutions');
         }
 
         const moleculeIndex = getRouteMoleculeIndex(frontendState.value.currentRoute);
@@ -168,6 +206,10 @@ export const VirApp = defineElement()({
         const molecule = state.molecule.isResolved() ? state.molecule.value : undefined;
 
         const isPhone = frontendState.value.screenSize === ScreenSize.Phone;
+        const viewerBottom = isPhone
+            ? /** The overlay's top padding plus the gap below its header. */
+              state.overlayHeaderHeight + 24
+            : 0;
 
         const pageRenderers: Record<FrontendPaths[0], () => HTMLTemplateResult> = {
             molecule() {
@@ -206,10 +248,55 @@ export const VirApp = defineElement()({
                     })}></${VirEvolutionChains}>
                 `;
             },
+            atom() {
+                const symbol = getRouteElementSymbol(frontendState.value.currentRoute);
+                return html`
+                    <${VirAtomPage.assign({
+                        router: frontendState.value.router,
+                        symbol,
+                        selectedOrbitalId: state.orbitalSelections[symbol],
+                        orbitalOpacity: state.orbitalOpacity,
+                        isPhone,
+                    })}
+                        ${listen(VirAtomPage.events.overlayWidthChange, (event) => {
+                            updateState({
+                                overlayWidth: event.detail,
+                            });
+                        })}
+                        ${listen(VirAtomPage.events.overlayHeaderHeightChange, (event) => {
+                            updateState({
+                                overlayHeaderHeight: event.detail,
+                            });
+                        })}
+                        ${listen(VirAtomPage.events.orbitalSelect, (event) => {
+                            updateState({
+                                orbitalSelections: {
+                                    ...state.orbitalSelections,
+                                    /** A `CustomEvent` turns an `undefined` detail into `null`. */
+                                    [symbol]: event.detail || undefined,
+                                },
+                            });
+                        })}
+                        ${listen(VirAtomPage.events.orbitalOpacityChange, (event) => {
+                            updateState({
+                                orbitalOpacity: event.detail,
+                            });
+                        })}
+                    ></${VirAtomPage}>
+                `;
+            },
+            atoms() {
+                return html`
+                    <${VirPeriodicTable.assign({
+                        router: frontendState.value.router,
+                    })}></${VirPeriodicTable}>
+                `;
+            },
         };
 
         return html`
             <${VirMoleculeViewer.assign({
+                router: frontendState.value.router,
                 molecule,
                 initialRenderQuality:
                     frontendState.value.localDbClient.value.settledRenderQualityV2,
@@ -218,12 +305,34 @@ export const VirApp = defineElement()({
                  * sides, its right margin, and the same gap on its left.
                  */
                 rightInsetPixels: isPhone ? 0 : state.overlayWidth && state.overlayWidth + 64,
-                isHidden: currentPage !== 'molecule',
+                isHidden: !check.isIn(currentPage, detailPages),
+                atomSymbol:
+                    currentPage === 'atom'
+                        ? getRouteElementSymbol(frontendState.value.currentRoute)
+                        : undefined,
+                selectedOrbitalId:
+                    currentPage === 'atom'
+                        ? state.orbitalSelections[
+                              getRouteElementSymbol(frontendState.value.currentRoute)
+                          ]
+                        : undefined,
+                orbitalOpacity: state.orbitalOpacity,
             })}
                 style=${css`
-                    /** The overlay's top padding plus the gap below its header. */
-                    bottom: ${isPhone ? state.overlayHeaderHeight + 24 : 0}px;
+                    bottom: ${viewerBottom}px;
                 `}
+                ${listen(VirMoleculeViewer.events.orbitalSelect, (event) => {
+                    if (currentPage !== 'atom') {
+                        return;
+                    }
+                    updateState({
+                        orbitalSelections: {
+                            ...state.orbitalSelections,
+                            [getRouteElementSymbol(frontendState.value.currentRoute)]:
+                                event.detail || undefined,
+                        },
+                    });
+                })}
                 ${listen(VirMoleculeViewer.events.renderQualityChange, (event) => {
                     void frontendState.value.localDbClient.set.settledRenderQualityV2(event.detail);
                 })}
@@ -265,40 +374,39 @@ export const VirApp = defineElement()({
                           ></${ViraButton}>
                       `
                     : nothing}
-                <${ViraButton.assign({
-                    icon: lucideIcons.LayoutGrid,
-                    color: ViraColorVariant.Neutral,
-                    buttonSize: ViraSize.Large,
-                })}
-                    title=${currentPage === 'all-molecules' ? 'Back to molecule' : 'All molecules'}
-                    ${listen('pointerup', (event) => {
-                        if (event.button === 0) {
-                            toggleAllMolecules();
-                        }
-                    })}
-                    ${listen('click', (event) => {
-                        if (!event.detail) {
-                            toggleAllMolecules();
-                        }
-                    })}
-                ></${ViraButton}>
-                <${ViraButton.assign({
-                    icon: lucideIcons.GitFork,
-                    color: ViraColorVariant.Neutral,
-                    buttonSize: ViraSize.Large,
-                })}
-                    title=${currentPage === 'evolutions' ? 'Back to molecule' : 'Evolutions'}
-                    ${listen('pointerup', (event) => {
-                        if (event.button === 0) {
-                            toggleEvolutions();
-                        }
-                    })}
-                    ${listen('click', (event) => {
-                        if (!event.detail) {
-                            toggleEvolutions();
-                        }
-                    })}
-                ></${ViraButton}>
+                ${getObjectTypedEntries(listPageButtons)
+                    .filter(
+                        ([
+                            ,
+                            button,
+                        ]) => !button.isHidden,
+                    )
+                    .map(
+                        ([
+                            page,
+                            button,
+                        ]) => {
+                            return html`
+                                <${ViraButton.assign({
+                                    icon: button.icon,
+                                    color: ViraColorVariant.Neutral,
+                                    buttonSize: ViraSize.Large,
+                                })}
+                                    title=${currentPage === page ? 'Back' : button.title}
+                                    ${listen('pointerup', (event) => {
+                                        if (event.button === 0) {
+                                            toggleListPage(page);
+                                        }
+                                    })}
+                                    ${listen('click', (event) => {
+                                        if (!event.detail) {
+                                            toggleListPage(page);
+                                        }
+                                    })}
+                                ></${ViraButton}>
+                            `;
+                        },
+                    )}
             </div>
             ${pageRenderers[currentPage]()}
         `;
