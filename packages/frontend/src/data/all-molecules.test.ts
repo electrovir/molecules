@@ -1,4 +1,4 @@
-import {assert} from '@augment-vir/assert';
+import {assert, assertWrap} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {moleculeRouteNames} from './all-molecules.js';
 import {getTotalBondOrder, type Molecule} from './molecule.js';
@@ -12,21 +12,63 @@ async function loadAllMolecules() {
 }
 
 describe('moleculeRouteNames', () => {
-    it('is sorted and has route names that match each molecule', async () => {
+    it('has route names that match each molecule', async () => {
         const molecules = await loadAllMolecules();
 
         assert.deepEquals(
             moleculeRouteNames,
             molecules.map((molecule) => molecule.routeName),
         );
+    });
+    it('sorts molecules that start an evolution line by complexity', async () => {
+        const molecules = await loadAllMolecules();
+        const lineStarts = molecules.filter((molecule) => {
+            return !molecules.some((parent) => parent.stats.evolvesInto?.includes(molecule));
+        });
+
         assert.deepEquals(
-            molecules,
-            molecules.toSorted((first, second) => {
+            lineStarts,
+            lineStarts.toSorted((first, second) => {
                 return (
                     first.atoms.length - second.atoms.length ||
                     getTotalBondOrder(first.bonds) - getTotalBondOrder(second.bonds)
                 );
             }),
+        );
+    });
+    it("numbers each evolution within its parent's line", async () => {
+        const molecules = await loadAllMolecules();
+
+        /** Annotated because the recursion leaves TypeScript nothing to infer from. */
+        function getDescendants(molecule: Readonly<Molecule>): Molecule[] {
+            return (molecule.stats.evolvesInto ?? []).flatMap((evolution) => [
+                evolution,
+                ...getDescendants(evolution),
+            ]);
+        }
+
+        assert.deepEquals(
+            molecules.flatMap((molecule, index) => {
+                const parentIndex = molecules.findIndex((parent) => {
+                    return parent.stats.evolvesInto?.includes(molecule);
+                });
+
+                if (parentIndex === -1) {
+                    return [];
+                }
+
+                const parent = assertWrap.isDefined(molecules[parentIndex]);
+
+                return index > parentIndex &&
+                    molecules
+                        .slice(parentIndex + 1, index)
+                        .every((between) => getDescendants(parent).includes(between))
+                    ? []
+                    : [
+                          `${parent.name} -> ${molecule.name}`,
+                      ];
+            }),
+            [],
         );
     });
     it('only evolves into more complex molecules', async () => {

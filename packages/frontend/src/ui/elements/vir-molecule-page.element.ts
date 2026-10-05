@@ -12,9 +12,9 @@ import {
     viraTheme,
 } from 'vira';
 import {getAudioOutput} from '../../audio/audio-output.js';
-import {moleculeRouteNames} from '../../data/all-molecules.js';
+import {moleculeRouteNames, moleculeSummaries} from '../../data/all-molecules.js';
 import {findChainStart} from '../../data/evolution-chains.js';
-import {getMoleculeFormula, type Molecule} from '../../data/molecule.js';
+import {type Molecule} from '../../data/molecule.js';
 import {
     createMoleculeRoute,
     createStaticFileUrl,
@@ -79,6 +79,27 @@ async function sayName(routeName: string) {
     source.connect(masterVolume);
     source.start();
     nameAudio.source = source;
+}
+
+/**
+ * The header's height as if the name fit on one line, so a wrapping name pushes the formula below
+ * the phone bar's visible part instead of pushing the arrows up.
+ */
+function getHeaderPeekHeight({
+    header,
+    headerHeight,
+}: Readonly<{
+    header: Element;
+    headerHeight: number;
+}>) {
+    const nameRow = assertWrap.isDefined(header.querySelector<HTMLElement>('.name-row'));
+    const name = assertWrap.isDefined(nameRow.querySelector<HTMLElement>('h1'));
+    const button = assertWrap.isDefined(nameRow.querySelector<HTMLElement>(ViraButton.tagName));
+    /** An inline element gets one client rect per line it wraps onto. */
+    const lineCount = assertWrap.isDefined(name.querySelector('span')).getClientRects().length || 1;
+    const oneLineRowHeight = Math.max(button.offsetHeight, name.offsetHeight / lineCount);
+
+    return headerHeight - (nameRow.offsetHeight - oneLineRowHeight);
 }
 
 const lastTouchEnd = {
@@ -373,6 +394,7 @@ export const VirMoleculePage = defineElement<
     },
     render({inputs, state, updateState, dispatch, events}) {
         const routeName = assertWrap.isDefined(moleculeRouteNames[inputs.moleculeIndex]);
+        const summary = assertWrap.isDefined(moleculeSummaries[routeName]);
         const chainStartRouteName = findChainStart(routeName);
         const molecule = inputs.molecule;
 
@@ -429,13 +451,17 @@ export const VirMoleculePage = defineElement<
                 >
                     <div
                         class="overlay-header"
-                        ${onResize(({contentRect}) => {
+                        ${onResize(({contentRect}, element) => {
+                            const peekHeight = getHeaderPeekHeight({
+                                header: element,
+                                headerHeight: contentRect.height,
+                            });
                             updateState({
-                                overlayHeaderHeight: contentRect.height,
+                                overlayHeaderHeight: peekHeight,
                             });
                             dispatch(
                                 new events.overlayHeaderHeightChange({
-                                    detail: contentRect.height,
+                                    detail: peekHeight,
                                 }),
                             );
                         })}
@@ -497,31 +523,27 @@ export const VirMoleculePage = defineElement<
                                   <p>Failed to load ${routeName}.</p>
                               `
                             : ''}
-                        ${molecule
-                            ? html`
-                                  <div class="name-row">
-                                      <${ViraButton.assign({
-                                          icon: lucideIcons.Speech,
-                                          color: ViraColorVariant.Neutral,
-                                          buttonSize: ViraSize.Large,
-                                      })}
-                                          title="Say the name"
-                                          ${listen('pointerup', (event) => {
-                                              if (event.button === 0) {
-                                                  void sayName(routeName);
-                                              }
-                                          })}
-                                          ${listen('click', (event) => {
-                                              if (!event.detail) {
-                                                  void sayName(routeName);
-                                              }
-                                          })}
-                                      ></${ViraButton}>
-                                      <h1>${molecule.name}</h1>
-                                  </div>
-                                  <span class="formula">${getMoleculeFormula(molecule.atoms)}</span>
-                              `
-                            : ''}
+                        <div class="name-row">
+                            <${ViraButton.assign({
+                                icon: lucideIcons.Speech,
+                                color: ViraColorVariant.Neutral,
+                                buttonSize: ViraSize.Large,
+                            })}
+                                title="Say the name"
+                                ${listen('pointerup', (event) => {
+                                    if (event.button === 0) {
+                                        void sayName(routeName);
+                                    }
+                                })}
+                                ${listen('click', (event) => {
+                                    if (!event.detail) {
+                                        void sayName(routeName);
+                                    }
+                                })}
+                            ></${ViraButton}>
+                            <h1><span>${summary.name}</span></h1>
+                        </div>
+                        <span class="formula">${summary.formula}</span>
                     </div>
                     ${molecule
                         ? html`

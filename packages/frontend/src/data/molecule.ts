@@ -76,6 +76,12 @@ export type Molecule = {
      * "eye-uh" in thiamine.
      */
     pronunciation: string;
+    /**
+     * Shifts which of the voice's styles speaks `pronunciation`. Kokoro picks a style from the
+     * phoneme count, and a neighboring style can fix a vowel no phoneme change does, such as the
+     * "tay" in DDT.
+     */
+    pronunciationStyleOffset?: number | undefined;
     /** What the molecule is built from and its shape. */
     structureDescription: string;
     /** Where the molecule shows up in everyday life and what it does there. */

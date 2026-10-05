@@ -8,6 +8,7 @@ const ddt: Molecule = {
     routeName: 'ddt',
     // cspell:disable-next-line
     pronunciation: 'dˌiːdˌiːtˈiː',
+    pronunciationStyleOffset: 1,
     structureDescription:
         'Two benzene rings, each with a chlorine, attached to a carbon next to a carbon holding three chlorines.',
     realLifeDescription:

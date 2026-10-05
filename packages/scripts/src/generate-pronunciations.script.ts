@@ -104,7 +104,10 @@ async function generatePronunciations() {
          * but kokoro-js's `generate_from_ids` picks row `count`, which put a stray "tch" in
          * chlorine. The count leaves out the two padding tokens the tokenizer adds.
          */
-        const styleRow = assertWrap.isDefined(inputIds.dims.at(-1)) - 3;
+        const styleRow =
+            assertWrap.isDefined(inputIds.dims.at(-1)) -
+            3 +
+            (molecule.pronunciationStyleOffset ?? 0);
         const {waveform} = await tts.model({
             input_ids: inputIds,
             style: new Tensor(
