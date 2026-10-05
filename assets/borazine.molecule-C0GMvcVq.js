@@ -1,0 +1,1 @@
+import{t as e}from"./borazine.molecule-DGWWJRct.js";export{e as default};

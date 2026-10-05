@@ -1,0 +1,1 @@
+import{t as e}from"./phosphorus-pentachloride.molecule-D22Tdsbo.js";export{e as default};

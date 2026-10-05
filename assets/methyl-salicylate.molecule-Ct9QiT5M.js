@@ -1,0 +1,1 @@
+import{t as e}from"./methyl-salicylate.molecule-98OOC30Z.js";export{e as default};

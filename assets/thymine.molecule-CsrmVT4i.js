@@ -1,1 +1,0 @@
-import{t as e}from"./thymine.molecule-DkZD-F6-.js";export{e as default};

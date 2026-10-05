@@ -1,0 +1,1 @@
+import{t as e}from"./nicotine.molecule-excRyXRy.js";export{e as default};

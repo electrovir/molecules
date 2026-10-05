@@ -1,1 +1,0 @@
-import{t as e}from"./adenosine-triphosphate.molecule-qWyQc0Ww.js";export{e as default};

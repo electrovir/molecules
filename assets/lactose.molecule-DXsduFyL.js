@@ -1,0 +1,1 @@
+import{t as e}from"./lactose.molecule--olp7iMx.js";export{e as default};

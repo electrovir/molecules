@@ -1,0 +1,1 @@
+import{t as e}from"./aspartame.molecule-6KrTbKPo.js";export{e as default};

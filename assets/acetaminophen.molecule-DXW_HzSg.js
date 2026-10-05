@@ -1,1 +1,0 @@
-import{t as e}from"./acetaminophen.molecule-D6B46MuI.js";export{e as default};

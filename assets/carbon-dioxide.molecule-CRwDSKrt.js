@@ -1,1 +1,0 @@
-import{t as e}from"./carbon-dioxide.molecule-B0Y2F358.js";export{e as default};

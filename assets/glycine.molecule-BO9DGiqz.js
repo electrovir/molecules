@@ -1,1 +1,0 @@
-import{t as e}from"./glycine.molecule-CgHzNlYU.js";export{e as default};

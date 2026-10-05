@@ -1,0 +1,1 @@
+import{t as e}from"./thymine.molecule-0-fDeXJ_.js";export{e as default};

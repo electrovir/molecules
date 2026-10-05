@@ -1,0 +1,1 @@
+import{t as e}from"./cinnamaldehyde.molecule-Bp8epxaR.js";export{e as default};

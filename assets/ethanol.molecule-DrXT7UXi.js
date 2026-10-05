@@ -1,0 +1,1 @@
+import{t as e}from"./ethanol.molecule-jZxVXrxH.js";export{e as default};

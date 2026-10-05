@@ -1,0 +1,1 @@
+import{t as e}from"./methanol.molecule-CXfoZ19J.js";export{e as default};

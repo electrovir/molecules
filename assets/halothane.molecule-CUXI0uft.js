@@ -1,0 +1,1 @@
+import{t as e}from"./halothane.molecule-UESwhurk.js";export{e as default};

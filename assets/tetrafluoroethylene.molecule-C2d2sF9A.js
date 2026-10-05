@@ -1,0 +1,1 @@
+import{t as e}from"./tetrafluoroethylene.molecule-NUoqlowH.js";export{e as default};

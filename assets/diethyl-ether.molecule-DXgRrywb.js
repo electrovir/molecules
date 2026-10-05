@@ -1,0 +1,1 @@
+import{t as e}from"./diethyl-ether.molecule-B5mhkhha.js";export{e as default};

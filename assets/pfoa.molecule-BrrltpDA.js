@@ -1,0 +1,1 @@
+import{t as e}from"./pfoa.molecule-DyKkASSw.js";export{e as default};

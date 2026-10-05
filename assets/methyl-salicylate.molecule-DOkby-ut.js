@@ -1,1 +1,0 @@
-import{t as e}from"./methyl-salicylate.molecule-BzKMGM-y.js";export{e as default};

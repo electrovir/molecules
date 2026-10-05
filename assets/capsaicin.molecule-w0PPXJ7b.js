@@ -1,0 +1,1 @@
+import{t as e}from"./capsaicin.molecule-FfJ2gZvV.js";export{e as default};

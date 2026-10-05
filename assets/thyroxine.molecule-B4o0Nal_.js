@@ -1,1 +1,0 @@
-import{t as e}from"./thyroxine.molecule-B581HXFW.js";export{e as default};

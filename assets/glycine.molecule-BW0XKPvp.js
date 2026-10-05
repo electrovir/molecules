@@ -1,0 +1,1 @@
+import{t as e}from"./glycine.molecule-B83F24e_.js";export{e as default};

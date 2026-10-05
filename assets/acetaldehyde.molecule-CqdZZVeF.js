@@ -1,1 +1,0 @@
-import{t as e}from"./acetaldehyde.molecule-CLAbRhqf.js";export{e as default};

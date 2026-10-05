@@ -1,0 +1,1 @@
+import{t as e}from"./acetaminophen.molecule-wKcB3HMa.js";export{e as default};

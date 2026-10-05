@@ -1,0 +1,1 @@
+import{t as e}from"./xenon-tetrafluoride.molecule-C9wJvYfm.js";export{e as default};

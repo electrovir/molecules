@@ -1,0 +1,1 @@
+import{t as e}from"./formic-acid.molecule-Dwf4d7fc.js";export{e as default};

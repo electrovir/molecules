@@ -1,0 +1,1 @@
+import{t as e}from"./ammonia.molecule-yB1hDDBI.js";export{e as default};

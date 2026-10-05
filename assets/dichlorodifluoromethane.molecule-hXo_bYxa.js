@@ -1,0 +1,1 @@
+import{t as e}from"./dichlorodifluoromethane.molecule-DCjvDoNh.js";export{e as default};

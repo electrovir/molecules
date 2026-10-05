@@ -1,0 +1,1 @@
+import{t as e}from"./isopropyl-alcohol.molecule-BhW4g5yv.js";export{e as default};

@@ -1,0 +1,1 @@
+import{t as e}from"./ethylene-glycol.molecule-Bd1o755k.js";export{e as default};

@@ -1,0 +1,1 @@
+import{t as e}from"./salicylic-acid.molecule-EGfY31mF.js";export{e as default};

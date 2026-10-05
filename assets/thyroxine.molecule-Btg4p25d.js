@@ -1,0 +1,1 @@
+import{t as e}from"./thyroxine.molecule-Chb-6lUX.js";export{e as default};

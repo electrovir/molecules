@@ -1,1 +1,0 @@
-import{t as e}from"./methanol.molecule-W2RedjOW.js";export{e as default};

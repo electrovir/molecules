@@ -1,0 +1,1 @@
+import{t as e}from"./aspirin.molecule-CSrFJBly.js";export{e as default};

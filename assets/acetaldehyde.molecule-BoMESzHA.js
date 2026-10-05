@@ -1,0 +1,1 @@
+import{t as e}from"./acetaldehyde.molecule--bGm8jBg.js";export{e as default};

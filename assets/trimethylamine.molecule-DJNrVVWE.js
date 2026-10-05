@@ -1,0 +1,1 @@
+import{t as e}from"./trimethylamine.molecule-C-rkJl1d.js";export{e as default};

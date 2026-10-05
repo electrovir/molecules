@@ -1,1 +1,0 @@
-import{t as e}from"./ethylene-glycol.molecule-BUMEzRE5.js";export{e as default};

@@ -1,0 +1,1 @@
+import{t as e}from"./phosgene.molecule-Boek4U8B.js";export{e as default};
