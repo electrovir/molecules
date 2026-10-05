@@ -1,0 +1,1 @@
+import{t as e}from"./capsaicin.molecule-vBT6MOjb.js";export{e as default};

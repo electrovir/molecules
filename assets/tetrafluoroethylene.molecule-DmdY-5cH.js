@@ -1,0 +1,1 @@
+import{t as e}from"./tetrafluoroethylene.molecule-CnEw_rR6.js";export{e as default};

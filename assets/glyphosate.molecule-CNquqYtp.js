@@ -1,0 +1,1 @@
+import{t as e}from"./glyphosate.molecule-DV_FbA-c.js";export{e as default};

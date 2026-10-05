@@ -1,0 +1,1 @@
+import{t as e}from"./dichlorodifluoromethane.molecule-CAYF4oPm.js";export{e as default};

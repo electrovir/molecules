@@ -1,0 +1,1 @@
+import{t as e}from"./isopropyl-alcohol.molecule-BMHo7HC9.js";export{e as default};

@@ -1,0 +1,1 @@
+import{t as e}from"./boron-trifluoride.molecule-DUqjACf4.js";export{e as default};

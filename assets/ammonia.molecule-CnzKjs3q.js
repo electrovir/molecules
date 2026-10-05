@@ -1,0 +1,1 @@
+import{t as e}from"./ammonia.molecule-BQsbyUm2.js";export{e as default};

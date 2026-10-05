@@ -1,0 +1,1 @@
+import{t as e}from"./acetic-acid.molecule-DuntpCZ3.js";export{e as default};

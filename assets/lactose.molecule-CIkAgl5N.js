@@ -1,0 +1,1 @@
+import{t as e}from"./lactose.molecule-BRJXFZ7S.js";export{e as default};
