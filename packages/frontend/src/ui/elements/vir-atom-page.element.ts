@@ -33,6 +33,7 @@ import {
     type FrontendRouter,
 } from '../frontend-state/frontend-state.js';
 import {getOrbitalCssColor} from '../orbital-colors.js';
+import {moveOverlayDrag, type OverlayDrag, startOverlayDrag} from '../overlay-drag.js';
 import {VirAtomThumbnail} from './vir-atom-thumbnail.element.js';
 import {VirSlider} from './vir-slider.element.js';
 
@@ -165,7 +166,6 @@ export const VirAtomPage = defineElement<
                 width: 400px;
                 max-width: 40%;
                 max-height: calc(100% - 32px);
-                overflow-y: auto;
                 box-sizing: border-box;
                 padding: 16px;
                 border-radius: 16px;
@@ -183,45 +183,45 @@ export const VirAtomPage = defineElement<
                 gap: 8px;
             }
 
-            .overlay-scroller {
-                display: contents;
-            }
-
-            .overlay-spacer {
-                display: none;
+            .scroll-area {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                min-height: 0;
+                overflow-y: auto;
             }
 
             /**
-             * The overlay becomes a bar at the bottom that only shows its header until scrolled up.
-             * The scroller covers the whole app so the bar can scroll over the atom, but lets
-             * touches through to the atom everywhere except on the bar.
+             * The overlay becomes a bar at the bottom that only shows its header until the header is
+             * dragged up. iOS Safari won't scroll a full-screen scroller that lets touches through
+             * to the atom, so the bar is resized by hand instead.
              */
-            ${hostClasses['vir-atom-page-phone'].selector} .overlay-scroller {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                flex-direction: column;
-                overflow-y: auto;
-                overscroll-behavior: contain;
-                scrollbar-width: none;
-                pointer-events: none;
-            }
-
-            ${hostClasses['vir-atom-page-phone'].selector} .overlay-spacer {
-                display: block;
-                flex-shrink: 0;
-            }
-
             ${hostClasses['vir-atom-page-phone'].selector} .details {
-                flex-shrink: 0;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                left: 0;
                 width: auto;
                 max-width: none;
                 max-height: none;
-                overflow-y: visible;
                 margin: 0 8px;
+                padding-bottom: 0;
+                overflow: hidden;
                 border-radius: 16px 16px 0 0;
                 background-color: rgba(0, 0, 0, 0.75);
-                pointer-events: auto;
+            }
+
+            ${hostClasses['vir-atom-page-phone'].selector} .overlay-header {
+                flex-shrink: 0;
+            }
+
+            ${hostClasses['vir-atom-page-phone'].selector} .scroll-area {
+                padding-bottom: 16px;
+            }
+
+            ${hostClasses['vir-atom-page-phone'].selector} .overlay-header,
+            ${hostClasses['vir-atom-page-phone'].selector} .overlay-header * {
+                touch-action: none;
             }
 
             .chips {
@@ -329,6 +329,9 @@ export const VirAtomPage = defineElement<
     state() {
         return {
             overlayHeaderHeight: 0,
+            /** The phone bar's height once dragged. */
+            overlayHeight: undefined satisfies number | undefined as number | undefined,
+            overlayDrag: undefined satisfies OverlayDrag | undefined as OverlayDrag | undefined,
             /** The subshell whose orbitals show as their own chips, when chips are grouped. */
             expandedSubshellId: undefined satisfies string | undefined as string | undefined,
             documentListenerAbort: undefined satisfies AbortController | undefined as
@@ -467,6 +470,9 @@ export const VirAtomPage = defineElement<
                 : groupChip;
         }
 
+        /** The overlay's top padding plus the gap below its header. */
+        const overlayPeekPixels = state.overlayHeaderHeight + 24;
+
         function goToPrevious() {
             goToElement({
                 router: inputs.router,
@@ -494,110 +500,143 @@ export const VirAtomPage = defineElement<
         }
 
         return html`
-            <div class="overlay-scroller">
+            <div
+                class="details"
+                style=${inputs.isPhone
+                    ? css`
+                          height: ${state.overlayHeight ?? overlayPeekPixels}px;
+                      `
+                    : nothing}
+                ${onResize(({contentRect}) => {
+                    dispatch(
+                        new events.overlayWidthChange({
+                            detail: contentRect.width,
+                        }),
+                    );
+                })}
+            >
                 <div
-                    class="overlay-spacer"
-                    style=${css`
-                        /** The overlay's top padding plus the gap below its header. */
-                        height: calc(100% - ${state.overlayHeaderHeight + 24}px);
-                    `}
-                ></div>
-                <div
-                    class="details"
+                    class="overlay-header"
+                    ${listen('pointerdown', (event) => {
+                        if (inputs.isPhone) {
+                            updateState({
+                                overlayDrag: startOverlayDrag(event),
+                            });
+                        }
+                    })}
+                    ${listen('pointermove', (event) => {
+                        const overlayHeight = state.overlayDrag
+                            ? moveOverlayDrag({
+                                  event,
+                                  drag: state.overlayDrag,
+                                  minHeight: overlayPeekPixels,
+                              })
+                            : undefined;
+                        if (state.overlayDrag && overlayHeight != undefined) {
+                            updateState({
+                                overlayHeight,
+                                overlayDrag: {
+                                    ...state.overlayDrag,
+                                    isDragging: true,
+                                },
+                            });
+                        }
+                    })}
+                    ${listen('pointerup', () => {
+                        updateState({
+                            overlayDrag: undefined,
+                        });
+                    })}
+                    ${listen('pointercancel', () => {
+                        updateState({
+                            overlayDrag: undefined,
+                        });
+                    })}
                     ${onResize(({contentRect}) => {
+                        updateState({
+                            overlayHeaderHeight: contentRect.height,
+                        });
                         dispatch(
-                            new events.overlayWidthChange({
-                                detail: contentRect.width,
+                            new events.overlayHeaderHeightChange({
+                                detail: contentRect.height,
                             }),
                         );
                     })}
                 >
-                    <div
-                        class="overlay-header"
-                        ${onResize(({contentRect}) => {
-                            updateState({
-                                overlayHeaderHeight: contentRect.height,
-                            });
-                            dispatch(
-                                new events.overlayHeaderHeightChange({
-                                    detail: contentRect.height,
-                                }),
-                            );
+                    <div class="navigation">
+                        <${ViraButton.assign({
+                            icon: lucideIcons.ArrowLeft,
+                            color: ViraColorVariant.Neutral,
+                            buttonSize: ViraSize.Large,
                         })}
-                    >
-                        <div class="navigation">
-                            <${ViraButton.assign({
-                                icon: lucideIcons.ArrowLeft,
-                                color: ViraColorVariant.Neutral,
-                                buttonSize: ViraSize.Large,
-                            })}
-                                title="Previous"
-                                ${
-                                    /**
-                                     * `pointerup` instead of `click`: touch browsers withhold a
-                                     * tap's `click` in some states, such as while another touch is
-                                     * down, but still send its `pointerup`.
-                                     */
-                                    listen('pointerup', (event) => {
-                                        if (event.button === 0) {
-                                            goToPrevious();
-                                        }
-                                    })
-                                }
-                                ${
-                                    /**
-                                     * Keyboard activation is the only `click` whose `detail` (the
-                                     * click count) is `0`.
-                                     */
-                                    listen('click', (event) => {
-                                        if (!event.detail) {
-                                            goToPrevious();
-                                        }
-                                    })
-                                }
-                            ></${ViraButton}>
-                            <${ViraButton.assign({
-                                icon: lucideIcons.ArrowRight,
-                                color: ViraColorVariant.Neutral,
-                                buttonSize: ViraSize.Large,
-                            })}
-                                title="Next"
-                                ${listen('pointerup', (event) => {
+                            title="Previous"
+                            ${
+                                /**
+                                 * `pointerup` instead of `click`: touch browsers withhold a
+                                 * tap's `click` in some states, such as while another touch is
+                                 * down, but still send its `pointerup`.
+                                 */
+                                listen('pointerup', (event) => {
                                     if (event.button === 0) {
-                                        goToNext();
+                                        goToPrevious();
                                     }
-                                })}
-                                ${listen('click', (event) => {
+                                })
+                            }
+                            ${
+                                /**
+                                 * Keyboard activation is the only `click` whose `detail` (the
+                                 * click count) is `0`.
+                                 */
+                                listen('click', (event) => {
                                     if (!event.detail) {
-                                        goToNext();
+                                        goToPrevious();
                                     }
-                                })}
-                            ></${ViraButton}>
-                        </div>
-                        <span class="entry-number">
-                            #${String(element.atomicNumber).padStart(3, '0')}
-                        </span>
-                        <div class="name-row">
-                            <${ViraButton.assign({
-                                icon: lucideIcons.Speech,
-                                color: ViraColorVariant.Neutral,
-                                buttonSize: ViraSize.Large,
+                                })
+                            }
+                        ></${ViraButton}>
+                        <${ViraButton.assign({
+                            icon: lucideIcons.ArrowRight,
+                            color: ViraColorVariant.Neutral,
+                            buttonSize: ViraSize.Large,
+                        })}
+                            title="Next"
+                            ${listen('pointerup', (event) => {
+                                if (event.button === 0) {
+                                    goToNext();
+                                }
                             })}
-                                title="Say the name"
-                                ${listen('pointerup', (event) => {
-                                    if (event.button === 0) {
-                                        sayName();
-                                    }
-                                })}
-                                ${listen('click', (event) => {
-                                    if (!event.detail) {
-                                        sayName();
-                                    }
-                                })}
-                            ></${ViraButton}>
-                            <h1>${element.name}</h1>
-                        </div>
+                            ${listen('click', (event) => {
+                                if (!event.detail) {
+                                    goToNext();
+                                }
+                            })}
+                        ></${ViraButton}>
                     </div>
+                    <span class="entry-number">
+                        #${String(element.atomicNumber).padStart(3, '0')}
+                    </span>
+                    <div class="name-row">
+                        <${ViraButton.assign({
+                            icon: lucideIcons.Speech,
+                            color: ViraColorVariant.Neutral,
+                            buttonSize: ViraSize.Large,
+                        })}
+                            title="Say the name"
+                            ${listen('pointerup', (event) => {
+                                if (event.button === 0) {
+                                    sayName();
+                                }
+                            })}
+                            ${listen('click', (event) => {
+                                if (!event.detail) {
+                                    sayName();
+                                }
+                            })}
+                        ></${ViraButton}>
+                        <h1>${element.name}</h1>
+                    </div>
+                </div>
+                <div class="scroll-area">
                     <${VirAtomThumbnail.assign({
                         symbol: inputs.symbol,
                     })}

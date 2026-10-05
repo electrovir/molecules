@@ -21,6 +21,7 @@ import {
     type FrontendRouter,
 } from '../frontend-state/frontend-state.js';
 import {getMoleculeStatRows} from '../molecule-stat-rows.js';
+import {moveOverlayDrag, type OverlayDrag, startOverlayDrag} from '../overlay-drag.js';
 import {VirEvolutionChain} from './vir-evolution-chain.element.js';
 import {VirMoleculeCry} from './vir-molecule-cry.element.js';
 
@@ -253,53 +254,32 @@ export const VirMoleculePage = defineElement<
                 gap: 8px;
             }
 
-            .overlay-scroller {
-                display: contents;
-            }
-
-            .overlay-spacer {
-                display: none;
-            }
-
             /**
-             * The overlay becomes a bar at the bottom that only shows its header until scrolled up.
-             * The scroller covers the whole app so the bar can scroll over the molecule, but lets
-             * touches through to the molecule everywhere except on the bar.
+             * The overlay becomes a bar at the bottom that only shows its header until the header is
+             * dragged up. iOS Safari won't scroll a full-screen scroller that lets touches through
+             * to the molecule, so the bar is resized by hand instead.
              */
-            ${hostClasses['vir-molecule-page-phone'].selector} .overlay-scroller {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                flex-direction: column;
-                overflow-y: auto;
-                overscroll-behavior: contain;
-                scrollbar-width: none;
-                pointer-events: none;
-            }
-
-            ${hostClasses['vir-molecule-page-phone'].selector} .overlay-scroller,
-            ${hostClasses['vir-molecule-page-phone'].selector} .overlay-scroller * {
-                touch-action: pan-y;
-            }
-
-            ${hostClasses['vir-molecule-page-phone'].selector} .overlay-spacer {
-                display: block;
-                flex-shrink: 0;
-            }
-
             ${hostClasses['vir-molecule-page-phone'].selector} .overlay {
-                flex-shrink: 0;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                left: 0;
                 width: auto;
                 max-width: none;
                 max-height: none;
                 margin: 0 8px;
+                padding-bottom: 0;
+                overflow: hidden;
                 border-radius: 16px 16px 0 0;
                 background-color: rgba(0, 0, 0, 0.75);
-                pointer-events: auto;
             }
 
-            ${hostClasses['vir-molecule-page-phone'].selector} .overlay .scroll-area {
-                overflow-y: visible;
+            ${hostClasses['vir-molecule-page-phone'].selector} .overlay-header {
+                flex-shrink: 0;
+            }
+
+            ${hostClasses['vir-molecule-page-phone'].selector} .scroll-area {
+                padding-bottom: 16px;
             }
 
             .entry-number {
@@ -315,6 +295,9 @@ export const VirMoleculePage = defineElement<
     state() {
         return {
             overlayHeaderHeight: 0,
+            /** The phone bar's height once dragged. */
+            overlayHeight: undefined satisfies number | undefined as number | undefined,
+            overlayDrag: undefined satisfies OverlayDrag | undefined as OverlayDrag | undefined,
             documentListenerAbort: undefined satisfies AbortController | undefined as
                 | AbortController
                 | undefined,
@@ -379,226 +362,249 @@ export const VirMoleculePage = defineElement<
         }
 
         return html`
-            <div class="overlay-scroller">
+            <div
+                class="overlay"
+                style=${inputs.isPhone
+                    ? css`
+                          height: ${state.overlayHeight ?? overlayPeekPixels}px;
+                      `
+                    : nothing}
+                ${onResize(({contentRect}) => {
+                    dispatch(
+                        new events.overlayWidthChange({
+                            detail: contentRect.width,
+                        }),
+                    );
+                })}
+                ${
+                    /**
+                     * Safari ignores `user-scalable=no` and only blocks double tap zooming
+                     * under `touch-action: none` or `manipulation`, neither of which lets an
+                     * area scroll without also allowing pinch zooming. Canceling the second
+                     * tap's `touchend` stops the zoom, along with that tap's `click`.
+                     */
+                    listen('touchend', (event) => {
+                        if (event.timeStamp - lastTouchEnd.timeStamp < 300) {
+                            event.preventDefault();
+                        }
+                        lastTouchEnd.timeStamp = event.timeStamp;
+                    })
+                }
+            >
                 <div
-                    class="overlay-spacer"
-                    style=${css`
-                        height: calc(100% - ${overlayPeekPixels}px);
-                    `}
-                ></div>
-                <div
-                    class="overlay"
-                    ${onResize(({contentRect}) => {
+                    class="overlay-header"
+                    ${listen('pointerdown', (event) => {
+                        if (inputs.isPhone) {
+                            updateState({
+                                overlayDrag: startOverlayDrag(event),
+                            });
+                        }
+                    })}
+                    ${listen('pointermove', (event) => {
+                        const overlayHeight = state.overlayDrag
+                            ? moveOverlayDrag({
+                                  event,
+                                  drag: state.overlayDrag,
+                                  minHeight: overlayPeekPixels,
+                              })
+                            : undefined;
+                        if (state.overlayDrag && overlayHeight != undefined) {
+                            updateState({
+                                overlayHeight,
+                                overlayDrag: {
+                                    ...state.overlayDrag,
+                                    isDragging: true,
+                                },
+                            });
+                        }
+                    })}
+                    ${listen('pointerup', () => {
+                        updateState({
+                            overlayDrag: undefined,
+                        });
+                    })}
+                    ${listen('pointercancel', () => {
+                        updateState({
+                            overlayDrag: undefined,
+                        });
+                    })}
+                    ${onResize(({contentRect}, element) => {
+                        const peekHeight = getHeaderPeekHeight({
+                            header: element,
+                            headerHeight: contentRect.height,
+                        });
+                        updateState({
+                            overlayHeaderHeight: peekHeight,
+                        });
                         dispatch(
-                            new events.overlayWidthChange({
-                                detail: contentRect.width,
+                            new events.overlayHeaderHeightChange({
+                                detail: peekHeight,
                             }),
                         );
                     })}
-                    ${
-                        /**
-                         * Safari ignores `user-scalable=no` and only blocks double tap zooming
-                         * under `touch-action: none` or `manipulation`, neither of which lets an
-                         * area scroll without also allowing pinch zooming. Canceling the second
-                         * tap's `touchend` stops the zoom, along with that tap's `click`.
-                         */
-                        listen('touchend', (event) => {
-                            if (event.timeStamp - lastTouchEnd.timeStamp < 300) {
-                                event.preventDefault();
-                            }
-                            lastTouchEnd.timeStamp = event.timeStamp;
-                        })
-                    }
                 >
-                    <div
-                        class="overlay-header"
-                        ${onResize(({contentRect}, element) => {
-                            const peekHeight = getHeaderPeekHeight({
-                                header: element,
-                                headerHeight: contentRect.height,
-                            });
-                            updateState({
-                                overlayHeaderHeight: peekHeight,
-                            });
-                            dispatch(
-                                new events.overlayHeaderHeightChange({
-                                    detail: peekHeight,
-                                }),
-                            );
+                    <div class="navigation">
+                        <${ViraButton.assign({
+                            icon: lucideIcons.ArrowLeft,
+                            color: ViraColorVariant.Neutral,
+                            buttonSize: ViraSize.Large,
                         })}
-                    >
-                        <div class="navigation">
-                            <${ViraButton.assign({
-                                icon: lucideIcons.ArrowLeft,
-                                color: ViraColorVariant.Neutral,
-                                buttonSize: ViraSize.Large,
-                            })}
-                                title="Previous"
-                                ${
-                                    /**
-                                     * `pointerup` instead of `click`: touch browsers withhold a
-                                     * tap's `click` in some states, such as while another touch is
-                                     * down, but still send its `pointerup`.
-                                     */
-                                    listen('pointerup', (event) => {
-                                        if (event.button === 0) {
-                                            goToPrevious();
-                                        }
-                                    })
-                                }
-                                ${
-                                    /**
-                                     * Keyboard activation is the only `click` whose `detail` (the
-                                     * click count) is `0`.
-                                     */
-                                    listen('click', (event) => {
-                                        if (!event.detail) {
-                                            goToPrevious();
-                                        }
-                                    })
-                                }
-                            ></${ViraButton}>
-                            <${ViraButton.assign({
-                                icon: lucideIcons.ArrowRight,
-                                color: ViraColorVariant.Neutral,
-                                buttonSize: ViraSize.Large,
-                            })}
-                                title="Next"
-                                ${listen('pointerup', (event) => {
+                            title="Previous"
+                            ${
+                                /**
+                                 * `pointerup` instead of `click`: touch browsers withhold a
+                                 * tap's `click` in some states, such as while another touch is
+                                 * down, but still send its `pointerup`.
+                                 */
+                                listen('pointerup', (event) => {
                                     if (event.button === 0) {
-                                        goToNext();
+                                        goToPrevious();
                                     }
-                                })}
-                                ${listen('click', (event) => {
+                                })
+                            }
+                            ${
+                                /**
+                                 * Keyboard activation is the only `click` whose `detail` (the
+                                 * click count) is `0`.
+                                 */
+                                listen('click', (event) => {
                                     if (!event.detail) {
-                                        goToNext();
+                                        goToPrevious();
                                     }
-                                })}
-                            ></${ViraButton}>
-                        </div>
-                        <span class="entry-number">
-                            #${String(inputs.moleculeIndex + 1).padStart(3, '0')}
-                        </span>
-                        ${inputs.isLoadFailed
-                            ? html`
-                                  <p>Failed to load ${routeName}.</p>
-                              `
-                            : ''}
-                        <div class="name-row">
-                            <${ViraButton.assign({
-                                icon: lucideIcons.Speech,
-                                color: ViraColorVariant.Neutral,
-                                buttonSize: ViraSize.Large,
+                                })
+                            }
+                        ></${ViraButton}>
+                        <${ViraButton.assign({
+                            icon: lucideIcons.ArrowRight,
+                            color: ViraColorVariant.Neutral,
+                            buttonSize: ViraSize.Large,
+                        })}
+                            title="Next"
+                            ${listen('pointerup', (event) => {
+                                if (event.button === 0) {
+                                    goToNext();
+                                }
                             })}
-                                title="Say the name"
-                                ${listen('pointerup', (event) => {
-                                    if (event.button === 0) {
-                                        void playPronunciation(
-                                            createStaticFileUrl(
-                                                'pronunciations',
-                                                `${routeName}.mp3`,
-                                            ),
-                                        );
-                                    }
-                                })}
-                                ${listen('click', (event) => {
-                                    if (!event.detail) {
-                                        void playPronunciation(
-                                            createStaticFileUrl(
-                                                'pronunciations',
-                                                `${routeName}.mp3`,
-                                            ),
-                                        );
-                                    }
-                                })}
-                            ></${ViraButton}>
-                            <h1><span>${summary.name}</span></h1>
-                        </div>
-                        <span class="formula">${summary.formula}</span>
+                            ${listen('click', (event) => {
+                                if (!event.detail) {
+                                    goToNext();
+                                }
+                            })}
+                        ></${ViraButton}>
                     </div>
-                    ${molecule
+                    <span class="entry-number">
+                        #${String(inputs.moleculeIndex + 1).padStart(3, '0')}
+                    </span>
+                    ${inputs.isLoadFailed
                         ? html`
-                              <div
-                                  class="scroll-area"
-                                  ${
-                                      /**
-                                       * Safari ignores `user-scalable=no` and only blocks double
-                                       * tap zooming under `touch-action: none` or `manipulation`,
-                                       * neither of which lets an area scroll without also allowing
-                                       * pinch zooming. Canceling the second tap's `touchend` stops
-                                       * the zoom, along with that tap's `click`.
-                                       */
-                                      listen('touchend', (event) => {
-                                          if (event.timeStamp - lastTouchEnd.timeStamp < 300) {
-                                              event.preventDefault();
-                                          }
-                                          lastTouchEnd.timeStamp = event.timeStamp;
-                                      })
-                                  }
-                              >
-                                  <p>${molecule.structureDescription}</p>
-                                  <p>${molecule.realLifeDescription}</p>
-                                  <${VirMoleculeCry.assign({
-                                      molecule,
-                                      seed: routeName,
-                                  })}></${VirMoleculeCry}>
-                                  <table>
-                                      ${getMoleculeStatRows(molecule).map((row) => {
-                                          return row.values.map((value, index) => {
-                                              return html`
-                                                  <tr class=${index ? 'continued' : ''}>
-                                                      ${index
-                                                          ? nothing
-                                                          : html`
-                                                                <th rowspan=${row.values.length}>
-                                                                    ${row.label}
-                                                                </th>
-                                                            `}
-                                                      <td>
-                                                          <span
-                                                              class="stat-value"
-                                                              ${value.description
-                                                                  ? tooltip(
-                                                                        html`
-                                                                            <div
-                                                                                class="stat-tooltip"
-                                                                            >
-                                                                                ${value.icon ??
-                                                                                nothing}
-                                                                                <p>
-                                                                                    ${value.description}
-                                                                                </p>
-                                                                            </div>
-                                                                        `,
-                                                                        {
-                                                                            trigger:
-                                                                                PopoverTrigger.Click,
-                                                                        },
-                                                                    )
-                                                                  : nothing}
-                                                          >
-                                                              ${value.icon ?? nothing} ${value.text}
-                                                          </span>
-                                                      </td>
-                                                  </tr>
-                                              `;
-                                          });
-                                      })}
-                                  </table>
-                                  ${chainStartRouteName
-                                      ? html`
-                                            <${VirEvolutionChain.assign({
-                                                router: inputs.router,
-                                                startRouteName: chainStartRouteName,
-                                                currentRouteName: routeName,
-                                                isCompact: true,
-                                            })}></${VirEvolutionChain}>
-                                        `
-                                      : nothing}
-                              </div>
+                              <p>Failed to load ${routeName}.</p>
                           `
                         : ''}
+                    <div class="name-row">
+                        <${ViraButton.assign({
+                            icon: lucideIcons.Speech,
+                            color: ViraColorVariant.Neutral,
+                            buttonSize: ViraSize.Large,
+                        })}
+                            title="Say the name"
+                            ${listen('pointerup', (event) => {
+                                if (event.button === 0) {
+                                    void playPronunciation(
+                                        createStaticFileUrl('pronunciations', `${routeName}.mp3`),
+                                    );
+                                }
+                            })}
+                            ${listen('click', (event) => {
+                                if (!event.detail) {
+                                    void playPronunciation(
+                                        createStaticFileUrl('pronunciations', `${routeName}.mp3`),
+                                    );
+                                }
+                            })}
+                        ></${ViraButton}>
+                        <h1><span>${summary.name}</span></h1>
+                    </div>
+                    <span class="formula">${summary.formula}</span>
                 </div>
+                ${molecule
+                    ? html`
+                          <div
+                              class="scroll-area"
+                              ${
+                                  /**
+                                   * Safari ignores `user-scalable=no` and only blocks double
+                                   * tap zooming under `touch-action: none` or `manipulation`,
+                                   * neither of which lets an area scroll without also allowing
+                                   * pinch zooming. Canceling the second tap's `touchend` stops
+                                   * the zoom, along with that tap's `click`.
+                                   */
+                                  listen('touchend', (event) => {
+                                      if (event.timeStamp - lastTouchEnd.timeStamp < 300) {
+                                          event.preventDefault();
+                                      }
+                                      lastTouchEnd.timeStamp = event.timeStamp;
+                                  })
+                              }
+                          >
+                              <p>${molecule.structureDescription}</p>
+                              <p>${molecule.realLifeDescription}</p>
+                              <${VirMoleculeCry.assign({
+                                  molecule,
+                                  seed: routeName,
+                              })}></${VirMoleculeCry}>
+                              <table>
+                                  ${getMoleculeStatRows(molecule).map((row) => {
+                                      return row.values.map((value, index) => {
+                                          return html`
+                                              <tr class=${index ? 'continued' : ''}>
+                                                  ${index
+                                                      ? nothing
+                                                      : html`
+                                                            <th rowspan=${row.values.length}>
+                                                                ${row.label}
+                                                            </th>
+                                                        `}
+                                                  <td>
+                                                      <span
+                                                          class="stat-value"
+                                                          ${value.description
+                                                              ? tooltip(
+                                                                    html`
+                                                                        <div class="stat-tooltip">
+                                                                            ${value.icon ?? nothing}
+                                                                            <p>
+                                                                                ${value.description}
+                                                                            </p>
+                                                                        </div>
+                                                                    `,
+                                                                    {
+                                                                        trigger:
+                                                                            PopoverTrigger.Click,
+                                                                    },
+                                                                )
+                                                              : nothing}
+                                                      >
+                                                          ${value.icon ?? nothing} ${value.text}
+                                                      </span>
+                                                  </td>
+                                              </tr>
+                                          `;
+                                      });
+                                  })}
+                              </table>
+                              ${chainStartRouteName
+                                  ? html`
+                                        <${VirEvolutionChain.assign({
+                                            router: inputs.router,
+                                            startRouteName: chainStartRouteName,
+                                            currentRouteName: routeName,
+                                            isCompact: true,
+                                        })}></${VirEvolutionChain}>
+                                    `
+                                  : nothing}
+                          </div>
+                      `
+                    : ''}
             </div>
         `;
     },

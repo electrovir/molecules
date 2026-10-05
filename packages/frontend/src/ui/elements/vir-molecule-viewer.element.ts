@@ -130,6 +130,8 @@ export const VirMoleculeViewer = defineElement<
         selectedOrbitalId: string;
         /** How strongly the atom's orbital clouds show, from 0 to 1. */
         orbitalOpacity: number;
+        /** Shrinks the selection pop-up. */
+        isPhone: boolean;
     }>
 >()({
     tagName: 'vir-molecule-viewer',
@@ -141,6 +143,9 @@ export const VirMoleculeViewer = defineElement<
     hostClasses: {
         'vir-molecule-viewer-hidden'({inputs}) {
             return !!inputs.isHidden;
+        },
+        'vir-molecule-viewer-phone'({inputs}) {
+            return !!inputs.isPhone;
         },
     },
     styles({hostClasses}) {
@@ -228,6 +233,32 @@ export const VirMoleculeViewer = defineElement<
                     pointer-events: auto;
                     cursor: pointer;
                     text-decoration: none;
+                }
+            }
+
+            ${hostClasses['vir-molecule-viewer-phone'].selector} .selection-label {
+                left: 8px;
+                bottom: 8px;
+                gap: 12px;
+                padding: 8px 12px;
+                border-width: 2px;
+                font-size: 14px;
+
+                & strong {
+                    font-size: 24px;
+                }
+
+                & .details {
+                    font-size: 12px;
+                }
+
+                & .orbital-swatch {
+                    width: 24px;
+                    height: 24px;
+                }
+
+                & ${VirAtomThumbnail} {
+                    width: 32px;
                 }
             }
         `;

@@ -322,6 +322,7 @@ export const VirApp = defineElement()({
                           ]
                         : undefined,
                 orbitalOpacity: state.orbitalOpacity,
+                isPhone,
             })}
                 style=${css`
                     bottom: ${viewerBottom}px;

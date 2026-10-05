@@ -272,11 +272,17 @@ export function createAtomModel({
     );
     model.group.add(overlay);
 
+    /**
+     * Showing every orbital stacks their clouds, so each one fades with the count. The square root
+     * keeps a lone outer orbital visible in big atoms instead of dividing it to nothing.
+     */
+    const allOrbitalsGain = 1 / Math.sqrt(atom.orbitals.length || 1);
+
     function applyOrbitalStyles() {
         orbitalMeshes.forEach(({visual, cloud, surface, cloudOpacity, surfaceOpacity}) => {
             const strength =
                 state.selectedOrbitalId == undefined
-                    ? visual.gain
+                    ? visual.gain * allOrbitalsGain
                     : Math.max(visual.gain * selectedGainBoost, minSelectedGain);
             const isShown =
                 state.opacity > 0 &&
