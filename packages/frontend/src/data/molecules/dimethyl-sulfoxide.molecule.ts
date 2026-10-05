@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 679. */
 const dimethylSulfoxide: Molecule = {
     name: 'Dimethyl Sulfoxide',
+    routeName: 'dimethyl-sulfoxide',
     // cspell:disable-next-line
     pronunciation: 'dˌImˈɛθɪl sʌlfˈɑksId',
     structureDescription: 'A sulfur atom holding an oxygen and two carbon groups.',
@@ -23,7 +24,6 @@ const dimethylSulfoxide: Molecule = {
         smell: 'slightly sulfurous, garlic-like',
         taste: 'slightly bitter, sweet aftertaste',
         habitat: 'Seawater phytoplankton, traces in vegetables, grains, milk, coffee, tea',
-        evolvesInto: ['dimethyl-sulfide'],
     },
     atoms: [
         {

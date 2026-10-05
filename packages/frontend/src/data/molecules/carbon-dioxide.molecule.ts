@@ -1,8 +1,10 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import carbonicAcid from './carbonic-acid.molecule.js';
 
 const carbonDioxide: Molecule = {
     name: 'Carbon Dioxide',
+    routeName: 'carbon-dioxide',
     // cspell:disable-next-line
     pronunciation: 'kˈɑɹbən dIˈɑksˌId',
     structureDescription: 'A carbon atom double-bonded to two oxygen atoms in a straight line.',
@@ -20,7 +22,9 @@ const carbonDioxide: Molecule = {
         taste: 'faintly acidic',
         habitat:
             'Air, animal breath, volcanoes, fires, groundwater, seawater, the atmosphere of Venus',
-        evolvesInto: ['carbonic-acid'],
+        evolvesInto: [
+            carbonicAcid,
+        ],
     },
     atoms: [
         {

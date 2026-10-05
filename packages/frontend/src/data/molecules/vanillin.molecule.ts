@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import capsaicin from './capsaicin.molecule.js';
 
 /** 3D coordinates from PubChem CID 1183. */
 const vanillin: Molecule = {
     name: 'Vanillin',
+    routeName: 'vanillin',
     // cspell:disable-next-line
     pronunciation: 'vənˈɪlʌn',
     structureDescription: 'A benzene ring holding three different groups.',
@@ -22,6 +24,9 @@ const vanillin: Molecule = {
         smell: 'sweet, creamy vanilla',
         taste: 'pleasant vanilla',
         habitat: 'Vanilla beans, other orchids, pine bark, clove oil',
+        evolvesInto: [
+            capsaicin,
+        ],
     },
     atoms: [
         {

@@ -3,6 +3,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const aspirin: Molecule = {
     name: 'Aspirin',
+    routeName: 'aspirin',
     // cspell:disable-next-line
     pronunciation: 'ˈæspəɹən',
     structureDescription: 'A benzene ring carrying an acid group and an acetyl group side by side.',
@@ -22,10 +23,6 @@ const aspirin: Molecule = {
         yearDiscovered: 1853,
         taste: 'slightly bitter',
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'salicylic-acid',
-            'acetic-acid',
-        ],
     },
     atoms: [
         {

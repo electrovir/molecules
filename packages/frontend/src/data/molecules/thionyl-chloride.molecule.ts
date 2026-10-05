@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24386. */
 const thionylChloride: Molecule = {
     name: 'Thionyl Chloride',
+    routeName: 'thionyl-chloride',
     // cspell:disable-next-line
     pronunciation: 'θˈIˌənˌɪl klˈɔɹˌId',
     structureDescription: 'A sulfur atom holding one oxygen and two chlorine atoms in a pyramid.',
@@ -23,10 +24,6 @@ const thionylChloride: Molecule = {
         yearDiscovered: 1849,
         smell: 'pungent, like sulfur dioxide',
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'sulfur-dioxide',
-            'hydrogen-chloride',
-        ],
     },
     atoms: [
         {

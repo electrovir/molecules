@@ -1,8 +1,10 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import acetaldehyde from './acetaldehyde.molecule.js';
 
 const acetylene: Molecule = {
     name: 'Acetylene',
+    routeName: 'acetylene',
     // cspell:disable-next-line
     pronunciation: 'əsˈɛtᵊlən',
     structureDescription:
@@ -23,7 +25,7 @@ const acetylene: Molecule = {
         yearDiscovered: 1836,
         smell: 'faint, ethereal',
         habitat: 'Wood smoke, bacteria that feed on it, Titan',
-        evolvesInto: ['acetaldehyde'],
+        evolvesInto: [acetaldehyde],
     },
     atoms: [
         {

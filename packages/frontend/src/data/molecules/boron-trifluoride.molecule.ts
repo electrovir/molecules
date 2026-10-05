@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const boronTrifluoride: Molecule = {
     name: 'Boron Trifluoride',
+    routeName: 'boron-trifluoride',
     // cspell:disable-next-line
     pronunciation: 'bˈɔɹˌɑn tɹˌIflˈʊɹˌId',
     structureDescription: 'A boron atom bonded to three fluorine atoms in a flat triangle.',
@@ -24,10 +25,6 @@ const boronTrifluoride: Molecule = {
         ],
         smell: 'pungent, suffocating',
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'boric-acid',
-            'hydrogen-fluoride',
-        ],
     },
     atoms: [
         {

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1146. */
 const trimethylamine: Molecule = {
     name: 'Trimethylamine',
+    routeName: 'trimethylamine',
     // cspell:disable-next-line
     pronunciation: 'tɹˌImˌɛθələmˈin',
     structureDescription: 'A nitrogen atom with three methyl groups.',
@@ -27,7 +28,6 @@ const trimethylamine: Molecule = {
         smell: 'fishy, ammonia-like',
         taste: 'fishy, salty',
         habitat: 'Rotting fish, gut bacteria',
-        evolvesInto: ['ammonia'],
     },
     atoms: [
         {

@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import aceticAcid from './acetic-acid.molecule.js';
 
 /** 3D coordinates from PubChem CID 177. */
 const acetaldehyde: Molecule = {
     name: 'Acetaldehyde',
+    routeName: 'acetaldehyde',
     // cspell:disable-next-line
     pronunciation: 'ˌæsətˈældəhˌId',
     structureDescription: 'Two carbon atoms with a double bonded oxygen on the end.',
@@ -27,7 +29,7 @@ const acetaldehyde: Molecule = {
         smell: 'pungent, fruity',
         taste: 'tart',
         habitat: 'Ripe fruit, coffee, bread, plants',
-        evolvesInto: ['acetic-acid'],
+        evolvesInto: [aceticAcid],
     },
     atoms: [
         {

@@ -1,8 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import hydrazine from './hydrazine.molecule.js';
+import urea from './urea.molecule.js';
 
 const ammonia: Molecule = {
     name: 'Ammonia',
+    routeName: 'ammonia',
     // cspell:disable-next-line
     pronunciation: 'ʌmˈOniə',
     structureDescription: 'A nitrogen atom bonded to three hydrogen atoms in a squat pyramid.',
@@ -26,7 +29,10 @@ const ammonia: Molecule = {
         yearDiscovered: 1756,
         smell: 'pungent, suffocating',
         habitat: 'Animal waste, decaying matter, the atmosphere, giant planets, interstellar space',
-        evolvesInto: ['urea'],
+        evolvesInto: [
+            hydrazine,
+            urea,
+        ],
     },
     atoms: [
         {

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6393. */
 const tetrafluoromethane: Molecule = {
     name: 'Tetrafluoromethane',
+    routeName: 'tetrafluoromethane',
     // cspell:disable-next-line
     pronunciation: 'tˌɛtɹəflˌʊɹOmˈɛθˌAn',
     structureDescription: 'A carbon atom bonded to four fluorine atoms.',

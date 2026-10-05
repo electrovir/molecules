@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 134601. */
 const aspartame: Molecule = {
     name: 'Aspartame',
+    routeName: 'aspartame',
     // cspell:disable-next-line
     pronunciation: 'ˈæspəɹtˌAm',
     structureDescription:
@@ -19,7 +20,6 @@ const aspartame: Molecule = {
         yearDiscovered: 1965,
         taste: 'sweet',
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['methanol'],
     },
     atoms: [
         {

@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6334. */
 const propane: Molecule = {
     name: 'Propane',
+    routeName: 'propane',
     // cspell:disable-next-line
     pronunciation: 'pɹˈOpˌAn',
     structureDescription: 'A chain of three carbon atoms covered in hydrogens.',
@@ -23,7 +24,6 @@ const propane: Molecule = {
         ],
         yearDiscovered: 1857,
         habitat: "Crude oil, natural gas, Saturn's moon Titan",
-        evolvesInto: ['isopropyl-alcohol'],
     },
     atoms: [
         {

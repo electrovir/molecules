@@ -1,10 +1,12 @@
 // cspell:words theobroma
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import caffeine from './caffeine.molecule.js';
 
 /** 3D coordinates from PubChem CID 5429. */
 const theobromine: Molecule = {
     name: 'Theobromine',
+    routeName: 'theobromine',
     // cspell:disable-next-line
     pronunciation: 'θˌiəbɹˈOmin',
     structureDescription: 'A close cousin of caffeine, missing one carbon group.',
@@ -24,7 +26,7 @@ const theobromine: Molecule = {
         yearDiscovered: 1841,
         taste: 'bitter',
         habitat: 'Cacao beans, chocolate, tea, kola nuts',
-        evolvesInto: ['caffeine'],
+        evolvesInto: [caffeine],
     },
     atoms: [
         {

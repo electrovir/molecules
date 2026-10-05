@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 135398658. */
 const folicAcid: Molecule = {
     name: 'Folic Acid',
+    routeName: 'folic-acid',
     // cspell:disable-next-line
     pronunciation: 'fˈɑlɪk ˈæsəd',
     structureDescription:

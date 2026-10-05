@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import crownEther18 from './18-crown-6.molecule.js';
 
 /** 3D coordinates from PubChem CID 174. */
 const ethyleneGlycol: Molecule = {
     name: 'Ethylene Glycol',
+    routeName: 'ethylene-glycol',
     // cspell:disable-next-line
     pronunciation: 'ˈɛθəlˌin ɡlˈIkˌɔl',
     structureDescription: 'Two carbon atoms each holding an oxygen-hydrogen group.',
@@ -25,6 +27,9 @@ const ethyleneGlycol: Molecule = {
         yearDiscovered: 1856,
         taste: 'sweet',
         habitat: 'Factories, pea plants',
+        evolvesInto: [
+            crownEther18,
+        ],
     },
     atoms: [
         {

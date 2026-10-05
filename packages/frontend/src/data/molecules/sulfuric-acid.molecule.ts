@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1118. */
 const sulfuricAcid: Molecule = {
     name: 'Sulfuric Acid',
+    routeName: 'sulfuric-acid',
     // cspell:disable-next-line
     pronunciation: 'səlfjˈuɹɪk ˈæsəd',
     structureDescription: 'A sulfur atom surrounded by four oxygens, two of which hold hydrogens.',
@@ -20,10 +21,6 @@ const sulfuricAcid: Molecule = {
         hazardPictograms: [GhsPictogram.Corrosive],
         taste: 'acidic',
         habitat: 'Acid rain, volcanic gases, the clouds of Venus',
-        evolvesInto: [
-            'sulfur-trioxide',
-            'water',
-        ],
     },
     atoms: [
         {

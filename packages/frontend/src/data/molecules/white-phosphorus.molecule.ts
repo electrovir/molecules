@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const whitePhosphorus: Molecule = {
     name: 'White Phosphorus',
+    routeName: 'white-phosphorus',
     // cspell:disable-next-line
     pronunciation: 'wˈIt fˈɑsfəɹəs',
     structureDescription:
@@ -26,7 +27,6 @@ const whitePhosphorus: Molecule = {
         yearDiscovered: 1669,
         smell: 'garlic-like',
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['phosphine'],
     },
     atoms: [
         {

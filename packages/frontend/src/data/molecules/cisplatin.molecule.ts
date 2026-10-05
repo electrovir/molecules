@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const cisplatin: Molecule = {
     name: 'Cisplatin',
+    routeName: 'cisplatin',
     // cspell:disable-next-line
     pronunciation: 'sˌɪsplˈætᵊn',
     structureDescription:

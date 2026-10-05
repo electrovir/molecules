@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 311. */
 const citricAcid: Molecule = {
     name: 'Citric Acid',
+    routeName: 'citric-acid',
     // cspell:disable-next-line
     pronunciation: 'sˈɪtɹɪk ˈæsəd',
     structureDescription: 'A six carbon molecule with three acid groups.',
@@ -20,7 +21,6 @@ const citricAcid: Molecule = {
         yearDiscovered: 1784,
         taste: 'strongly sour, tart',
         habitat: 'Citrus fruits, many plants, cells of all aerobic organisms',
-        evolvesInto: ['acetic-acid'],
     },
     atoms: [
         {

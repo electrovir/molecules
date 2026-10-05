@@ -1,10 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import ozone from './ozone.molecule.js';
 
 const oxygenBondLength = 1.2075;
 
 const oxygen: Molecule = {
     name: 'Oxygen',
+    routeName: 'oxygen',
     // cspell:disable-next-line
     pronunciation: 'ˈɑksəʤᵊn',
     structureDescription: 'Two oxygen atoms joined by a double bond.',
@@ -23,7 +25,9 @@ const oxygen: Molecule = {
             GhsPictogram.CompressedGas,
         ],
         habitat: "Earth's air (21%), plant photosynthesis",
-        evolvesInto: ['ozone'],
+        evolvesInto: [
+            ozone,
+        ],
     },
     atoms: [
         {

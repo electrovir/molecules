@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 71485. */
 const sucralose: Molecule = {
     name: 'Sucralose',
+    routeName: 'sucralose',
     // cspell:disable-next-line
     pronunciation: 'sˈukɹəlˌOs',
     structureDescription:

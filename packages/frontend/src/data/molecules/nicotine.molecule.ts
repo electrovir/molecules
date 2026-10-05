@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 89594. */
 const nicotine: Molecule = {
     name: 'Nicotine',
+    routeName: 'nicotine',
     // cspell:disable-next-line
     pronunciation: 'nˈɪkətˌin',
     structureDescription: 'Two nitrogen-containing rings joined together.',
@@ -25,7 +26,6 @@ const nicotine: Molecule = {
         smell: 'pungent, fishy when warm',
         taste: 'acrid, burning',
         habitat: 'Tobacco leaves, traces in tomatoes, potatoes, eggplants',
-        evolvesInto: ['niacin'],
     },
     atoms: [
         {

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 36573. */
 const acesulfame: Molecule = {
     name: 'Acesulfame',
+    routeName: 'acesulfame',
     // cspell:disable-next-line
     pronunciation: 'ˌAsəsˈʌlfˌAm',
     structureDescription:

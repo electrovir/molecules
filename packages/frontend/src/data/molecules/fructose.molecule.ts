@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import sucrose from './sucrose.molecule.js';
 
 /** 3D coordinates from PubChem CID 2723872. */
 const fructose: Molecule = {
     name: 'Fructose',
+    routeName: 'fructose',
     // cspell:disable-next-line
     pronunciation: 'fɹˈuktˌOs',
     structureDescription: 'A sugar with the same atoms as glucose arranged differently.',
@@ -17,7 +19,7 @@ const fructose: Molecule = {
         yearDiscovered: 1847,
         taste: 'sweet',
         habitat: 'Honey, fruits, berries, flowers, root vegetables',
-        evolvesInto: ['glucose'],
+        evolvesInto: [sucrose],
     },
     atoms: [
         {

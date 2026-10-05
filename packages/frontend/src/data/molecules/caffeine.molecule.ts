@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const caffeine: Molecule = {
     name: 'Caffeine',
+    routeName: 'caffeine',
     // cspell:disable-next-line
     pronunciation: 'kæfˈin',
     structureDescription:
@@ -23,10 +24,6 @@ const caffeine: Molecule = {
         yearDiscovered: 1819,
         taste: 'bitter',
         habitat: 'Coffee, tea, cacao, kola, mate, guarana',
-        evolvesInto: [
-            'theobromine',
-            'theophylline',
-        ],
     },
     atoms: [
         {

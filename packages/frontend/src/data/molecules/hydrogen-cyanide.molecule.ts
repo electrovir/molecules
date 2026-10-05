@@ -1,10 +1,13 @@
 // cspell:words cyanogenic
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import edta from './edta.molecule.js';
+import glycine from './glycine.molecule.js';
 
 /** 3D coordinates from PubChem CID 768. */
 const hydrogenCyanide: Molecule = {
     name: 'Hydrogen Cyanide',
+    routeName: 'hydrogen-cyanide',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəʤᵊn sˈIənˌId',
     structureDescription:
@@ -28,6 +31,10 @@ const hydrogenCyanide: Molecule = {
         smell: 'bitter almond',
         taste: 'bitter, burning',
         habitat: 'Fruit pits, cyanogenic plants, microbes, human blood, space',
+        evolvesInto: [
+            glycine,
+            edta,
+        ],
     },
     atoms: [
         {

@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import nitroglycerin from './nitroglycerin.molecule.js';
 
 /** 3D coordinates from PubChem CID 753. */
 const glycerol: Molecule = {
     name: 'Glycerol',
+    routeName: 'glycerol',
     // cspell:disable-next-line
     pronunciation: 'ɡlˈɪsəɹɔl',
     structureDescription: 'Three carbon atoms each holding an oxygen-hydrogen group.',
@@ -20,6 +22,7 @@ const glycerol: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 9100,
         taste: 'sweet, warm',
         habitat: 'Fats and oils of all plants and animals',
+        evolvesInto: [nitroglycerin],
     },
     atoms: [
         {

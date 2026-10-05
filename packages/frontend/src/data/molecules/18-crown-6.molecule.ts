@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 28557. */
 const crownEther18: Molecule = {
     name: '18-Crown-6',
+    routeName: '18-crown-6',
     // cspell:disable-next-line
     pronunciation: 'ˌAtˈin kɹˈWn sˈɪks',
     structureDescription: 'A ring of twelve carbons and six oxygens shaped like a crown.',

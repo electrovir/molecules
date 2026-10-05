@@ -5,6 +5,7 @@ import {BondOrder, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 24341. */
 const hypochlorousAcid: Molecule = {
     name: 'Hypochlorous Acid',
+    routeName: 'hypochlorous-acid',
     // cspell:disable-next-line
     pronunciation: 'hˌIpəklˈɔɹəs ˈæsəd',
     structureDescription: 'A chlorine atom and a hydrogen atom, each bonded to one oxygen.',
@@ -13,10 +14,6 @@ const hypochlorousAcid: Molecule = {
     stats: {
         yearDiscovered: 1834,
         habitat: 'White blood cells of mammals, bleaches, disinfectants',
-        evolvesInto: [
-            'hydrogen-chloride',
-            'oxygen',
-        ],
     },
     atoms: [
         {

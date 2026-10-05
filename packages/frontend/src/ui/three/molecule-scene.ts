@@ -3,7 +3,9 @@ import {createArray, type PartialWithUndefined} from '@augment-vir/common';
 import {
     Box3,
     Color,
+    DepthTexture,
     Euler,
+    FloatType,
     Group,
     Matrix4,
     MOUSE,
@@ -15,6 +17,7 @@ import {
     Vector2,
     Vector3,
     WebGLRenderer,
+    WebGLRenderTarget,
 } from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {type ChemicalElement, chemicalElements} from '../../data/chemical-element.js';
@@ -26,6 +29,7 @@ import {createGroundShadow} from './ground-shadow.js';
 import {
     createAtomImpostors,
     createStickImpostors,
+    frontDepthLayer,
     type ImpostorSceneUniforms,
 } from './impostors.js';
 import {createSelfReflections} from './marble.js';
@@ -123,66 +127,53 @@ type Stick = {
 };
 
 /**
- * Stretches bonds to follow their atoms, and turns each multi-stick bond around its own axis so its
- * sticks spread across the screen and never hide behind each other.
+ * Places a stick along its bond. A multi-stick bond is turned around its own axis so its sticks
+ * spread across the screen and never hide behind each other.
  */
-function getPartPositions({
+function getStickEnds({
     molecule,
-    sticks,
+    stick,
     atomPositions,
     cameraPosition,
 }: Readonly<{
     molecule: Readonly<Molecule>;
-    sticks: ReadonlyArray<Readonly<Stick>>;
-    atomPositions: Vector3[];
+    stick: Readonly<Stick>;
+    atomPositions: ReadonlyArray<Readonly<Vector3>>;
     /** In the molecule's own space, which turns with the molecule. */
     cameraPosition: Readonly<Vector3>;
 }>) {
-    const bondFrames = molecule.bonds.map((bond) => {
-        const [
-            start,
-            end,
-        ] = bond.atomIndexes.map((atomIndex) => {
-            return assertWrap.isDefined(
-                atomPositions[atomIndex],
-                `Bond in '${molecule.name}' references missing atom ${atomIndex}.`,
-            );
-        }) satisfies Vector3[] as [
-            Vector3,
-            Vector3,
-        ];
-        const bondDirection = end.clone().sub(start).normalize();
-        const spreadDirection = new Vector3().crossVectors(
-            bondDirection,
-            cameraPosition.clone().sub(start.clone().add(end).multiplyScalar(0.5)),
+    const bond = assertWrap.isDefined(molecule.bonds[stick.bondIndex]);
+    const [
+        start,
+        end,
+    ] = bond.atomIndexes.map((atomIndex) => {
+        return assertWrap.isDefined(
+            atomPositions[atomIndex],
+            `Bond in '${molecule.name}' references missing atom ${atomIndex}.`,
         );
-        /**
-         * Single bonds have nothing to spread, and a bond pointing straight at the camera looks the
-         * same at any spread.
-         */
-        const side =
-            bond.order === BondOrder.Single || spreadDirection.lengthSq() < 1e-9
-                ? new Vector3(1, 0, 0).applyQuaternion(
-                      new Quaternion().setFromUnitVectors(new Vector3(0, 1, 0), bondDirection),
-                  )
-                : spreadDirection.normalize();
-        return {
-            start,
-            end,
-            side,
-        };
-    });
-
+    }) satisfies ReadonlyArray<Readonly<Vector3>> as [
+        Readonly<Vector3>,
+        Readonly<Vector3>,
+    ];
+    const bondDirection = end.clone().sub(start).normalize();
+    const spreadDirection = new Vector3().crossVectors(
+        bondDirection,
+        cameraPosition.clone().sub(start.clone().add(end).multiplyScalar(0.5)),
+    );
+    /**
+     * Single bonds have nothing to spread, and a bond pointing straight at the camera looks the
+     * same at any spread.
+     */
+    const side =
+        bond.order === BondOrder.Single || spreadDirection.lengthSq() < 1e-9
+            ? new Vector3(1, 0, 0).applyQuaternion(
+                  new Quaternion().setFromUnitVectors(new Vector3(0, 1, 0), bondDirection),
+              )
+            : spreadDirection.normalize();
     return {
-        atomCenters: atomPositions,
-        stickEnds: sticks.map(({bondIndex, offset}) => {
-            const frame = assertWrap.isDefined(bondFrames[bondIndex]);
-            return {
-                start: frame.start.clone().addScaledVector(frame.side, offset),
-                end: frame.end.clone().addScaledVector(frame.side, offset),
-                side: frame.side,
-            };
-        }),
+        start: start.clone().addScaledVector(side, stick.offset),
+        end: end.clone().addScaledVector(side, stick.offset),
+        side,
     };
 }
 
@@ -342,10 +333,14 @@ function createMoleculeModel({
         stickColor,
     });
     /** Sticks draw after atoms, so what shows through them is already drawn. */
-    group.add(...atoms.meshes, ...stickImpostors.meshes);
-    stickImpostors.meshes.forEach((mesh) => {
-        mesh.visible = sticks.length > 0;
-    });
+    group.add(
+        atoms.depthMesh,
+        atoms.mesh,
+        atoms.outlineMesh,
+        stickImpostors.mesh,
+        stickImpostors.outlineMesh,
+    );
+    stickImpostors.mesh.visible = sticks.length > 0;
     atomRadii.forEach((atomRadius, atomIndex) => {
         atoms.attributes.radius.setX(atomIndex, atomRadius);
         const color = assertWrap.isDefined(atomColors[atomIndex]);
@@ -353,16 +348,6 @@ function createMoleculeModel({
     });
     sticks.forEach((stick, stickIndex) => {
         stickImpostors.attributes.radius.setX(stickIndex, stick.radius);
-    });
-
-    const groundShadow = createGroundShadow({
-        casters: shadowCasters.allCastersTexture,
-        towardLight,
-        opacity: groundShadowOpacity,
-    });
-    groundShadow.setFootprint({
-        groundHeight: -radius - groundGap,
-        moleculeRadius: radius,
     });
 
     /** Contact shading only checks the parts that can touch, found once from the resting shape. */
@@ -388,6 +373,20 @@ function createMoleculeModel({
                 : [];
         });
     });
+    /**
+     * The molecule never changes shape, so only the sticks of multi-stick bonds move, as they turn
+     * to face the camera. Everything else is written once.
+     */
+    const movingStickIndexes = sticks.flatMap((stick, stickIndex) => {
+        return assertWrap.isDefined(molecule.bonds[stick.bondIndex]).order === BondOrder.Single
+            ? []
+            : [stickIndex];
+    });
+    const movingContactAtomIndexes = touchingStickIndexes.flatMap((stickIndexes, atomIndex) => {
+        return stickIndexes.some((stickIndex) => movingStickIndexes.includes(stickIndex))
+            ? [atomIndex]
+            : [];
+    });
 
     /** Each part's start then end, with an atom's start and end both at its center. */
     const partEnds = new Float32Array(partCount * 6);
@@ -401,28 +400,42 @@ function createMoleculeModel({
         ...sticks.map((stick) => stick.radius),
     ]);
 
+    const groundShadow = createGroundShadow({
+        casters: shadowCasters.allCastersTexture,
+        ends: partEnds,
+        casterRadii,
+        towardLight,
+        opacity: groundShadowOpacity,
+    });
+    groundShadow.setFootprint({
+        groundHeight: -radius - groundGap,
+        moleculeRadius: radius,
+    });
+
     const state = {
-        positions: getPartPositions({
-            molecule,
-            sticks,
-            atomPositions: restingPositions,
-            cameraPosition: new Vector3(0, 0, 1),
+        stickEnds: sticks.map((stick) => {
+            return getStickEnds({
+                molecule,
+                stick,
+                atomPositions: restingPositions,
+                cameraPosition: new Vector3(0, 0, 1),
+            });
         }),
         isShadowsEnabled: true,
+        hasGlow: false,
     };
 
     function getAtomCapsule(atomIndex: number): Capsule {
-        const atomCenter = assertWrap.isDefined(state.positions.atomCenters[atomIndex]);
         return {
-            start: atomCenter,
-            end: atomCenter,
+            start: assertWrap.isDefined(restingPositions[atomIndex]),
+            end: assertWrap.isDefined(restingPositions[atomIndex]),
             radius: assertWrap.isDefined(atomRadii[atomIndex]),
             isAtom: true,
         };
     }
 
     function getStickCapsule(stickIndex: number): Capsule {
-        const ends = assertWrap.isDefined(state.positions.stickEnds[stickIndex]);
+        const ends = assertWrap.isDefined(state.stickEnds[stickIndex]);
         return {
             start: ends.start,
             end: ends.end,
@@ -430,6 +443,60 @@ function createMoleculeModel({
             isAtom: false,
         };
     }
+
+    function writeAtomContactRow(atomIndex: number) {
+        contactOccluders.setRow({
+            row: atomIndex,
+            capsules: [
+                ...assertWrap
+                    .isDefined(touchingAtomIndexes[atomIndex])
+                    .map((otherIndex) => getAtomCapsule(otherIndex)),
+                ...assertWrap
+                    .isDefined(touchingStickIndexes[atomIndex])
+                    .map((stickIndex) => getStickCapsule(stickIndex)),
+            ],
+        });
+    }
+
+    function writeStick(stickIndex: number) {
+        const {start, end, side} = assertWrap.isDefined(state.stickEnds[stickIndex]);
+        stickImpostors.attributes.start.setXYZ(stickIndex, start.x, start.y, start.z);
+        stickImpostors.attributes.end.setXYZ(stickIndex, end.x, end.y, end.z);
+        stickImpostors.attributes.side.setXYZ(stickIndex, side.x, side.y, side.z);
+        partEnds.set(
+            [
+                ...start.toArray(),
+                ...end.toArray(),
+            ],
+            (atomCount + stickIndex) * 6,
+        );
+    }
+
+    restingPositions.forEach((atomCenter, atomIndex) => {
+        atoms.attributes.center.setXYZ(atomIndex, atomCenter.x, atomCenter.y, atomCenter.z);
+        partEnds.set(
+            [
+                ...atomCenter.toArray(),
+                ...atomCenter.toArray(),
+            ],
+            atomIndex * 6,
+        );
+        writeAtomContactRow(atomIndex);
+    });
+    sticks.forEach((stick, stickIndex) => {
+        writeStick(stickIndex);
+        contactOccluders.setRow({
+            row: atomCount + stickIndex,
+            capsules: assertWrap
+                .isDefined(molecule.bonds[stick.bondIndex])
+                .atomIndexes.map((atomIndex) => getAtomCapsule(atomIndex)),
+        });
+    });
+    contactOccluders.upload();
+    selfReflections.update({
+        sphereCenters: restingPositions,
+        cylinderEnds: state.stickEnds,
+    });
 
     return {
         molecule,
@@ -451,60 +518,30 @@ function createMoleculeModel({
             localCameraPosition: Readonly<Vector3>;
             localTowardLight: Readonly<Vector3>;
         }>) {
-            state.positions = getPartPositions({
-                molecule,
-                sticks,
-                atomPositions: restingPositions.map((position) => position.clone()),
-                cameraPosition: localCameraPosition,
-            });
-
-            state.positions.atomCenters.forEach((atomCenter, atomIndex) => {
-                atoms.attributes.center.setXYZ(atomIndex, atomCenter.x, atomCenter.y, atomCenter.z);
-                partEnds.set(
-                    [
-                        ...atomCenter.toArray(),
-                        ...atomCenter.toArray(),
-                    ],
-                    atomIndex * 6,
-                );
-                contactOccluders.setRow({
-                    row: atomIndex,
-                    capsules: [
-                        ...assertWrap
-                            .isDefined(touchingAtomIndexes[atomIndex])
-                            .map((otherIndex) => getAtomCapsule(otherIndex)),
-                        ...assertWrap
-                            .isDefined(touchingStickIndexes[atomIndex])
-                            .map((stickIndex) => getStickCapsule(stickIndex)),
-                    ],
+            if (movingStickIndexes.length) {
+                state.stickEnds = state.stickEnds.map((ends, stickIndex) => {
+                    return movingStickIndexes.includes(stickIndex)
+                        ? getStickEnds({
+                              molecule,
+                              stick: assertWrap.isDefined(sticks[stickIndex]),
+                              atomPositions: restingPositions,
+                              cameraPosition: localCameraPosition,
+                          })
+                        : ends;
                 });
-            });
-            atoms.attributes.center.needsUpdate = true;
-
-            state.positions.stickEnds.forEach(({start, end, side}, stickIndex) => {
-                stickImpostors.attributes.start.setXYZ(stickIndex, start.x, start.y, start.z);
-                stickImpostors.attributes.end.setXYZ(stickIndex, end.x, end.y, end.z);
-                stickImpostors.attributes.side.setXYZ(stickIndex, side.x, side.y, side.z);
-                partEnds.set(
-                    [
-                        ...start.toArray(),
-                        ...end.toArray(),
-                    ],
-                    (atomCount + stickIndex) * 6,
-                );
-                contactOccluders.setRow({
-                    row: atomCount + stickIndex,
-                    capsules: assertWrap
-                        .isDefined(
-                            molecule.bonds[assertWrap.isDefined(sticks[stickIndex]).bondIndex],
-                        )
-                        .atomIndexes.map((atomIndex) => getAtomCapsule(atomIndex)),
-                });
-            });
-            stickImpostors.attributes.start.needsUpdate = true;
-            stickImpostors.attributes.end.needsUpdate = true;
-            stickImpostors.attributes.side.needsUpdate = true;
-            contactOccluders.upload();
+                movingStickIndexes.forEach((stickIndex) => writeStick(stickIndex));
+                stickImpostors.attributes.start.needsUpdate = true;
+                stickImpostors.attributes.end.needsUpdate = true;
+                stickImpostors.attributes.side.needsUpdate = true;
+                movingContactAtomIndexes.forEach((atomIndex) => writeAtomContactRow(atomIndex));
+                contactOccluders.upload();
+                if (selfReflections.isEnabled()) {
+                    selfReflections.update({
+                        sphereCenters: restingPositions,
+                        cylinderEnds: state.stickEnds,
+                    });
+                }
+            }
 
             if (state.isShadowsEnabled) {
                 shadowCasters.update({
@@ -517,18 +554,15 @@ function createMoleculeModel({
                     towardLight: localTowardLight,
                 });
             }
-            if (selfReflections.isEnabled()) {
-                selfReflections.update({
-                    sphereCenters: state.positions.atomCenters,
-                    cylinderEnds: state.positions.stickEnds,
-                });
-            }
         },
         /** Lights up the selection, if any, and turns off every other part's glow. */
         setGlow({
             selection,
             glow,
         }: Readonly<{selection: Readonly<MoleculeSelection> | undefined; glow: number}>) {
+            if (selection == undefined && !state.hasGlow) {
+                return;
+            }
             const selected =
                 selection == undefined
                     ? {
@@ -559,6 +593,9 @@ function createMoleculeModel({
             });
             atoms.attributes.glow.needsUpdate = true;
             stickImpostors.attributes.glow.needsUpdate = true;
+            atoms.outlineMesh.visible = selected.atomIndexes.length > 0;
+            stickImpostors.outlineMesh.visible = selected.stickIndexes.length > 0;
+            state.hasGlow = selection != undefined;
         },
         /** Finds the nearest atom or bond along a ray in the molecule's own space. */
         pick({
@@ -569,7 +606,7 @@ function createMoleculeModel({
             direction: Readonly<Vector3>;
         }>) {
             const hits = [
-                ...state.positions.atomCenters.map((atomCenter, atomIndex) => {
+                ...restingPositions.map((atomCenter, atomIndex) => {
                     return {
                         distance: intersectSphere({
                             origin,
@@ -583,7 +620,7 @@ function createMoleculeModel({
                         } satisfies MoleculeSelection,
                     };
                 }),
-                ...state.positions.stickEnds.map(({start, end}, stickIndex) => {
+                ...state.stickEnds.map(({start, end}, stickIndex) => {
                     const stick = assertWrap.isDefined(sticks[stickIndex]);
                     return {
                         distance: intersectCylinder({
@@ -659,6 +696,9 @@ export function createMoleculeScene({
     const camera = new PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, Math.sin(cameraElevationRadians), Math.cos(cameraElevationRadians));
     scene.add(camera);
+    const frontDepthTarget = new WebGLRenderTarget(1, 1, {
+        depthTexture: new DepthTexture(1, 1, FloatType),
+    });
     const sceneUniforms: ImpostorSceneUniforms = {
         localCameraPosition: {
             value: new Vector3(),
@@ -669,8 +709,12 @@ export function createMoleculeScene({
         localToClip: {
             value: new Matrix4(),
         },
+        frontDepth: {
+            value: assertWrap.isDefined(frontDepthTarget.depthTexture),
+        },
     };
     const worldToLocal = new Matrix4();
+    const drawingBufferSize = new Vector2();
 
     /**
      * Dragging spins this instead of orbiting the camera, so the ground and light stay put. Each
@@ -718,12 +762,15 @@ export function createMoleculeScene({
         onSelectionChange: ((selection: MoleculeSelection | undefined) => void) | undefined;
         onRenderQualityChange: ((quality: Readonly<RenderQuality>) => void) | undefined;
         rightInsetPixels: number;
+        /** The distance the camera was last fit to, which the user's zoom is relative to. */
+        fitDistance: number | undefined;
     } = {
         model: undefined,
         selection: undefined,
         onSelectionChange: undefined,
         onRenderQualityChange: undefined,
         rightInsetPixels: 0,
+        fitDistance: undefined,
     };
 
     /** Capped at half the viewer so the molecule never centers off the left edge. */
@@ -752,9 +799,47 @@ export function createMoleculeScene({
         );
     }
 
+    /**
+     * Zooms the camera so the molecule fits the uncovered part of the viewer. A refit after a
+     * resize keeps the user's zoom, scaled by how much the fit changed.
+     */
+    function fitCamera() {
+        const viewerSize = renderer.getSize(new Vector2());
+        if (!current.model || !viewerSize.x || !viewerSize.y) {
+            return;
+        }
+        const moleculeRadius = current.model.radius;
+        const verticalHalfFov = (camera.fov * Math.PI) / 360;
+        /** In a portrait viewer, the sides cut the molecule off before the top and bottom do. */
+        const narrowestHalfFov = Math.min(
+            verticalHalfFov,
+            Math.atan(
+                (Math.tan(verticalHalfFov) * (viewerSize.x - getRightInsetPixels(viewerSize.x))) /
+                    viewerSize.y,
+            ),
+        );
+        const fitDistance =
+            (Math.max(moleculeRadius, minimumFitRadius) / Math.sin(narrowestHalfFov)) *
+            fitDistanceMargin *
+            (Math.min(viewerSize.x, viewerSize.y) < smallScreenPixels
+                ? smallScreenFitDistanceMargin
+                : 1);
+        camera.position.setLength(
+            current.fitDistance == undefined
+                ? fitDistance
+                : camera.position.length() * (fitDistance / current.fitDistance),
+        );
+        current.fitDistance = fitDistance;
+        controls.maxDistance = fitDistance * 3;
+        /** Reaches past the molecule and the far corner of its ground shadow at full zoom-out. */
+        camera.far = controls.maxDistance + moleculeRadius * 3 + groundGap + 2;
+        camera.updateProjectionMatrix();
+    }
+
     const qualityScaler = createRenderQualityScaler({
         applyQuality({resolutionScale, disabledEffects}) {
-            renderer.setPixelRatio(globalThis.devicePixelRatio * resolutionScale);
+            /** Past 2, more pixels are hard to see but cost as much as any others. */
+            renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio, 2) * resolutionScale);
             current.model?.setDisabledEffects(disabledEffects);
         },
     });
@@ -994,6 +1079,13 @@ export function createMoleculeScene({
                 });
             }
         }
+        renderer.getDrawingBufferSize(drawingBufferSize);
+        frontDepthTarget.setSize(drawingBufferSize.x, drawingBufferSize.y);
+        camera.layers.set(frontDepthLayer);
+        renderer.setRenderTarget(frontDepthTarget);
+        renderer.render(scene, camera);
+        renderer.setRenderTarget(null);
+        camera.layers.set(0);
         renderer.render(scene, camera);
     }
 
@@ -1043,29 +1135,8 @@ export function createMoleculeScene({
                 applyTurn();
             }
 
-            const moleculeRadius = current.model.radius;
-            const viewerSize = renderer.getSize(new Vector2());
-            const verticalHalfFov = (camera.fov * Math.PI) / 360;
-            /** In a portrait viewer, the sides cut the molecule off before the top and bottom do. */
-            const narrowestHalfFov = Math.min(
-                verticalHalfFov,
-                Math.atan(
-                    (Math.tan(verticalHalfFov) *
-                        (viewerSize.x - getRightInsetPixels(viewerSize.x))) /
-                        viewerSize.y,
-                ),
-            );
-            const fitDistance =
-                (Math.max(moleculeRadius, minimumFitRadius) / Math.sin(narrowestHalfFov)) *
-                fitDistanceMargin *
-                (Math.min(viewerSize.x, viewerSize.y) < smallScreenPixels
-                    ? smallScreenFitDistanceMargin
-                    : 1);
-            camera.position.setLength(fitDistance);
-            controls.maxDistance = fitDistance * 3;
-            /** Reaches past the molecule and the far corner of its ground shadow at full zoom-out. */
-            camera.far = controls.maxDistance + moleculeRadius * 3 + groundGap + 2;
-            camera.updateProjectionMatrix();
+            current.fitDistance = undefined;
+            fitCamera();
         },
         /**
          * Renders a frame and reads it out as a PNG data URL in the same task, before the browser
@@ -1096,10 +1167,12 @@ export function createMoleculeScene({
             }
             renderer.setSize(width, height, false);
             updateProjection();
+            fitCamera();
         },
         setRightInset(pixels: number) {
             current.rightInsetPixels = pixels;
             updateProjection();
+            fitCamera();
         },
         /** Stops and restarts drawing frames, keeping everything else as is. */
         setPaused(isPaused: boolean) {
@@ -1120,6 +1193,8 @@ export function createMoleculeScene({
             if (current.model) {
                 current.model.dispose();
             }
+            frontDepthTarget.depthTexture?.dispose();
+            frontDepthTarget.dispose();
             renderer.dispose();
         },
     };

@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3016. */
 const diazepam: Molecule = {
     name: 'Diazepam',
+    routeName: 'diazepam',
     // cspell:disable-next-line
     pronunciation: 'dIˈæzəpˌæm',
     structureDescription:

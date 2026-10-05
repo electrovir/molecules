@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 4201. */
 const minoxidil: Molecule = {
     name: 'Minoxidil',
+    routeName: 'minoxidil',
     // cspell:disable-next-line
     pronunciation: 'mənˈɑksədˌɪl',
     structureDescription:

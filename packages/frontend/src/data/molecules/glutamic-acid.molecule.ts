@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 33032. */
 const glutamicAcid: Molecule = {
     name: 'Glutamic Acid',
+    routeName: 'glutamic-acid',
     // cspell:disable-next-line
     pronunciation: 'ɡlutˈæmɪk ˈæsəd',
     structureDescription: 'An amino acid with a second acid group on a longer side chain.',
@@ -19,7 +20,6 @@ const glutamicAcid: Molecule = {
         yearDiscovered: 1866,
         taste: 'umami, sour',
         habitat: 'Protein-rich foods, plants, animals, soil microbes, brain neurons',
-        evolvesInto: ['gaba'],
     },
     atoms: [
         {

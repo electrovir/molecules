@@ -1,10 +1,12 @@
 // cspell:words diborane
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import borazine from './borazine.molecule.js';
 
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const diborane: Molecule = {
     name: 'Diborane',
+    routeName: 'diborane',
     // cspell:disable-next-line
     pronunciation: 'dIbˈɔɹˌAn',
     structureDescription:
@@ -20,8 +22,7 @@ const diborane: Molecule = {
         smell: 'repulsive, sweet',
         habitat: 'Made only in labs and factories',
         evolvesInto: [
-            'boric-acid',
-            'hydrogen',
+            borazine,
         ],
     },
     atoms: [

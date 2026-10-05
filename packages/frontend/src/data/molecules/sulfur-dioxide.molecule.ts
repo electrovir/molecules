@@ -1,9 +1,13 @@
+// cspell:words thionyl
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import sulfurTrioxide from './sulfur-trioxide.molecule.js';
+import thionylChloride from './thionyl-chloride.molecule.js';
 
 /** 3D coordinates from PubChem CID 1119. */
 const sulfurDioxide: Molecule = {
     name: 'Sulfur Dioxide',
+    routeName: 'sulfur-dioxide',
     // cspell:disable-next-line
     pronunciation: 'sˈʌlfəɹ dIˈɑksˌId',
     structureDescription: 'A sulfur atom holding two oxygens in a bent shape.',
@@ -24,7 +28,10 @@ const sulfurDioxide: Molecule = {
         smell: 'pungent, like a struck match',
         taste: 'acidic',
         habitat: 'Volcanic gases, burning sulfur and fossil fuels, the atmosphere of Venus',
-        evolvesInto: ['sulfur-trioxide'],
+        evolvesInto: [
+            sulfurTrioxide,
+            thionylChloride,
+        ],
     },
     atoms: [
         {

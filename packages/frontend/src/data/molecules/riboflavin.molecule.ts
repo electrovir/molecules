@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 493570. */
 const riboflavin: Molecule = {
     name: 'Riboflavin',
+    routeName: 'riboflavin',
     // cspell:disable-next-line
     pronunciation: 'ɹˈIbəflˌAvən',
     structureDescription:

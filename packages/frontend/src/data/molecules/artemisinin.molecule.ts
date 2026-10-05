@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 68827. */
 const artemisinin: Molecule = {
     name: 'Artemisinin',
+    routeName: 'artemisinin',
     // cspell:disable-next-line
     pronunciation: 'ˌɑɹtəmˈɪsɪnɪn',
     structureDescription: 'Three rings with a bridge of two linked oxygens across one of them.',

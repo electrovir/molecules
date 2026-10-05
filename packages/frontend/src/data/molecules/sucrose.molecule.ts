@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5988. */
 const sucrose: Molecule = {
     name: 'Sucrose',
+    routeName: 'sucrose',
     // cspell:disable-next-line
     pronunciation: 'sˈukɹˌOs',
     structureDescription: 'A glucose and a fructose joined together.',
@@ -19,11 +20,6 @@ const sucrose: Molecule = {
         oralRatLethalDoseMilligramsPerKilogram: 29_700,
         taste: 'sweet',
         habitat: 'Sugarcane, sugar beets, fruits, nectar, honey, maple sap',
-        evolvesInto: [
-            'glucose',
-            'fructose',
-            'sucralose',
-        ],
     },
     atoms: [
         {

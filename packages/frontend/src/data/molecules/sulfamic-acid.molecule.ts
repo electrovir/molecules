@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5987. */
 const sulfamicAcid: Molecule = {
     name: 'Sulfamic Acid',
+    routeName: 'sulfamic-acid',
     // cspell:disable-next-line
     pronunciation: 'sʌlfˈæmɪk ˈæsəd',
     structureDescription: 'A sulfur atom bonded to three oxygens and an amine group.',
@@ -18,10 +19,6 @@ const sulfamicAcid: Molecule = {
         logP: 0.1,
         hazardPictograms: [GhsPictogram.Irritant],
         habitat: 'Factories, human kidneys, liver',
-        evolvesInto: [
-            'ammonia',
-            'sulfuric-acid',
-        ],
     },
     atoms: [
         {

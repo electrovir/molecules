@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24816. */
 const siliconTetrachloride: Molecule = {
     name: 'Silicon Tetrachloride',
+    routeName: 'silicon-tetrachloride',
     // cspell:disable-next-line
     pronunciation: 'sˈɪləkˌɑn tˌɛtɹəklˈɔɹˌId',
     structureDescription:
@@ -23,7 +24,6 @@ const siliconTetrachloride: Molecule = {
         yearDiscovered: 1823,
         smell: 'suffocating, pungent',
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['hydrogen-chloride'],
     },
     atoms: [
         {

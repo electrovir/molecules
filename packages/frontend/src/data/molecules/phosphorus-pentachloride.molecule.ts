@@ -1,10 +1,12 @@
 // cspell:words pentachloride
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import phosphoricAcid from './phosphoric-acid.molecule.js';
 
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const phosphorusPentachloride: Molecule = {
     name: 'Phosphorus Pentachloride',
+    routeName: 'phosphorus-pentachloride',
     // cspell:disable-next-line
     pronunciation: 'fˈɑsfˌəɹəs pˌɛntəklˈɔɹˌId',
     structureDescription:
@@ -25,10 +27,7 @@ const phosphorusPentachloride: Molecule = {
         yearDiscovered: 1808,
         smell: 'pungent, unpleasant',
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'phosphoric-acid',
-            'hydrogen-chloride',
-        ],
+        evolvesInto: [phosphoricAcid],
     },
     atoms: [
         {

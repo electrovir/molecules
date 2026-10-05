@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5943. */
 const carbonTetrachloride: Molecule = {
     name: 'Carbon Tetrachloride',
+    routeName: 'carbon-tetrachloride',
     // cspell:disable-next-line
     pronunciation: 'kˈɑɹbən tˌɛtɹəklˈɔɹˌId',
     structureDescription:
@@ -27,7 +28,6 @@ const carbonTetrachloride: Molecule = {
         yearDiscovered: 1839,
         smell: 'sweet, ether-like',
         habitat: 'Oceans, red algae (Asparagopsis), volcanic gases',
-        evolvesInto: ['chloroform'],
     },
     atoms: [
         {

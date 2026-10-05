@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5143. */
 const saccharin: Molecule = {
     name: 'Saccharin',
+    routeName: 'saccharin',
     // cspell:disable-next-line
     pronunciation: 'sˈækəɹən',
     structureDescription:

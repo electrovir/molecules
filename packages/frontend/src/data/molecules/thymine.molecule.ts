@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1135. */
 const thymine: Molecule = {
     name: 'Thymine',
+    routeName: 'thymine',
     // cspell:disable-next-line
     pronunciation: 'θˈImˌin',
     structureDescription: 'A single ring of carbon and nitrogen.',

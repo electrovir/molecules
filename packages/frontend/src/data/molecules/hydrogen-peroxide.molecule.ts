@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const hydrogenPeroxide: Molecule = {
     name: 'Hydrogen Peroxide',
+    routeName: 'hydrogen-peroxide',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəʤᵊn pəɹˈɑksˌId',
     structureDescription:
@@ -27,10 +28,6 @@ const hydrogenPeroxide: Molecule = {
         smell: 'slightly sharp',
         taste: 'bitter, slightly acidic',
         habitat: 'Human cells, peroxisomes, rain, the lower atmosphere',
-        evolvesInto: [
-            'water',
-            'oxygen',
-        ],
     },
     atoms: [
         {

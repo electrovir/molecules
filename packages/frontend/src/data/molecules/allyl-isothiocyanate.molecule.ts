@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5971. */
 const allylIsothiocyanate: Molecule = {
     name: 'Allyl Isothiocyanate',
+    routeName: 'allyl-isothiocyanate',
     // cspell:disable-next-line
     pronunciation: 'ˈælɪl ˌIsOθˌI OsˈIənˌAt',
     structureDescription:

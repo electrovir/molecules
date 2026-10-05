@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 588. */
 const creatinine: Molecule = {
     name: 'Creatinine',
+    routeName: 'creatinine',
     // cspell:disable-next-line
     pronunciation: 'kɹiˈætənˌin',
     structureDescription:

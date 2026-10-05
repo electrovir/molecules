@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import taurine from './taurine.molecule.js';
 
 /** 3D coordinates from PubChem CID 5862. */
 const cysteine: Molecule = {
     name: 'Cysteine',
+    routeName: 'cysteine',
     // cspell:disable-next-line
     pronunciation: 'sˈɪstin',
     structureDescription: 'An amino acid with a sulfur-hydrogen group on its side chain.',
@@ -19,6 +21,7 @@ const cysteine: Molecule = {
         yearDiscovered: 1884,
         smell: 'sulfurous',
         habitat: 'Proteins of all organisms, keratin, many plants',
+        evolvesInto: [taurine],
     },
     atoms: [
         {

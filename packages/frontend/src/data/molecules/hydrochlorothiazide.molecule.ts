@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3639. */
 const hydrochlorothiazide: Molecule = {
     name: 'Hydrochlorothiazide',
+    routeName: 'hydrochlorothiazide',
     // cspell:disable-next-line
     pronunciation: 'hˌIdɹəklˌɔɹəθˈIəzˌId',
     structureDescription:

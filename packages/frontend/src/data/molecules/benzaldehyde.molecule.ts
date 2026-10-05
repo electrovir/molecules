@@ -1,9 +1,12 @@
+// cspell:words cinnamaldehyde
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import cinnamaldehyde from './cinnamaldehyde.molecule.js';
 
 /** 3D coordinates from PubChem CID 240. */
 const benzaldehyde: Molecule = {
     name: 'Benzaldehyde',
+    routeName: 'benzaldehyde',
     // cspell:disable-next-line
     pronunciation: 'bɛnzˈældəhˌId',
     structureDescription: 'A benzene ring with an aldehyde group attached.',
@@ -22,6 +25,7 @@ const benzaldehyde: Molecule = {
         smell: 'bitter almond',
         taste: 'burning, almond-like',
         habitat: 'Bitter almonds, cranberries, over 100 other plant species',
+        evolvesInto: [cinnamaldehyde],
     },
     atoms: [
         {

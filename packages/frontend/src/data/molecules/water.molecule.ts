@@ -1,11 +1,13 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import hydrogenPeroxide from './hydrogen-peroxide.molecule.js';
 
 const waterBondLength = 0.9584;
 const waterHalfBondAngle = ((104.45 / 2) * Math.PI) / 180;
 
 const water: Molecule = {
     name: 'Water',
+    routeName: 'water',
     // cspell:disable-next-line
     pronunciation: 'wˈɔɾəɹ',
     structureDescription: 'Two hydrogen atoms bonded to one oxygen atom at a bent 104.45° angle.',
@@ -21,8 +23,7 @@ const water: Molecule = {
         dipoleMomentDebye: 1.854,
         habitat: 'Oceans, rivers, ice, air, every living cell, space',
         evolvesInto: [
-            'hydrogen',
-            'oxygen',
+            hydrogenPeroxide,
         ],
     },
     atoms: [

@@ -1,10 +1,13 @@
 // cspell:words hypochlorous
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import chloralHydrate from './chloral-hydrate.molecule.js';
+import hypochlorousAcid from './hypochlorous-acid.molecule.js';
 
 /** 3D coordinates from PubChem CID 24526. */
 const chlorine: Molecule = {
     name: 'Chlorine',
+    routeName: 'chlorine',
     // cspell:disable-next-line
     pronunciation: 'klˈɔɹˌin',
     structureDescription: 'Two chlorine atoms joined by a single bond.',
@@ -27,8 +30,8 @@ const chlorine: Molecule = {
         smell: 'pungent, bleach-like',
         habitat: 'Factories, traces in volcanic gases, traces in sea spray',
         evolvesInto: [
-            'hypochlorous-acid',
-            'hydrogen-chloride',
+            chloralHydrate,
+            hypochlorousAcid,
         ],
     },
     atoms: [

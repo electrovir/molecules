@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4133. */
 const methylSalicylate: Molecule = {
     name: 'Methyl Salicylate',
+    routeName: 'methyl-salicylate',
     // cspell:disable-next-line
     pronunciation: 'mˈɛθᵊl səlˈɪsəlˌAt',
     structureDescription: 'A benzene ring with an OH group next to an ester group.',
@@ -23,7 +24,6 @@ const methylSalicylate: Molecule = {
         smell: 'wintergreen',
         taste: 'wintergreen',
         habitat: 'Wintergreen leaves, sweet birch bark, many other plants',
-        evolvesInto: ['salicylic-acid'],
     },
     atoms: [
         {

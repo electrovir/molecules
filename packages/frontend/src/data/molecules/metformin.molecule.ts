@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4091. */
 const metformin: Molecule = {
     name: 'Metformin',
+    routeName: 'metformin',
     // cspell:disable-next-line
     pronunciation: 'mɛtfˈɔɹmɪn',
     structureDescription:

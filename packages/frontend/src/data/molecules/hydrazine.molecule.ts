@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 9321. */
 const hydrazine: Molecule = {
     name: 'Hydrazine',
+    routeName: 'hydrazine',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəzˌin',
     structureDescription: 'Two nitrogen atoms bonded together, each holding two hydrogens.',
@@ -30,10 +31,6 @@ const hydrazine: Molecule = {
         yearDiscovered: 1887,
         smell: 'ammonia-like',
         habitat: 'Some yeasts, anammox ocean bacteria, nitrogen-fixing soil bacteria',
-        evolvesInto: [
-            'nitrogen',
-            'ammonia',
-        ],
     },
     atoms: [
         {

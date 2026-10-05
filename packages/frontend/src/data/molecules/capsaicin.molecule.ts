@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1548943. */
 const capsaicin: Molecule = {
     name: 'Capsaicin',
+    routeName: 'capsaicin',
     // cspell:disable-next-line
     pronunciation: 'kæpsˈAsən',
     structureDescription: 'A ring joined to a long carbon tail by a nitrogen link.',

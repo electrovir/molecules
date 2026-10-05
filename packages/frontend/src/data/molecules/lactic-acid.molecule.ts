@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 612. */
 const lacticAcid: Molecule = {
     name: 'Lactic Acid',
+    routeName: 'lactic-acid',
     // cspell:disable-next-line
     pronunciation: 'lˈæktɪk ˈæsəd',
     structureDescription: 'Three carbon atoms with an acid group and an oxygen-hydrogen group.',

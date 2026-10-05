@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import nicotine from './nicotine.molecule.js';
 
 /** 3D coordinates from PubChem CID 938. */
 const niacin: Molecule = {
     name: 'Niacin',
+    routeName: 'niacin',
     // cspell:disable-next-line
     pronunciation: 'nˈIəsᵊn',
     structureDescription: 'A pyridine ring with an acid group attached.',
@@ -20,6 +22,7 @@ const niacin: Molecule = {
         yearDiscovered: 1867,
         taste: 'faintly sour',
         habitat: 'Plants, animals, meteorites',
+        evolvesInto: [nicotine],
     },
     atoms: [
         {

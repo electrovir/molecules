@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 33613. */
 const amoxicillin: Molecule = {
     name: 'Amoxicillin',
+    routeName: 'amoxicillin',
     // cspell:disable-next-line
     pronunciation: 'əmˌɑksəsˈɪlɪn',
     structureDescription:

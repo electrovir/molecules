@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 65036. */
 const allicin: Molecule = {
     name: 'Allicin',
+    routeName: 'allicin',
     // cspell:disable-next-line
     pronunciation: 'ˈæləsən',
     structureDescription:

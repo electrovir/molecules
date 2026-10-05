@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4284. */
 const deet: Molecule = {
     name: 'DEET',
+    routeName: 'deet',
     // cspell:disable-next-line
     pronunciation: 'dˈit',
     structureDescription:
@@ -22,7 +23,6 @@ const deet: Molecule = {
         yearDiscovered: 1944,
         smell: 'faint, pleasant',
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['acetaldehyde'],
     },
     atoms: [
         {

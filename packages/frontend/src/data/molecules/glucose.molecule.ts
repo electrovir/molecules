@@ -1,8 +1,10 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import lactose from './lactose.molecule.js';
 
 const glucose: Molecule = {
     name: 'Glucose',
+    routeName: 'glucose',
     // cspell:disable-next-line
     pronunciation: 'ɡlˈukˌOs',
     structureDescription:
@@ -19,6 +21,9 @@ const glucose: Molecule = {
         yearDiscovered: 1747,
         taste: 'sweet',
         habitat: 'Fruits, plants, human blood',
+        evolvesInto: [
+            lactose,
+        ],
     },
     atoms: [
         {

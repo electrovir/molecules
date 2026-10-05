@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3283. */
 const diethylEther: Molecule = {
     name: 'Diethyl Ether',
+    routeName: 'diethyl-ether',
     // cspell:disable-next-line
     pronunciation: 'dIˈɛθɪl ˈiθəɹ',
     structureDescription: 'An oxygen atom with a two-carbon chain on each side.',
@@ -27,10 +28,6 @@ const diethylEther: Molecule = {
         smell: 'sweet, pungent, ethereal',
         taste: 'burning, sweet',
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'ethanol',
-            'acetaldehyde',
-        ],
     },
     atoms: [
         {

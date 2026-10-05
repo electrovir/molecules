@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 65028. */
 const oseltamivir: Molecule = {
     name: 'Oseltamivir',
+    routeName: 'oseltamivir',
     // cspell:disable-next-line
     pronunciation: 'ˌOsɛltˈæmɪvˌɪɹ',
     structureDescription:

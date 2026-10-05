@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6909. */
 const trichloroisocyanuricAcid: Molecule = {
     name: 'Trichloroisocyanuric Acid',
+    routeName: 'trichloroisocyanuric-acid',
     // cspell:disable-next-line
     pronunciation: 'tɹˌIklˌɔɹOˌIsOsˌIənˈʊɹɪk ˈæsəd',
     structureDescription:

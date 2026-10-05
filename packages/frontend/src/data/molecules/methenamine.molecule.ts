@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4101. */
 const methenamine: Molecule = {
     name: 'Methenamine',
+    routeName: 'methenamine',
     // cspell:disable-next-line
     pronunciation: 'mɪθˈɪnəmin',
     structureDescription: 'Six carbons and four nitrogens folded into a cage like adamantane.',
@@ -23,10 +24,6 @@ const methenamine: Molecule = {
         yearDiscovered: 1859,
         smell: 'odorless to faintly fishy',
         habitat: 'Labs, factories, meteorites',
-        evolvesInto: [
-            'formaldehyde',
-            'ammonia',
-        ],
     },
     atoms: [
         {

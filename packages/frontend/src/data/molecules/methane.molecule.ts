@@ -1,8 +1,10 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import methanol from './methanol.molecule.js';
 
 const methane: Molecule = {
     name: 'Methane',
+    routeName: 'methane',
     // cspell:disable-next-line
     pronunciation: 'mˈɛθˌAn',
     structureDescription:
@@ -23,7 +25,7 @@ const methane: Molecule = {
         ],
         yearDiscovered: 1776,
         habitat: 'Natural gas, wetlands, cattle, termites, seafloor sediments',
-        evolvesInto: ['methanol'],
+        evolvesInto: [methanol],
     },
     atoms: [
         {

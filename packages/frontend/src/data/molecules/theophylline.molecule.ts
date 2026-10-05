@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2153. */
 const theophylline: Molecule = {
     name: 'Theophylline',
+    routeName: 'theophylline',
     // cspell:disable-next-line
     pronunciation: 'θiˈɑfələn',
     structureDescription:
@@ -21,7 +22,6 @@ const theophylline: Molecule = {
         yearDiscovered: 1888,
         taste: 'bitter',
         habitat: 'Cocoa beans, tea, coffee, kola nuts',
-        evolvesInto: ['caffeine'],
     },
     atoms: [
         {

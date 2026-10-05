@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6374. */
 const iodoform: Molecule = {
     name: 'Iodoform',
+    routeName: 'iodoform',
     // cspell:disable-next-line
     pronunciation: 'ˌIˈOdəfˌɔɹm',
     structureDescription: 'A carbon atom bonded to three iodine atoms and one hydrogen.',
@@ -22,7 +23,6 @@ const iodoform: Molecule = {
         smell: 'penetrating, sweetish, chloroform-like',
         taste: 'sweetish',
         habitat: "Angel's bonnet mushroom, labs",
-        evolvesInto: ['carbon-monoxide'],
     },
     atoms: [
         {

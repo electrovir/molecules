@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6375. */
 const nitromethane: Molecule = {
     name: 'Nitromethane',
+    routeName: 'nitromethane',
     // cspell:disable-next-line
     pronunciation: 'nˌItɹOmˈɛθˌAn',
     structureDescription: 'A methyl group bonded to a nitrogen that carries two oxygens.',

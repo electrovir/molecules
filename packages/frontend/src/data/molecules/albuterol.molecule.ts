@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 2083. */
 const albuterol: Molecule = {
     name: 'Albuterol',
+    routeName: 'albuterol',
     // cspell:disable-next-line
     pronunciation: 'ælbjˈuɾəɹˌɔl',
     structureDescription:

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 66348. */
 const octasulfur: Molecule = {
     name: 'Octasulfur',
+    routeName: 'octasulfur',
     // cspell:disable-next-line
     pronunciation: 'ˌɑktəsˈʌlfəɹ',
     structureDescription: 'Eight sulfur atoms in a ring folded like a crown.',

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 7439. */
 const carvone: Molecule = {
     name: 'Carvone',
+    routeName: 'carvone',
     // cspell:disable-next-line
     pronunciation: 'kˈɑɹvˌOn',
     structureDescription:

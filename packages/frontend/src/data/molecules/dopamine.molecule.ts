@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import adrenaline from './adrenaline.molecule.js';
 
 /** 3D coordinates from PubChem CID 681. */
 const dopamine: Molecule = {
     name: 'Dopamine',
+    routeName: 'dopamine',
     // cspell:disable-next-line
     pronunciation: 'dˈOpəmˌin',
     structureDescription:
@@ -22,6 +24,7 @@ const dopamine: Molecule = {
         ],
         yearDiscovered: 1910,
         habitat: 'Animal brains, nerves, adrenal glands, many foods',
+        evolvesInto: [adrenaline],
     },
     atoms: [
         {

@@ -1,9 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import ethanethiol from './ethanethiol.molecule.js';
+import octasulfur from './octasulfur.molecule.js';
 
 /** 3D coordinates from PubChem CID 402. */
 const hydrogenSulfide: Molecule = {
     name: 'Hydrogen Sulfide',
+    routeName: 'hydrogen-sulfide',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəʤᵊn sˈʌlfˌId',
     structureDescription: 'A sulfur atom with two hydrogens, bent like water.',
@@ -26,6 +29,10 @@ const hydrogenSulfide: Molecule = {
         smell: 'rotten eggs',
         taste: 'sweetish',
         habitat: 'Volcanic gas, sulfur springs, natural gas, sewers, the human gut',
+        evolvesInto: [
+            octasulfur,
+            ethanethiol,
+        ],
     },
     atoms: [
         {

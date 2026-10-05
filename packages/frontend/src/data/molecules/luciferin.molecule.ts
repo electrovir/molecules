@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 92934. */
 const luciferin: Molecule = {
     name: 'Luciferin',
+    routeName: 'luciferin',
     // cspell:disable-next-line
     pronunciation: 'lusˈɪfəɹən',
     structureDescription:

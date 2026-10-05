@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5329. */
 const sulfamethoxazole: Molecule = {
     name: 'Sulfamethoxazole',
+    routeName: 'sulfamethoxazole',
     // cspell:disable-next-line
     pronunciation: 'sˌʌlfəməθˈɑksəzˌOl',
     structureDescription:

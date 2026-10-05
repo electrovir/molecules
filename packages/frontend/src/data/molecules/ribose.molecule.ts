@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import riboflavin from './riboflavin.molecule.js';
 
 /** 3D coordinates from PubChem CID 10975657. */
 const ribose: Molecule = {
     name: 'Ribose',
+    routeName: 'ribose',
     // cspell:disable-next-line
     pronunciation: 'ɹˈIbˌOz',
     structureDescription: 'A five-carbon sugar that forms the backbone of RNA.',
@@ -15,6 +17,9 @@ const ribose: Molecule = {
         waterSolubilityGramsPerLiter: 100,
         yearDiscovered: 1891,
         habitat: 'RNA in every living cell',
+        evolvesInto: [
+            riboflavin,
+        ],
     },
     atoms: [
         {

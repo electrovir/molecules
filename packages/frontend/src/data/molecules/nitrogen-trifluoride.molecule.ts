@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24553. */
 const nitrogenTrifluoride: Molecule = {
     name: 'Nitrogen Trifluoride',
+    routeName: 'nitrogen-trifluoride',
     // cspell:disable-next-line
     pronunciation: 'nˈItɹəʤᵊn tɹˌIflˈʊɹˌId',
     structureDescription: 'A nitrogen atom bonded to three fluorine atoms in a low pyramid.',

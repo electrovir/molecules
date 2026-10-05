@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6049. */
 const edta: Molecule = {
     name: 'EDTA',
+    routeName: 'edta',
     // cspell:disable-next-line
     pronunciation: 'ˌi dˌi tˌi ˈA',
     structureDescription:

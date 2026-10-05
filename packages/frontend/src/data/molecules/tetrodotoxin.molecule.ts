@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 11174599. */
 const tetrodotoxin: Molecule = {
     name: 'Tetrodotoxin',
+    routeName: 'tetrodotoxin',
     // cspell:disable-next-line
     pronunciation: 'tɛtɹˌOdətˈɑksɪn',
     structureDescription: 'A compact cage of carbon, nitrogen, and oxygen covered in OH groups.',

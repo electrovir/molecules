@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 284. */
 const formicAcid: Molecule = {
     name: 'Formic Acid',
+    routeName: 'formic-acid',
     // cspell:disable-next-line
     pronunciation: 'fˈɔɹmɪk ˈæsəd',
     structureDescription:
@@ -29,7 +30,6 @@ const formicAcid: Molecule = {
         smell: 'pungent, vinegar-like',
         taste: 'sour',
         habitat: 'Ant and bee stings, stinging nettles, fruits, forest air',
-        evolvesInto: ['carbon-dioxide'],
     },
     atoms: [
         {

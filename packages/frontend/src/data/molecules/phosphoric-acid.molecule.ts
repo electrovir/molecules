@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1004. */
 const phosphoricAcid: Molecule = {
     name: 'Phosphoric Acid',
+    routeName: 'phosphoric-acid',
     // cspell:disable-next-line
     pronunciation: 'fɑsfˈɔɹɪk ˈæsəd',
     structureDescription: 'A phosphorus atom surrounded by four oxygens, three holding hydrogens.',

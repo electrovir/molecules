@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5819. */
 const thyroxine: Molecule = {
     name: 'Thyroxine',
+    routeName: 'thyroxine',
     // cspell:disable-next-line
     pronunciation: 'θˌIɹˈɑksˌən',
     structureDescription:

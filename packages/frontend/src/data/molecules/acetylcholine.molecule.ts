@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 187. */
 const acetylcholine: Molecule = {
     name: 'Acetylcholine',
+    routeName: 'acetylcholine',
     // cspell:disable-next-line
     pronunciation: 'əsˌɛtəlkˈOlˌin',
     structureDescription:
@@ -15,7 +16,6 @@ const acetylcholine: Molecule = {
         meltingPointCelsius: 148,
         yearDiscovered: 1867,
         habitat: 'Nerve cells of animals, some non-neural cells, plants, microbes',
-        evolvesInto: ['acetic-acid'],
     },
     atoms: [
         {

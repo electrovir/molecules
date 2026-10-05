@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 8376. */
 const tnt: Molecule = {
     name: 'TNT',
+    routeName: 'tnt',
     // cspell:disable-next-line
     pronunciation: 'tˌi ˌɛn tˈi',
     structureDescription: 'Short for trinitrotoluene: a toluene ring holding three nitro groups.',

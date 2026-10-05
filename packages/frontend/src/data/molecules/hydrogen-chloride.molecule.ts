@@ -3,6 +3,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const hydrogenChloride: Molecule = {
     name: 'Hydrogen Chloride',
+    routeName: 'hydrogen-chloride',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəʤᵊn klˈɔɹˌId',
     structureDescription: 'A hydrogen atom bonded to a chlorine atom.',

@@ -1,8 +1,10 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import ammonia from './ammonia.molecule.js';
 
 const nitrogen: Molecule = {
     name: 'Nitrogen',
+    routeName: 'nitrogen',
     // cspell:disable-next-line
     pronunciation: 'nˈItɹəʤᵊn',
     structureDescription:
@@ -20,7 +22,7 @@ const nitrogen: Molecule = {
         hazardPictograms: [GhsPictogram.CompressedGas],
         yearDiscovered: 1772,
         habitat: "Earth's air (78%), volcanic gases, mine gases",
-        evolvesInto: ['ammonia'],
+        evolvesInto: [ammonia],
     },
     atoms: [
         {

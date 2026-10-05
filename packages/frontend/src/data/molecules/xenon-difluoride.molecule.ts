@@ -1,10 +1,12 @@
 // cspell:words difluoride
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import xenonTetrafluoride from './xenon-tetrafluoride.molecule.js';
 
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const xenonDifluoride: Molecule = {
     name: 'Xenon Difluoride',
+    routeName: 'xenon-difluoride',
     // cspell:disable-next-line
     pronunciation: 'zˈinˌɑn dIflˈɔɹId',
     structureDescription: 'A xenon atom with a fluorine atom on each side in a straight line.',
@@ -23,6 +25,9 @@ const xenonDifluoride: Molecule = {
         yearDiscovered: 1962,
         smell: 'nauseating',
         habitat: 'Made only in labs and factories',
+        evolvesInto: [
+            xenonTetrafluoride,
+        ],
     },
     atoms: [
         {

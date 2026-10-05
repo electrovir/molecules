@@ -2,6 +2,8 @@
 import {createArray} from '@augment-vir/common';
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import acetaminophen from './acetaminophen.molecule.js';
+import salicylicAcid from './salicylic-acid.molecule.js';
 
 const carbonRingRadius = 1.39;
 const hydrogenRingRadius = carbonRingRadius + 1.09;
@@ -18,6 +20,7 @@ function getRingPosition({index, radius}: Readonly<{index: number; radius: numbe
 
 const benzene: Molecule = {
     name: 'Benzene',
+    routeName: 'benzene',
     // cspell:disable-next-line
     pronunciation: 'bˈɛnzˌin',
     structureDescription: 'Six carbon atoms in a flat ring, each holding one hydrogen.',
@@ -40,6 +43,10 @@ const benzene: Molecule = {
         yearDiscovered: 1825,
         smell: 'aromatic, gasoline-like',
         habitat: 'Crude oil, coal, volcanoes, forest fires, traces in some foods',
+        evolvesInto: [
+            salicylicAcid,
+            acetaminophen,
+        ],
     },
     atoms: [
         ...createArray(ringSize, (index) => {

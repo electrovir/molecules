@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 597. */
 const cytosine: Molecule = {
     name: 'Cytosine',
+    routeName: 'cytosine',
     // cspell:disable-next-line
     pronunciation: 'sˈItəsˌin',
     structureDescription: 'A single ring of carbon and nitrogen.',
@@ -18,7 +19,6 @@ const cytosine: Molecule = {
         hazardPictograms: [GhsPictogram.Irritant],
         yearDiscovered: 1894,
         habitat: 'DNA and RNA of all living things, meteorites',
-        evolvesInto: ['uracil'],
     },
     atoms: [
         {

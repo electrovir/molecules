@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5206. */
 const sevoflurane: Molecule = {
     name: 'Sevoflurane',
+    routeName: 'sevoflurane',
     // cspell:disable-next-line
     pronunciation: 'sˌivəflˈʊɹˌAn',
     structureDescription: 'Three carbons and an oxygen covered in seven fluorine atoms.',

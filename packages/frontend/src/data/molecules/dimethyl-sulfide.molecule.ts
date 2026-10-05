@@ -1,10 +1,12 @@
 // cspell:words dimethyl sulfoxide
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import dimethylSulfoxide from './dimethyl-sulfoxide.molecule.js';
 
 /** 3D coordinates from PubChem CID 1068. */
 const dimethylSulfide: Molecule = {
     name: 'Dimethyl Sulfide',
+    routeName: 'dimethyl-sulfide',
     // cspell:disable-next-line
     pronunciation: 'dImˈɛθɪl sˈʌlfˌId',
     structureDescription: 'A sulfur atom with a methyl group on each side.',
@@ -22,7 +24,7 @@ const dimethylSulfide: Molecule = {
         hazardPictograms: [GhsPictogram.Flammable],
         smell: 'cabbage-like, unpleasant',
         habitat: 'Ocean plankton, bacteria, cabbage, garlic, tea, cheese',
-        evolvesInto: ['dimethyl-sulfoxide'],
+        evolvesInto: [dimethylSulfoxide],
     },
     atoms: [
         {

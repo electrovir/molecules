@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 23953. */
 const silane: Molecule = {
     name: 'Silane',
+    routeName: 'silane',
     // cspell:disable-next-line
     pronunciation: 'sˈIlˌAn',
     structureDescription:
@@ -23,7 +24,6 @@ const silane: Molecule = {
         yearDiscovered: 1857,
         smell: 'repulsive',
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['hydrogen'],
     },
     atoms: [
         {

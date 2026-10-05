@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5426. */
 const thalidomide: Molecule = {
     name: 'Thalidomide',
+    routeName: 'thalidomide',
     // cspell:disable-next-line
     pronunciation: 'θəlˈɪdəmˌId',
     structureDescription:

@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 6134. */
 const lactose: Molecule = {
     name: 'Lactose',
+    routeName: 'lactose',
     // cspell:disable-next-line
     pronunciation: 'lˈæktˌOs',
     structureDescription: 'A galactose ring and a glucose ring joined through an oxygen bridge.',
@@ -17,7 +18,6 @@ const lactose: Molecule = {
         yearDiscovered: 1633,
         taste: 'mildly sweet',
         habitat: 'Milk of most mammals',
-        evolvesInto: ['glucose'],
     },
     atoms: [
         {

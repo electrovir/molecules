@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3496. */
 const glyphosate: Molecule = {
     name: 'Glyphosate',
+    routeName: 'glyphosate',
     // cspell:disable-next-line
     pronunciation: 'ɡlˈIfəsˌAt',
     structureDescription:

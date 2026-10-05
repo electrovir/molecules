@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const xenonTetrafluoride: Molecule = {
     name: 'Xenon Tetrafluoride',
+    routeName: 'xenon-tetrafluoride',
     // cspell:disable-next-line
     pronunciation: 'zˈinˌɑn tˌɛtɹəflˈʊɹˌId',
     structureDescription: 'A xenon atom bonded to four fluorine atoms in a flat square.',
@@ -17,10 +18,6 @@ const xenonTetrafluoride: Molecule = {
         dipoleMomentDebye: 0,
         yearDiscovered: 1962,
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'oxygen',
-            'hydrogen-fluoride',
-        ],
     },
     atoms: [
         {

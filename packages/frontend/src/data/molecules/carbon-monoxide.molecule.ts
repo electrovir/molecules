@@ -1,8 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import carbonDioxide from './carbon-dioxide.molecule.js';
+import phosgene from './phosgene.molecule.js';
 
 const carbonMonoxide: Molecule = {
     name: 'Carbon Monoxide',
+    routeName: 'carbon-monoxide',
     // cspell:disable-next-line
     pronunciation: 'kˈɑɹbən mənˈɑksˌId',
     structureDescription: 'A carbon atom and an oxygen atom joined by a triple bond.',
@@ -23,7 +26,10 @@ const carbonMonoxide: Molecule = {
         ],
         yearDiscovered: 1772,
         habitat: 'Volcanoes, wildfires, combustion, ocean microbes, small amounts in the body',
-        evolvesInto: ['carbon-dioxide'],
+        evolvesInto: [
+            carbonDioxide,
+            phosgene,
+        ],
     },
     atoms: [
         {

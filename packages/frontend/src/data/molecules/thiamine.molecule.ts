@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1130. */
 const thiamine: Molecule = {
     name: 'Thiamine',
+    routeName: 'thiamine',
     // cspell:disable-next-line
     pronunciation: 'θˈI əmˌin',
     structureDescription:

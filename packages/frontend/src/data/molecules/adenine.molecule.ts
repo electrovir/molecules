@@ -1,9 +1,12 @@
+// cspell:words triphosphate
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import adenosineTriphosphate from './adenosine-triphosphate.molecule.js';
 
 /** 3D coordinates from PubChem CID 190. */
 const adenine: Molecule = {
     name: 'Adenine',
+    routeName: 'adenine',
     // cspell:disable-next-line
     pronunciation: 'ˈædᵊnˌin',
     structureDescription:
@@ -18,6 +21,7 @@ const adenine: Molecule = {
         hazardPictograms: [GhsPictogram.AcuteToxicity],
         yearDiscovered: 1885,
         habitat: 'DNA, RNA, energy molecules in every living cell',
+        evolvesInto: [adenosineTriphosphate],
     },
     atoms: [
         {

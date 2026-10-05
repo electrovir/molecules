@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1175. */
 const uricAcid: Molecule = {
     name: 'Uric Acid',
+    routeName: 'uric-acid',
     // cspell:disable-next-line
     pronunciation: 'jˈʊɹɪk ˈæsəd',
     structureDescription:

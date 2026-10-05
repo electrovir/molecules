@@ -1,9 +1,13 @@
+// cspell:words trifluoride
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import boronTrifluoride from './boron-trifluoride.molecule.js';
+import dichlorodifluoromethane from './dichlorodifluoromethane.molecule.js';
 
 /** 3D coordinates from PubChem CID 14917. */
 const hydrogenFluoride: Molecule = {
     name: 'Hydrogen Fluoride',
+    routeName: 'hydrogen-fluoride',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəʤᵊn flˈʊɹˌId',
     structureDescription: 'A hydrogen atom bonded to a fluorine atom.',
@@ -24,6 +28,10 @@ const hydrogenFluoride: Molecule = {
         yearDiscovered: 1771,
         smell: 'strong, pungent, irritating',
         habitat: 'Volcanic gases, factories',
+        evolvesInto: [
+            boronTrifluoride,
+            dichlorodifluoromethane,
+        ],
     },
     atoms: [
         {

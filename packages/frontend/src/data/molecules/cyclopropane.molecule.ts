@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6351. */
 const cyclopropane: Molecule = {
     name: 'Cyclopropane',
+    routeName: 'cyclopropane',
     // cspell:disable-next-line
     pronunciation: 'sˌIklOpɹˈOpˌAn',
     structureDescription:

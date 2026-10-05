@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 774. */
 const histamine: Molecule = {
     name: 'Histamine',
+    routeName: 'histamine',
     // cspell:disable-next-line
     pronunciation: 'hˈɪstəmˌin',
     structureDescription: 'A ring holding two nitrogens with a short chain ending in nitrogen.',

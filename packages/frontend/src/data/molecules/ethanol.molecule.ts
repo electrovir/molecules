@@ -1,8 +1,11 @@
+// cspell:words diethyl
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import diethylEther from './diethyl-ether.molecule.js';
 
 const ethanol: Molecule = {
     name: 'Ethanol',
+    routeName: 'ethanol',
     // cspell:disable-next-line
     pronunciation: 'ˈɛθˌənˌɔl',
     structureDescription: 'Two carbon atoms in a chain with an OH group on the end.',
@@ -23,10 +26,7 @@ const ethanol: Molecule = {
         smell: 'sharp, like hand sanitizer',
         taste: 'burning',
         habitat: 'Fermenting fruit, yeast, plants, human breath, interstellar space',
-        evolvesInto: [
-            'acetaldehyde',
-            'ethylene',
-        ],
+        evolvesInto: [diethylEther],
     },
     atoms: [
         {

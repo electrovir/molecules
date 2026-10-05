@@ -1,10 +1,12 @@
-// cspell:words tetrafluoromethane
+// cspell:words tetrafluoromethane pfoa
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import pfoa from './pfoa.molecule.js';
 
 /** 3D coordinates from PubChem CID 8301. */
 const tetrafluoroethylene: Molecule = {
     name: 'Tetrafluoroethylene',
+    routeName: 'tetrafluoroethylene',
     // cspell:disable-next-line
     pronunciation: 'tˌɛtɹəflˌʊɹOˈɛθəlˌin',
     structureDescription: 'Two carbons joined by a double bond, each holding two fluorine atoms.',
@@ -17,7 +19,7 @@ const tetrafluoroethylene: Molecule = {
         waterSolubilityGramsPerLiter: 0.159,
         dipoleMomentDebye: 0,
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['tetrafluoromethane'],
+        evolvesInto: [pfoa],
     },
     atoms: [
         {

@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import melatonin from './melatonin.molecule.js';
 
 /** 3D coordinates from PubChem CID 5202. */
 const serotonin: Molecule = {
     name: 'Serotonin',
+    routeName: 'serotonin',
     // cspell:disable-next-line
     pronunciation: 'sˌɛɹətˈOnən',
     structureDescription: 'A double ring with a short chain ending in nitrogen.',
@@ -21,6 +23,7 @@ const serotonin: Molecule = {
         ],
         yearDiscovered: 1937,
         habitat: 'Animal guts, animal brains, blood platelets, plants, fungi',
+        evolvesInto: [melatonin],
     },
     atoms: [
         {

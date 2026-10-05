@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5754. */
 const cortisol: Molecule = {
     name: 'Cortisol',
+    routeName: 'cortisol',
     // cspell:disable-next-line
     pronunciation: 'kˈɔɹtəsˌɑl',
     structureDescription: 'Four fused rings of carbon decorated with oxygen atoms and OH groups.',

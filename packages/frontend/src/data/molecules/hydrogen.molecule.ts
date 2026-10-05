@@ -1,10 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import water from './water.molecule.js';
 
 const hydrogenBondLength = 0.7414;
 
 const hydrogen: Molecule = {
     name: 'Hydrogen',
+    routeName: 'hydrogen',
     // cspell:disable-next-line
     pronunciation: 'hˈIdɹəʤᵊn',
     structureDescription: 'Two hydrogen atoms sharing a single bond.',
@@ -23,7 +25,7 @@ const hydrogen: Molecule = {
         ],
         yearDiscovered: 1766,
         habitat: "Stars, gas giant planets, interstellar space, traces in Earth's air",
-        evolvesInto: ['water'],
+        evolvesInto: [water],
     },
     atoms: [
         {

@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 948. */
 const nitrousOxide: Molecule = {
     name: 'Nitrous Oxide',
+    routeName: 'nitrous-oxide',
     // cspell:disable-next-line
     pronunciation: 'nˈItɹəs ˈɑksˌId',
     structureDescription: 'Two nitrogen atoms and an oxygen in a straight line.',
@@ -26,7 +27,6 @@ const nitrousOxide: Molecule = {
         smell: 'slightly sweet',
         taste: 'slightly sweet',
         habitat: "Soil microbes, ocean microbes, Earth's air",
-        evolvesInto: ['nitrogen'],
     },
     atoms: [
         {

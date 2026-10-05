@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 10925. */
 const isoamylMercaptan: Molecule = {
     name: 'Isoamyl Mercaptan',
+    routeName: 'isoamyl-mercaptan',
     // cspell:disable-next-line
     pronunciation: 'ˌIsOˈæməl mɪɹkˈæptæn',
     structureDescription: 'A branched five-carbon chain ending in a sulfur with a hydrogen.',

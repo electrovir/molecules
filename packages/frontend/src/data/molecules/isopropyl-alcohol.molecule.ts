@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3776. */
 const isopropylAlcohol: Molecule = {
     name: 'Isopropyl Alcohol',
+    routeName: 'isopropyl-alcohol',
     // cspell:disable-next-line
     pronunciation: 'ˌIsʌpɹˈOpᵊl ˈælkəhˌɔl',
     structureDescription: 'Three carbon atoms with an oxygen-hydrogen group on the middle one.',
@@ -26,7 +27,6 @@ const isopropylAlcohol: Molecule = {
         smell: 'pungent, like rubbing alcohol',
         taste: 'slightly bitter, burning',
         habitat: 'Factories, spoilage bacteria, fungi, yeast',
-        evolvesInto: ['acetone'],
     },
     atoms: [
         {

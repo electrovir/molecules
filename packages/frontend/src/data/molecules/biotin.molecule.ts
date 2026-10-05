@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 171548. */
 const biotin: Molecule = {
     name: 'Biotin',
+    routeName: 'biotin',
     // cspell:disable-next-line
     pronunciation: 'bˈIətᵊn',
     structureDescription:

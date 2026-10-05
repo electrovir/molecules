@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4594. */
 const omeprazole: Molecule = {
     name: 'Omeprazole',
+    routeName: 'omeprazole',
     // cspell:disable-next-line
     pronunciation: 'OmˈɛpɹəzˌOl',
     structureDescription:

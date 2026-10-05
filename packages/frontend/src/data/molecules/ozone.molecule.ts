@@ -3,6 +3,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const ozone: Molecule = {
     name: 'Ozone',
+    routeName: 'ozone',
     // cspell:disable-next-line
     pronunciation: 'ˈOzˌOn',
     structureDescription: 'Three oxygen atoms in a bent chain.',
@@ -24,7 +25,6 @@ const ozone: Molecule = {
         yearDiscovered: 1839,
         smell: 'pungent, chlorine-like',
         habitat: 'The upper-atmosphere ozone layer, lightning, sunlight on oxygen',
-        evolvesInto: ['oxygen'],
     },
     atoms: [
         {

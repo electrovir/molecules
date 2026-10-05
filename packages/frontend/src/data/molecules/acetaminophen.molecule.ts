@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1983. */
 const acetaminophen: Molecule = {
     name: 'Acetaminophen',
+    routeName: 'acetaminophen',
     // cspell:disable-next-line
     pronunciation: 'ˌʌsˌitəmˈɪnəfən',
     structureDescription:

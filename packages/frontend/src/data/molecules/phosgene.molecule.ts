@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6371. */
 const phosgene: Molecule = {
     name: 'Phosgene',
+    routeName: 'phosgene',
     // cspell:disable-next-line
     pronunciation: 'fˈɑzʤˌin',
     structureDescription: 'A carbon double bonded to an oxygen and holding two chlorine atoms.',
@@ -24,10 +25,6 @@ const phosgene: Molecule = {
         yearDiscovered: 1812,
         smell: 'musty hay, suffocating',
         habitat: 'Factories, air where chlorinated solvents break down',
-        evolvesInto: [
-            'hydrogen-chloride',
-            'carbon-dioxide',
-        ],
     },
     atoms: [
         {

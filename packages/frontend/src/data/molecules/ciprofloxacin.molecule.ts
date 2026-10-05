@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 2764. */
 const ciprofloxacin: Molecule = {
     name: 'Ciprofloxacin',
+    routeName: 'ciprofloxacin',
     // cspell:disable-next-line
     pronunciation: 'sˌɪpɹəflˈɑksəsɪn',
     structureDescription:

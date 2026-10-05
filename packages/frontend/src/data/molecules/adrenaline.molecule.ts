@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5816. */
 const adrenaline: Molecule = {
     name: 'Adrenaline',
+    routeName: 'adrenaline',
     // cspell:disable-next-line
     pronunciation: 'ədɹˈɛnᵊlən',
     structureDescription: 'Dopamine with an extra oxygen and carbon group.',

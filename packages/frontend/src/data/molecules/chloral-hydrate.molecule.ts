@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import ddt from './ddt.molecule.js';
 
 /** 3D coordinates from PubChem CID 2707. */
 const chloralHydrate: Molecule = {
     name: 'Chloral Hydrate',
+    routeName: 'chloral-hydrate',
     // cspell:disable-next-line
     pronunciation: 'klˈɔɹˌɪl hˈIdɹˌAt',
     structureDescription: 'A carbon holding three chlorines next to a carbon with two OH groups.',
@@ -20,7 +22,7 @@ const chloralHydrate: Molecule = {
         smell: 'aromatic, penetrating, slightly acrid',
         taste: 'slightly bitter, caustic',
         habitat: 'Traces in chlorinated drinking water, labs, factories',
-        evolvesInto: ['chloroform'],
+        evolvesInto: [ddt],
     },
     atoms: [
         {

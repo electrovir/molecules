@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 637511. */
 const cinnamaldehyde: Molecule = {
     name: 'Cinnamaldehyde',
+    routeName: 'cinnamaldehyde',
     // cspell:disable-next-line
     pronunciation: 'sˌɪnəmˈældʌhˌId',
     structureDescription:

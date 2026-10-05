@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 5280489. */
 const betaCarotene: Molecule = {
     name: 'Beta-Carotene',
+    routeName: 'beta-carotene',
     // cspell:disable-next-line
     pronunciation: 'bˌAɾəkˈɛɹətin',
     structureDescription:

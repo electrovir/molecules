@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3676. */
 const lidocaine: Molecule = {
     name: 'Lidocaine',
+    routeName: 'lidocaine',
     // cspell:disable-next-line
     pronunciation: 'lˈIdəkˌAn',
     structureDescription:

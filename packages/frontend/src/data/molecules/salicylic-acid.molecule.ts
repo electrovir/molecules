@@ -1,10 +1,13 @@
 // cspell:words salix
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import aspirin from './aspirin.molecule.js';
+import methylSalicylate from './methyl-salicylate.molecule.js';
 
 /** 3D coordinates from PubChem CID 338. */
 const salicylicAcid: Molecule = {
     name: 'Salicylic Acid',
+    routeName: 'salicylic-acid',
     // cspell:disable-next-line
     pronunciation: 'sælɪsˈɪlɪk ˈæsəd',
     structureDescription:
@@ -26,7 +29,10 @@ const salicylicAcid: Molecule = {
         yearDiscovered: 1839,
         taste: 'sweetish, then acrid',
         habitat: 'Willow bark, wintergreen, fruits, vegetables, tea',
-        evolvesInto: ['aspirin'],
+        evolvesInto: [
+            aspirin,
+            methylSalicylate,
+        ],
     },
     atoms: [
         {

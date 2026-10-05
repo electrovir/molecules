@@ -1,323 +1,84 @@
-// cspell:words rowspan
 import {assertWrap} from '@augment-vir/assert';
-import {asyncProp, css, defineElement, html, listen, nothing, onResize} from 'element-vir';
 import {
-    lucideIcons,
-    PopoverTrigger,
-    tooltip,
-    ViraButton,
-    ViraColorVariant,
-    ViraSize,
-    viraTheme,
-} from 'vira';
-import {getAudioOutput} from '../../audio/audio-output.js';
+    asyncProp,
+    css,
+    defineElement,
+    html,
+    type HTMLTemplateResult,
+    listen,
+    nothing,
+} from 'element-vir';
+import {lucideIcons, ViraButton, ViraColorVariant, ViraSize, viraTheme} from 'vira';
 import {moleculeRouteNames} from '../../data/all-molecules.js';
-import {getMoleculeFormula, type Molecule} from '../../data/molecule.js';
+import {type Molecule} from '../../data/molecule.js';
 import {
     createFrontendState,
     createMoleculeRoute,
-    createStaticFileUrl,
+    type FrontendPaths,
     frontendPathTree,
     type FrontendStateObservable,
     getRouteMoleculeIndex,
 } from '../frontend-state/frontend-state.js';
-import {getMoleculeStatRows} from '../molecule-stat-rows.js';
+import {ScreenSize} from '../frontend-state/screen-size.js';
 import {VirAllMolecules} from './vir-all-molecules.element.js';
-import {VirMoleculeCry} from './vir-molecule-cry.element.js';
+import {VirEvolutionChains} from './vir-evolution-chains.element.js';
+import {VirMoleculePage} from './vir-molecule-page.element.js';
 import {VirMoleculeViewer} from './vir-molecule-viewer.element.js';
-
-function goToMolecule({
-    frontendState,
-    moleculeIndex,
-    indexOffset,
-}: Readonly<{
-    frontendState: Readonly<FrontendStateObservable>;
-    moleculeIndex: number;
-    indexOffset: number;
-}>) {
-    frontendState.value.router.setRoute(
-        createMoleculeRoute(
-            assertWrap.isDefined(
-                moleculeRouteNames.at((moleculeIndex + indexOffset) % moleculeRouteNames.length),
-            ),
-        ),
-    );
-}
-
-/**
- * Use instead of a `click` listener on touch buttons. Touch browsers withhold a tap's `click` in
- * some states, such as while another touch is down, but still send its `pointerup`. Pair with
- * `listenToKeyboardPress`.
- */
-function listenToPress(callback: () => void) {
-    return listen('pointerup', (event) => {
-        if (event.button === 0) {
-            callback();
-        }
-    });
-}
-
-/** Keyboard activation is the only `click` whose `detail` (the click count) is `0`. */
-function listenToKeyboardPress(callback: () => void) {
-    return listen('click', (event) => {
-        if (!event.detail) {
-            callback();
-        }
-    });
-}
-
-/** Shared by every press, so a new press cuts off the name still being said. */
-const nameAudio: {
-    source: AudioBufferSourceNode | undefined;
-    pressCount: number;
-} = {
-    source: undefined,
-    pressCount: 0,
-};
-
-/**
- * Plays the molecule's pre-recorded name, generated from dictionary pronunciations instead of
- * leaving the device's voice to guess at chemical names and acronyms.
- */
-async function sayName(routeName: string) {
-    /**
-     * Web Audio instead of an `<audio>` element: media elements claim the OS media session, so the
-     * system media keys would replay the name.
-     */
-    const {context, masterVolume} = getAudioOutput();
-    nameAudio.source?.stop();
-    nameAudio.source = undefined;
-    nameAudio.pressCount++;
-    const pressCount = nameAudio.pressCount;
-
-    const response = await fetch(createStaticFileUrl('pronunciations', `${routeName}.mp3`));
-    const buffer = await context.decodeAudioData(await response.arrayBuffer());
-
-    /** A newer press started while this one was still loading. */
-    if (nameAudio.pressCount !== pressCount) {
-        return;
-    }
-
-    const source = context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(masterVolume);
-    source.start();
-    nameAudio.source = source;
-}
-
-const lastTouchEnd = {
-    timeStamp: -Infinity,
-};
-
-const arrowKeyIndexOffsets: Readonly<Partial<Record<string, number>>> = {
-    ArrowLeft: -1,
-    ArrowRight: 1,
-};
 
 export const VirApp = defineElement()({
     tagName: 'vir-app',
-    styles: css`
-        :host,
-        * {
-            touch-action: none;
-        }
-
-        :host {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            position: relative;
-            height: 100%;
-            overflow: hidden;
-            background-color: ${viraTheme.colors['theme-default'].background.value};
-            background-image: radial-gradient(circle, #2a3448, #0f141e);
-            color: ${viraTheme.colors['theme-default'].foreground.value};
-            font-family: 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, sans-serif;
-        }
-
-        button {
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        ${VirMoleculeViewer} {
-            position: absolute;
-            inset: 0;
-        }
-
-        /** Positioned so they paint above the absolutely positioned viewer. */
-        .corner-buttons,
-        .overlay {
-            position: relative;
-        }
-
-        .all-molecules-page {
-            flex-grow: 1;
-            align-self: stretch;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-
-            & .corner-buttons {
-                align-self: flex-start;
+    hostClasses: {
+        'vir-app-list-page'({state}) {
+            return (
+                !!state.frontendState &&
+                state.frontendState.value.currentRoute.paths[0] !== 'molecule'
+            );
+        },
+    },
+    styles({hostClasses}) {
+        return css`
+            :host,
+            * {
+                touch-action: none;
             }
 
-            & ${VirAllMolecules} {
-                flex-grow: 1;
-                min-height: 0;
-            }
-        }
-
-        .overlay {
-            margin: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 400px;
-            max-width: 40%;
-            max-height: calc(100% - 32px);
-            box-sizing: border-box;
-            padding: 16px;
-            border-radius: 16px;
-            background-color: rgba(0, 0, 0, 0.5);
-
-            & .scroll-area {
+            :host {
                 display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                position: relative;
+                height: 100%;
+                overflow: hidden;
+                background-color: ${viraTheme.colors['theme-default'].background.value};
+                background-image: radial-gradient(circle, #2a3448, #0f141e);
+                color: ${viraTheme.colors['theme-default'].foreground.value};
+                font-family: 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, sans-serif;
+            }
+
+            ${hostClasses['vir-app-list-page'].selector} {
                 flex-direction: column;
+                justify-content: flex-start;
+            }
+
+            ${VirMoleculeViewer} {
+                position: absolute;
+                inset: 0;
+            }
+
+            .corner-buttons {
+                position: relative;
+                margin: 16px;
+                display: flex;
                 gap: 8px;
-                min-height: 0;
-                overflow-y: auto;
-
-                &,
-                & * {
-                    touch-action: pan-y;
-                }
             }
 
-            & h1,
-            & p {
-                margin: 0;
-            }
-
-            & h1,
-            & p,
-            & .formula,
-            & .entry-number,
-            & table {
-                pointer-events: auto;
-                -webkit-user-select: text;
-                user-select: text;
-                -webkit-touch-callout: default;
-            }
-        }
-
-        .navigation {
-            display: flex;
-            gap: 8px;
-            pointer-events: auto;
-
-            & ${ViraButton} {
+            ${VirAllMolecules}, ${VirEvolutionChains} {
+                align-self: stretch;
                 flex-grow: 1;
+                min-height: 0;
             }
-        }
-
-        .name-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-
-            & h1 {
-                min-width: 0;
-                hyphens: auto;
-                overflow-wrap: anywhere;
-            }
-
-            & ${ViraButton} {
-                flex-shrink: 0;
-                pointer-events: auto;
-            }
-        }
-
-        .corner-buttons {
-            margin: 16px;
-            display: flex;
-            gap: 8px;
-        }
-
-        table {
-            border-collapse: collapse;
-
-            & th,
-            & td {
-                padding: 4px 0;
-                vertical-align: top;
-                text-align: left;
-            }
-
-            & th {
-                padding-right: 16px;
-                font-weight: normal;
-                opacity: 0.6;
-                white-space: nowrap;
-            }
-
-            & tr + tr {
-                border-top: 1px solid
-                    ${viraTheme.colors['vira-grey-foreground-decoration'].foreground.value};
-            }
-
-            & tr.continued {
-                border-top: none;
-            }
-        }
-
-        .stat-value {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            & svg {
-                flex-shrink: 0;
-                width: 32px;
-                height: 32px;
-            }
-        }
-
-        .stat-tooltip {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            max-width: 200px;
-            text-align: center;
-
-            & svg {
-                width: 96px;
-                height: 96px;
-            }
-
-            & p {
-                margin: 0;
-            }
-        }
-
-        .evolutions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .entry-number {
-            opacity: 0.6;
-            font-family: 'Atkinson Hyperlegible Mono', ui-monospace, monospace;
-        }
-
-        .formula {
-            font-size: 24px;
-        }
-    `,
+        `;
+    },
     state() {
         return {
             frontendState: undefined satisfies FrontendStateObservable | undefined as
@@ -330,13 +91,14 @@ export const VirApp = defineElement()({
             }),
             isFullscreen: !!globalThis.document.fullscreenElement,
             overlayWidth: 0,
+            overlayHeaderHeight: 0,
             documentListenerAbort: undefined satisfies AbortController | undefined as
                 | AbortController
                 | undefined,
         };
     },
-    init({state, updateState}) {
-        void createFrontendState().then((frontendState) => {
+    init({updateState, host}) {
+        void createFrontendState(host).then((frontendState) => {
             updateState({
                 frontendState,
             });
@@ -353,32 +115,6 @@ export const VirApp = defineElement()({
                 signal: documentListenerAbort.signal,
             },
         );
-        globalThis.document.addEventListener(
-            'keydown',
-            (event) => {
-                const indexOffset = arrowKeyIndexOffsets[event.key];
-                if (
-                    indexOffset == undefined ||
-                    !state.frontendState ||
-                    state.frontendState.value.currentRoute.paths[0] === 'all-molecules' ||
-                    event.altKey ||
-                    event.ctrlKey ||
-                    event.metaKey ||
-                    event.shiftKey
-                ) {
-                    return;
-                }
-                event.preventDefault();
-                goToMolecule({
-                    frontendState: state.frontendState,
-                    moleculeIndex: getRouteMoleculeIndex(state.frontendState.value.currentRoute),
-                    indexOffset,
-                });
-            },
-            {
-                signal: documentListenerAbort.signal,
-            },
-        );
         updateState({
             documentListenerAbort,
             isFullscreen: !!globalThis.document.fullscreenElement,
@@ -387,6 +123,7 @@ export const VirApp = defineElement()({
     cleanup({state}) {
         state.frontendState?.value.router.destroy();
         state.frontendState?.value.themeClient.destroy();
+        state.frontendState?.value.hostResizeObserver?.disconnect();
         state.frontendState?.destroy();
         state.documentListenerAbort?.abort();
     },
@@ -401,78 +138,75 @@ export const VirApp = defineElement()({
                 : globalThis.document.documentElement.requestFullscreen());
         }
 
-        const fullscreenButton = globalThis.document.fullscreenEnabled
-            ? html`
-                  <${ViraButton.assign({
-                      icon: state.isFullscreen ? lucideIcons.Minimize : lucideIcons.Maximize,
-                      color: ViraColorVariant.Neutral,
-                      buttonSize: ViraSize.Large,
-                  })}
-                      title=${state.isFullscreen ? 'Exit full screen' : 'Full screen'}
-                      ${listenToPress(toggleFullscreen)}
-                      ${listenToKeyboardPress(toggleFullscreen)}
-                  ></${ViraButton}>
-              `
-            : nothing;
+        const currentPage = frontendState.value.currentRoute.paths[0];
 
-        const isAllMoleculesRoute = frontendState.value.currentRoute.paths[0] === 'all-molecules';
-
-        function toggleAllMolecules() {
+        /** Goes to the given list page, or back to the last molecule when already on it. */
+        function toggleListPage(page: Exclude<FrontendPaths[0], 'molecule'>) {
             frontendState?.value.router.setRoute(
-                isAllMoleculesRoute
+                currentPage === page
                     ? createMoleculeRoute(
                           state.molecule.lastParams || assertWrap.isDefined(moleculeRouteNames[0]),
                       )
                     : {
-                          paths: frontendPathTree.paths.children['all-molecules'].fullPaths,
+                          paths: frontendPathTree.paths.children[page].fullPaths,
                       },
             );
         }
 
-        const cornerButtons = html`
-            <div class="corner-buttons">
-                ${fullscreenButton}
-                <${ViraButton.assign({
-                    icon: lucideIcons.LayoutGrid,
-                    color: ViraColorVariant.Neutral,
-                    buttonSize: ViraSize.Large,
-                })}
-                    title=${isAllMoleculesRoute ? 'Back to molecule' : 'All molecules'}
-                    ${listenToPress(toggleAllMolecules)}
-                    ${listenToKeyboardPress(toggleAllMolecules)}
-                ></${ViraButton}>
-            </div>
-        `;
+        function toggleAllMolecules() {
+            toggleListPage('all-molecules');
+        }
+
+        function toggleEvolutions() {
+            toggleListPage('evolutions');
+        }
 
         const moleculeIndex = getRouteMoleculeIndex(frontendState.value.currentRoute);
-        const routeName = assertWrap.isDefined(moleculeRouteNames[moleculeIndex]);
-        if (!isAllMoleculesRoute) {
-            state.molecule.update(routeName);
+        if (currentPage === 'molecule') {
+            state.molecule.update(assertWrap.isDefined(moleculeRouteNames[moleculeIndex]));
         }
         const molecule = state.molecule.isResolved() ? state.molecule.value : undefined;
 
-        if (isAllMoleculesRoute) {
-            globalThis.document.title = 'All Molecules';
-        } else if (molecule) {
-            globalThis.document.title = molecule.name;
-        }
+        const isPhone = frontendState.value.screenSize === ScreenSize.Phone;
 
-        function goToPrevious() {
-            goToMolecule({
-                /** Function declarations don't keep the `frontendState` narrowing from above. */
-                frontendState: assertWrap.isDefined(frontendState),
-                moleculeIndex,
-                indexOffset: -1,
-            });
-        }
-
-        function goToNext() {
-            goToMolecule({
-                frontendState: assertWrap.isDefined(frontendState),
-                moleculeIndex,
-                indexOffset: 1,
-            });
-        }
+        const pageRenderers: Record<FrontendPaths[0], () => HTMLTemplateResult> = {
+            molecule() {
+                return html`
+                    <${VirMoleculePage.assign({
+                        router: frontendState.value.router,
+                        moleculeIndex,
+                        molecule,
+                        isLoadFailed: state.molecule.isError(),
+                        isPhone,
+                    })}
+                        ${listen(VirMoleculePage.events.overlayWidthChange, (event) => {
+                            updateState({
+                                overlayWidth: event.detail,
+                            });
+                        })}
+                        ${listen(VirMoleculePage.events.overlayHeaderHeightChange, (event) => {
+                            updateState({
+                                overlayHeaderHeight: event.detail,
+                            });
+                        })}
+                    ></${VirMoleculePage}>
+                `;
+            },
+            'all-molecules'() {
+                return html`
+                    <${VirAllMolecules.assign({
+                        router: frontendState.value.router,
+                    })}></${VirAllMolecules}>
+                `;
+            },
+            evolutions() {
+                return html`
+                    <${VirEvolutionChains.assign({
+                        router: frontendState.value.router,
+                    })}></${VirEvolutionChains}>
+                `;
+            },
+        };
 
         return html`
             <${VirMoleculeViewer.assign({
@@ -483,191 +217,90 @@ export const VirApp = defineElement()({
                  * `overlayWidth` is the content width, so this adds the overlay's padding on both
                  * sides, its right margin, and the same gap on its left.
                  */
-                rightInsetPixels: state.overlayWidth && state.overlayWidth + 64,
-                isHidden: isAllMoleculesRoute,
+                rightInsetPixels: isPhone ? 0 : state.overlayWidth && state.overlayWidth + 64,
+                isHidden: currentPage !== 'molecule',
             })}
+                style=${css`
+                    /** The overlay's top padding plus the gap below its header. */
+                    bottom: ${isPhone ? state.overlayHeaderHeight + 24 : 0}px;
+                `}
                 ${listen(VirMoleculeViewer.events.renderQualityChange, (event) => {
                     void frontendState.value.localDbClient.set.settledRenderQualityV2(event.detail);
                 })}
             ></${VirMoleculeViewer}>
-            ${isAllMoleculesRoute
-                ? html`
-                      <div class="all-molecules-page">
-                          ${cornerButtons}
-                          <${VirAllMolecules.assign({
-                              router: frontendState.value.router,
-                          })}></${VirAllMolecules}>
-                      </div>
-                  `
-                : html`
-                      ${cornerButtons}
-                      <div
-                          class="overlay"
-                          ${onResize(({contentRect}) => {
-                              updateState({
-                                  overlayWidth: contentRect.width,
-                              });
+            <div class="corner-buttons">
+                ${globalThis.document.fullscreenEnabled
+                    ? html`
+                          <${ViraButton.assign({
+                              icon: state.isFullscreen
+                                  ? lucideIcons.Minimize
+                                  : lucideIcons.Maximize,
+                              color: ViraColorVariant.Neutral,
+                              buttonSize: ViraSize.Large,
                           })}
-                      >
-                          <div class="navigation">
-                              <${ViraButton.assign({
-                                  icon: lucideIcons.ArrowLeft,
-                                  color: ViraColorVariant.Neutral,
-                                  buttonSize: ViraSize.Large,
-                              })}
-                                  title="Previous"
-                                  ${listenToPress(goToPrevious)}
-                                  ${listenToKeyboardPress(goToPrevious)}
-                              ></${ViraButton}>
-                              <${ViraButton.assign({
-                                  icon: lucideIcons.ArrowRight,
-                                  color: ViraColorVariant.Neutral,
-                                  buttonSize: ViraSize.Large,
-                              })}
-                                  title="Next"
-                                  ${listenToPress(goToNext)}
-                                  ${listenToKeyboardPress(goToNext)}
-                              ></${ViraButton}>
-                          </div>
-                          <span class="entry-number">
-                              #${String(moleculeIndex + 1).padStart(3, '0')}
-                          </span>
-                          ${state.molecule.isError()
-                              ? html`
-                                    <p>Failed to load ${routeName}.</p>
-                                `
-                              : ''}
-                          ${molecule
-                              ? html`
-                                    <div class="name-row">
-                                        <${ViraButton.assign({
-                                            icon: lucideIcons.Speech,
-                                            color: ViraColorVariant.Neutral,
-                                            buttonSize: ViraSize.Large,
-                                        })}
-                                            title="Say the name"
-                                            ${listenToPress(() => {
-                                                return sayName(routeName);
-                                            })}
-                                            ${listenToKeyboardPress(() => {
-                                                return sayName(routeName);
-                                            })}
-                                        ></${ViraButton}>
-                                        <h1>${molecule.name}</h1>
-                                    </div>
-                                    <span class="formula">
-                                        ${getMoleculeFormula(molecule.atoms)}
-                                    </span>
-                                    <div
-                                        class="scroll-area"
-                                        ${
-                                            /**
-                                             * Safari ignores `user-scalable=no` and only blocks
-                                             * double tap zooming under `touch-action: none` or
-                                             * `manipulation`, neither of which lets an area scroll
-                                             * without also allowing pinch zooming. Canceling the
-                                             * second tap's `touchend` stops the zoom, along with
-                                             * that tap's `click`.
-                                             */
-                                            listen('touchend', (event) => {
-                                                if (
-                                                    event.timeStamp - lastTouchEnd.timeStamp <
-                                                    300
-                                                ) {
-                                                    event.preventDefault();
-                                                }
-                                                lastTouchEnd.timeStamp = event.timeStamp;
-                                            })
-                                        }
-                                    >
-                                        <p>${molecule.structureDescription}</p>
-                                        <p>${molecule.realLifeDescription}</p>
-                                        <${VirMoleculeCry.assign({
-                                            molecule,
-                                            seed: routeName,
-                                        })}></${VirMoleculeCry}>
-                                        <table>
-                                            ${getMoleculeStatRows(molecule).map((row) => {
-                                                return row.values.map((value, index) => {
-                                                    return html`
-                                                        <tr class=${index ? 'continued' : ''}>
-                                                            ${index
-                                                                ? nothing
-                                                                : html`
-                                                                      <th
-                                                                          rowspan=${row.values
-                                                                              .length}
-                                                                      >
-                                                                          ${row.label}
-                                                                      </th>
-                                                                  `}
-                                                            <td>
-                                                                <span
-                                                                    class="stat-value"
-                                                                    ${value.description
-                                                                        ? tooltip(
-                                                                              html`
-                                                                                  <div
-                                                                                      class="stat-tooltip"
-                                                                                  >
-                                                                                      ${value.icon ??
-                                                                                      nothing}
-                                                                                      <p>
-                                                                                          ${value.description}
-                                                                                      </p>
-                                                                                  </div>
-                                                                              `,
-                                                                              {
-                                                                                  trigger:
-                                                                                      PopoverTrigger.Click,
-                                                                              },
-                                                                          )
-                                                                        : nothing}
-                                                                >
-                                                                    ${value.icon ?? nothing}
-                                                                    ${value.text}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    `;
-                                                });
-                                            })}
-                                            <tr>
-                                                <th>Evolves into</th>
-                                                <td class="evolutions">
-                                                    ${molecule.stats.evolvesInto?.map(
-                                                        (routeName) => {
-                                                            function goToEvolution() {
-                                                                frontendState?.value.router.setRoute(
-                                                                    createMoleculeRoute(routeName),
-                                                                    {
-                                                                        replace: true,
-                                                                    },
-                                                                );
-                                                            }
-                                                            return html`
-                                                                <button
-                                                                    ${listenToPress(goToEvolution)}
-                                                                    ${listenToKeyboardPress(
-                                                                        goToEvolution,
-                                                                    )}
-                                                                >
-                                                                    ${routeName.replaceAll(
-                                                                        '-',
-                                                                        ' ',
-                                                                    )}
-                                                                </button>
-                                                            `;
-                                                        },
-                                                    ) ?? '-'}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                `
-                              : ''}
-                      </div>
-                  `}
+                              title=${state.isFullscreen ? 'Exit full screen' : 'Full screen'}
+                              ${
+                                  /**
+                                   * `pointerup` instead of `click`: touch browsers withhold a tap's
+                                   * `click` in some states, such as while another touch is down,
+                                   * but still send its `pointerup`.
+                                   */
+                                  listen('pointerup', (event) => {
+                                      if (event.button === 0) {
+                                          toggleFullscreen();
+                                      }
+                                  })
+                              }
+                              ${
+                                  /**
+                                   * Keyboard activation is the only `click` whose `detail` (the
+                                   * click count) is `0`.
+                                   */
+                                  listen('click', (event) => {
+                                      if (!event.detail) {
+                                          toggleFullscreen();
+                                      }
+                                  })
+                              }
+                          ></${ViraButton}>
+                      `
+                    : nothing}
+                <${ViraButton.assign({
+                    icon: lucideIcons.LayoutGrid,
+                    color: ViraColorVariant.Neutral,
+                    buttonSize: ViraSize.Large,
+                })}
+                    title=${currentPage === 'all-molecules' ? 'Back to molecule' : 'All molecules'}
+                    ${listen('pointerup', (event) => {
+                        if (event.button === 0) {
+                            toggleAllMolecules();
+                        }
+                    })}
+                    ${listen('click', (event) => {
+                        if (!event.detail) {
+                            toggleAllMolecules();
+                        }
+                    })}
+                ></${ViraButton}>
+                <${ViraButton.assign({
+                    icon: lucideIcons.GitFork,
+                    color: ViraColorVariant.Neutral,
+                    buttonSize: ViraSize.Large,
+                })}
+                    title=${currentPage === 'evolutions' ? 'Back to molecule' : 'Evolutions'}
+                    ${listen('pointerup', (event) => {
+                        if (event.button === 0) {
+                            toggleEvolutions();
+                        }
+                    })}
+                    ${listen('click', (event) => {
+                        if (!event.detail) {
+                            toggleEvolutions();
+                        }
+                    })}
+                ></${ViraButton}>
+            </div>
+            ${pageRenderers[currentPage]()}
         `;
     },
 });

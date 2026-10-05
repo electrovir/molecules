@@ -60,11 +60,13 @@ export type MoleculeStats = PartialWithUndefined<{
     smell: string;
     taste: string;
     habitat: string;
-    evolvesInto: string[];
+    evolvesInto: Molecule[];
 }>;
 
 export type Molecule = {
     name: string;
+    /** Matches this molecule's `.molecule.ts` file name. Used as its URL path segment. */
+    routeName: string;
     /**
      * Kokoro phonemes (misaki US notation) that `npm run build:pronunciations` speaks to make this
      * molecule's name clip. Most come from misaki's lexicon, tuned where Kokoro said them wrong by

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 787. */
 const hydroxylamine: Molecule = {
     name: 'Hydroxylamine',
+    routeName: 'hydroxylamine',
     // cspell:disable-next-line
     pronunciation: 'hˌIdɹˈɑksəlʌmˌin',
     structureDescription:
@@ -24,7 +25,6 @@ const hydroxylamine: Molecule = {
         ],
         yearDiscovered: 1865,
         habitat: 'Ammonia-oxidizing bacteria, factories',
-        evolvesInto: ['nitrous-oxide'],
     },
     atoms: [
         {

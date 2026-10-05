@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const sulfurHexafluoride: Molecule = {
     name: 'Sulfur Hexafluoride',
+    routeName: 'sulfur-hexafluoride',
     // cspell:disable-next-line
     pronunciation: 'sˈʌlfəɹ hˌɛksəflˈʊɹˌId',
     structureDescription:

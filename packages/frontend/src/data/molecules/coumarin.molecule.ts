@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 323. */
 const coumarin: Molecule = {
     name: 'Coumarin',
+    routeName: 'coumarin',
     // cspell:disable-next-line
     pronunciation: 'kˈuməɹən',
     structureDescription: 'A benzene ring fused to a ring holding an oxygen and a ketone.',

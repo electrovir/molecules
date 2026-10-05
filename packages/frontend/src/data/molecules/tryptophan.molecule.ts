@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import indigo from './indigo.molecule.js';
 
 /** 3D coordinates from PubChem CID 6305. */
 const tryptophan: Molecule = {
     name: 'Tryptophan',
+    routeName: 'tryptophan',
     // cspell:disable-next-line
     pronunciation: 'tɹˈɪptəfˌæn',
     structureDescription: 'An amino acid with a double ring side chain.',
@@ -17,7 +19,9 @@ const tryptophan: Molecule = {
         yearDiscovered: 1901,
         taste: 'flat, slightly bitter',
         habitat: 'Protein-rich foods, milk, eggs',
-        evolvesInto: ['serotonin'],
+        evolvesInto: [
+            indigo,
+        ],
     },
     atoms: [
         {

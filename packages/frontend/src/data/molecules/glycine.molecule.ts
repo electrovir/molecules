@@ -1,9 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import creatine from './creatine.molecule.js';
+import glyphosate from './glyphosate.molecule.js';
 
 /** 3D coordinates from PubChem CID 750. */
 const glycine: Molecule = {
     name: 'Glycine',
+    routeName: 'glycine',
     // cspell:disable-next-line
     pronunciation: 'ɡlˈIsˌin',
     structureDescription: 'The simplest amino acid, with just a hydrogen as its side chain.',
@@ -19,6 +22,10 @@ const glycine: Molecule = {
         yearDiscovered: 1820,
         taste: 'sweet',
         habitat: 'Proteins like gelatin and silk, sugarcane, comets, meteorites',
+        evolvesInto: [
+            creatine,
+            glyphosate,
+        ],
     },
     atoms: [
         {

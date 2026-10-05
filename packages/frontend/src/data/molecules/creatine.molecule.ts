@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 586. */
 const creatine: Molecule = {
     name: 'Creatine',
+    routeName: 'creatine',
     // cspell:disable-next-line
     pronunciation: 'kɹˈiətˌin',
     structureDescription:
@@ -18,7 +19,6 @@ const creatine: Molecule = {
         logP: -0.2,
         yearDiscovered: 1832,
         habitat: 'Skeletal muscle, heart muscle, liver, kidneys, pancreas',
-        evolvesInto: ['creatinine'],
     },
     atoms: [
         {

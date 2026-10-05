@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 3562. */
 const halothane: Molecule = {
     name: 'Halothane',
+    routeName: 'halothane',
     // cspell:disable-next-line
     pronunciation: 'hˈæləθˌAn',
     structureDescription: 'Two carbons carrying three fluorines, a chlorine, and a bromine.',

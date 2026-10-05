@@ -1,8 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import formicAcid from './formic-acid.molecule.js';
+import methenamine from './methenamine.molecule.js';
 
 const formaldehyde: Molecule = {
     name: 'Formaldehyde',
+    routeName: 'formaldehyde',
     // cspell:disable-next-line
     pronunciation: 'fɔɹmˈældəhˌId',
     structureDescription:
@@ -26,7 +29,10 @@ const formaldehyde: Molecule = {
         yearDiscovered: 1859,
         smell: 'pungent, suffocating',
         habitat: 'Human blood, most living cells, air from methane oxidation',
-        evolvesInto: ['formic-acid'],
+        evolvesInto: [
+            formicAcid,
+            methenamine,
+        ],
     },
     atoms: [
         {

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 25352. */
 const dinitrogenTetroxide: Molecule = {
     name: 'Dinitrogen Tetroxide',
+    routeName: 'dinitrogen-tetroxide',
     // cspell:disable-next-line
     pronunciation: 'dˌInˈItɹəʤən tɛtɹˈɑksˌId',
     structureDescription:
@@ -25,7 +26,6 @@ const dinitrogenTetroxide: Molecule = {
         ],
         smell: 'sharp, unpleasant',
         habitat: 'Made only in labs and factories',
-        evolvesInto: ['nitric-acid'],
     },
     atoms: [
         {

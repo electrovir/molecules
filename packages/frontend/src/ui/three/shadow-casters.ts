@@ -10,8 +10,8 @@ export const maxGroundShadowCasters = 512;
  * Half the width of a shadow's soft edge, in ångströms, right where the blocker is. The edge then
  * widens with distance from it at `penumbraSpread` ångströms per ångström.
  */
-const penumbraBase = 0.06;
-const penumbraSpread = 0.03;
+export const penumbraBase = 0.06;
+export const penumbraSpread = 0.03;
 /** Floats per packed capsule: start x, y, z, end x, y, z. */
 const capsuleStride = 6;
 
@@ -21,6 +21,34 @@ const capsuleStride = 6;
  * `SHADOW_CASTER_LIMIT` define with the loop's upper bound.
  */
 export const shadowCastersGlsl = `
+    /** How much of the light one caster lets through to \`origin\`. */
+    float getCasterVisibility(vec4 start, vec4 end, vec3 origin, vec3 towardLight) {
+        vec3 segment = end.xyz - start.xyz;
+        float segmentLengthSquared = dot(segment, segment);
+        vec3 fromStart = origin - start.xyz;
+        float segmentAlongRay = dot(segment, towardLight);
+        float denominator = segmentLengthSquared - segmentAlongRay * segmentAlongRay;
+        float along = denominator > 1e-6
+            ? clamp(
+                (dot(segment, fromStart) - segmentAlongRay * dot(towardLight, fromStart)) /
+                    denominator,
+                0.0,
+                1.0
+            )
+            : 0.0;
+        float rayDistance = dot(start.xyz + segment * along - origin, towardLight);
+        if (rayDistance <= 0.0) {
+            return 1.0;
+        }
+        vec3 rayPoint = origin + towardLight * rayDistance;
+        along = segmentLengthSquared > 1e-6
+            ? clamp(dot(rayPoint - start.xyz, segment) / segmentLengthSquared, 0.0, 1.0)
+            : 0.0;
+        float gap = distance(rayPoint, start.xyz + segment * along);
+        float penumbra = ${penumbraBase.toFixed(4)} + ${penumbraSpread.toFixed(4)} * rayDistance;
+        return smoothstep(start.w - penumbra, start.w + penumbra, gap);
+    }
+
     float getShadowVisibility(highp sampler2D casters, int row, vec3 origin, vec3 towardLight) {
         int count = getCapsuleCount(casters, row);
         float visibility = 1.0;
@@ -31,30 +59,7 @@ export const shadowCastersGlsl = `
             vec4 start;
             vec4 end;
             getCapsule(casters, row, index, start, end);
-            vec3 segment = end.xyz - start.xyz;
-            float segmentLengthSquared = dot(segment, segment);
-            vec3 fromStart = origin - start.xyz;
-            float segmentAlongRay = dot(segment, towardLight);
-            float denominator = segmentLengthSquared - segmentAlongRay * segmentAlongRay;
-            float along = denominator > 1e-6
-                ? clamp(
-                    (dot(segment, fromStart) - segmentAlongRay * dot(towardLight, fromStart)) /
-                        denominator,
-                    0.0,
-                    1.0
-                )
-                : 0.0;
-            float rayDistance = dot(start.xyz + segment * along - origin, towardLight);
-            if (rayDistance <= 0.0) {
-                continue;
-            }
-            vec3 rayPoint = origin + towardLight * rayDistance;
-            along = segmentLengthSquared > 1e-6
-                ? clamp(dot(rayPoint - start.xyz, segment) / segmentLengthSquared, 0.0, 1.0)
-                : 0.0;
-            float gap = distance(rayPoint, start.xyz + segment * along);
-            float penumbra = ${penumbraBase.toFixed(4)} + ${penumbraSpread.toFixed(4)} * rayDistance;
-            visibility *= smoothstep(start.w - penumbra, start.w + penumbra, gap);
+            visibility *= getCasterVisibility(start, end, origin, towardLight);
         }
         return visibility;
     }

@@ -1,9 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import nitromethane from './nitromethane.molecule.js';
+import tnt from './tnt.molecule.js';
 
 /** 3D coordinates from PubChem CID 944. */
 const nitricAcid: Molecule = {
     name: 'Nitric Acid',
+    routeName: 'nitric-acid',
     // cspell:disable-next-line
     pronunciation: 'nˈItɹɪk ˈæsəd',
     structureDescription: 'A nitrogen atom holding three oxygens, one with a hydrogen.',
@@ -24,6 +27,10 @@ const nitricAcid: Molecule = {
         ],
         smell: 'acrid, suffocating',
         habitat: 'The atmosphere, factories',
+        evolvesInto: [
+            tnt,
+            nitromethane,
+        ],
     },
     atoms: [
         {

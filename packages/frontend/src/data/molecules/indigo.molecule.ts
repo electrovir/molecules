@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 10215. */
 const indigo: Molecule = {
     name: 'Indigo',
+    routeName: 'indigo',
     // cspell:disable-next-line
     pronunciation: 'ˈɪndəɡˌO',
     structureDescription:

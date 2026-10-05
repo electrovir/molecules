@@ -29,9 +29,9 @@ async function loadMolecule(routeName: string) {
 
 /**
  * Builds the contents of the frontend's `all-molecules.ts` from every `.molecule.ts` file, with
- * each file's name as its route name, so the frontend can list every molecule's name and formula
- * without loading each molecule file. Sorted by fewest atoms first, then lowest total bond order,
- * then by route name.
+ * each file's name as its route name, so the frontend can list every molecule's name, formula, and
+ * evolutions without loading each molecule file. Sorted by fewest atoms first, then lowest total
+ * bond order, then by route name.
  */
 export async function generateAllMoleculesCode() {
     const routeNames = (await readdir(moleculesDirPath))
@@ -63,13 +63,16 @@ export async function generateAllMoleculesCode() {
         ' * Display order: fewest atoms first, ties broken by total bond order, then by route name.',
         ' */',
         'export const moleculeSummaries: Readonly<',
-        '    Record<string, Readonly<{name: string; formula: string}>>',
+        '    Record<string, Readonly<{name: string; formula: string; evolvesInto: string[]}>>',
         '> = {',
         ...sortedMolecules.map(({routeName, molecule}) => {
             return [
                 `${JSON.stringify(routeName)}: {`,
                 `name: ${JSON.stringify(molecule.name)},`,
                 `formula: ${JSON.stringify(getMoleculeFormula(molecule.atoms))},`,
+                `evolvesInto: ${JSON.stringify(
+                    (molecule.stats.evolvesInto ?? []).map((evolution) => evolution.routeName),
+                )},`,
                 '},',
             ].join('\n');
         }),

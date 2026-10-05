@@ -1,9 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import cytosine from './cytosine.molecule.js';
+import thymine from './thymine.molecule.js';
 
 /** 3D coordinates from PubChem CID 1174. */
 const uracil: Molecule = {
     name: 'Uracil',
+    routeName: 'uracil',
     // cspell:disable-next-line
     pronunciation: 'jˈʊɹəsˌɪl',
     structureDescription: 'A single ring of carbon and nitrogen.',
@@ -16,7 +19,10 @@ const uracil: Molecule = {
         logP: -1.07,
         yearDiscovered: 1900,
         habitat: 'RNA of all living cells, yeast, wheat germ, meteorites',
-        evolvesInto: ['thymine'],
+        evolvesInto: [
+            cytosine,
+            thymine,
+        ],
     },
     atoms: [
         {

@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 5904. */
 const penicillinG: Molecule = {
     name: 'Penicillin G',
+    routeName: 'penicillin-g',
     // cspell:disable-next-line
     pronunciation: 'pˌɛnəsˈɪlən ʤˈi',
     structureDescription:

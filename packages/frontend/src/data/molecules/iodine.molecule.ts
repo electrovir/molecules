@@ -1,9 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import iodoform from './iodoform.molecule.js';
+import thyroxine from './thyroxine.molecule.js';
 
 /** 3D coordinates from PubChem CID 807. */
 const iodine: Molecule = {
     name: 'Iodine',
+    routeName: 'iodine',
     // cspell:disable-next-line
     pronunciation: 'ˈI ədˌIn',
     structureDescription: 'Two iodine atoms joined by a single bond.',
@@ -27,6 +30,10 @@ const iodine: Molecule = {
         smell: 'sharp, irritating',
         taste: 'sharp, acrid',
         habitat: 'Seawater, seaweed, salt brines, Chilean saltpeter',
+        evolvesInto: [
+            iodoform,
+            thyroxine,
+        ],
     },
     atoms: [
         {

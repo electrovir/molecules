@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1254. */
 const menthol: Molecule = {
     name: 'Menthol',
+    routeName: 'menthol',
     // cspell:disable-next-line
     pronunciation: 'mˈɛnθˌɔl',
     structureDescription: 'A ring of six carbons with an oxygen-hydrogen group and two branches.',

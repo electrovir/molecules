@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 4004. */
 const malathion: Molecule = {
     name: 'Malathion',
+    routeName: 'malathion',
     // cspell:disable-next-line
     pronunciation: 'mæləθˈIɑn',
     structureDescription:

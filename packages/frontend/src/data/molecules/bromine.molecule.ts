@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import halothane from './halothane.molecule.js';
 
 /** 3D coordinates from PubChem CID 24408. */
 const bromine: Molecule = {
     name: 'Bromine',
+    routeName: 'bromine',
     // cspell:disable-next-line
     pronunciation: 'bɹˈOmˌin',
     structureDescription: 'Two bromine atoms joined by a single bond.',
@@ -25,6 +27,7 @@ const bromine: Molecule = {
         yearDiscovered: 1825,
         smell: 'suffocating, bleach-like',
         habitat: 'Bromide salts in seawater, brines, the Dead Sea',
+        evolvesInto: [halothane],
     },
     atoms: [
         {

@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 1176. */
 const urea: Molecule = {
     name: 'Urea',
+    routeName: 'urea',
     // cspell:disable-next-line
     pronunciation: 'jʊɹˈiə',
     structureDescription:
@@ -22,10 +23,6 @@ const urea: Molecule = {
         smell: 'odorless to faintly ammonia-like',
         taste: 'cooling, salty',
         habitat: 'Mammal and amphibian urine, the liver',
-        evolvesInto: [
-            'ammonia',
-            'carbon-dioxide',
-        ],
     },
     atoms: [
         {

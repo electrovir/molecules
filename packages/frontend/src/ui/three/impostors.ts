@@ -1,4 +1,4 @@
-// cspell:words highp brdf multisampling schlick
+// cspell:words highp brdf multisampling schlick prepass
 import {
     BoxGeometry,
     type Color,
@@ -41,7 +41,16 @@ export type ImpostorSceneUniforms = {
     localTowardLight: {value: Vector3};
     /** From the molecule's own space to clip space, for writing each pixel's depth. */
     localToClip: {value: Matrix4};
+    /** The depth of the nearest fully covered atom at each pixel, from the depth pre-pass. */
+    frontDepth: {value: Texture};
 };
+
+/**
+ * Camera layer for the depth pre-pass. Its depth lets every impostor skip shading pixels that a
+ * nearer atom fully covers, which the GPU can't skip on its own because impostors write their own
+ * depth.
+ */
+export const frontDepthLayer = 1;
 
 /**
  * Every atom and stick is drawn as a box around it, and each pixel of the box traces its own ray to
@@ -58,6 +67,20 @@ const impostorGlsl = `
         vec4 clipPosition = localToClip * vec4(position, 1.0);
         return clipPosition.z / clipPosition.w * 0.5 + 0.5;
     }
+
+    /** The pre-pass renders into \`frontDepth\`, so it must not read from it too. */
+    #ifndef DEPTH_PREPASS
+        uniform highp sampler2D frontDepth;
+
+        /**
+         * Whether a nearer atom fully covers this pixel, so this surface would fail the depth test
+         * anyway. The tolerance keeps the covering atom itself from being skipped, in case the
+         * pre-pass shader rounds its depth differently.
+         */
+        bool isHiddenByFrontDepth(float depth) {
+            return depth > texelFetch(frontDepth, ivec2(gl_FragCoord.xy), 0).r + 1e-5;
+        }
+    #endif
 
     /**
      * How much of a pixel a traced surface covers, from how far outside the surface's outline the
@@ -243,20 +266,37 @@ const atomFragmentShader = `
         float closestSquared = max(dot(offset, offset) - along * along, 0.0);
         float closestDistance = sqrt(closestSquared);
         float coverage = getEdgeCoverage(closestDistance - vRadius);
-        if (coverage <= 0.0) {
-            discard;
-        }
+        /**
+         * Only fully covered pixels count as hiding what's behind them. At the outline, what's
+         * behind still shows in the samples the atom leaves uncovered.
+         */
+        #ifdef DEPTH_PREPASS
+            if (coverage < 1.0) {
+                discard;
+            }
+        #else
+            if (coverage <= 0.0) {
+                discard;
+            }
+        #endif
         /** Just outside the outline, this lands on the point the ray passes closest to. */
         float halfChord = sqrt(max(vRadius * vRadius - closestSquared, 0.0));
 
-        #ifdef OUTLINE
+        #if defined(DEPTH_PREPASS)
+            gl_FragDepth = getFragmentDepth(localCameraPosition + rayDirection * (-along - halfChord));
+            gl_FragColor = vec4(0.0);
+        #elif defined(OUTLINE)
             /** The far side, so the outline only shows around the atom and behind its neighbors. */
             vec3 position = localCameraPosition + rayDirection * (-along + halfChord);
             gl_FragDepth = getFragmentDepth(position);
             gl_FragColor = vec4(highlightColor, 1.0);
         #else
             vec3 position = localCameraPosition + rayDirection * (-along - halfChord);
-            gl_FragDepth = getFragmentDepth(position);
+            float depth = getFragmentDepth(position);
+            if (isHiddenByFrontDepth(depth)) {
+                discard;
+            }
+            gl_FragDepth = depth;
             vec3 viewDirection = -rayDirection;
             vec3 geometryNormal = normalize(position - vCenter);
             float shadowVisibility = getShadowVisibility(
@@ -377,8 +417,10 @@ const atomFragmentShader = `
             #endif
             gl_FragColor = vec4(outgoingLight + vColor * vGlow, 1.0);
         #endif
-        #include <colorspace_fragment>
-        gl_FragColor *= coverage;
+        #ifndef DEPTH_PREPASS
+            #include <colorspace_fragment>
+            gl_FragColor *= coverage;
+        #endif
     }
 `;
 
@@ -458,7 +500,13 @@ const stickFragmentShader = `
         if (alongAxis < 0.0 || alongAxis > vLength) {
             discard;
         }
-        gl_FragDepth = getFragmentDepth(position);
+        float depth = getFragmentDepth(position);
+        #ifndef OUTLINE
+            if (isHiddenByFrontDepth(depth)) {
+                discard;
+            }
+        #endif
+        gl_FragDepth = depth;
 
         #ifdef OUTLINE
             gl_FragColor = vec4(highlightColor, 1.0);
@@ -523,7 +571,10 @@ function toGlslFloat(value: number) {
     return value.toFixed(4);
 }
 
-/** Draws every atom in two draw calls: the atoms themselves, and outlines on selected ones. */
+/**
+ * Draws every atom in up to three draw calls: the depth pre-pass, the atoms themselves, and
+ * outlines on selected ones.
+ */
 export function createAtomImpostors({
     atomCount,
     sceneUniforms,
@@ -633,18 +684,36 @@ export function createAtomImpostors({
         }),
     );
     outlineMaterial.alphaToCoverage = true;
+    const depthMaterial = new ShaderMaterial({
+        uniforms: {
+            ...sceneUniforms,
+            radiusScale: {
+                value: 1,
+            },
+        },
+        defines: {
+            ...defines,
+            DEPTH_PREPASS: '',
+        },
+        vertexShader: atomVertexShader,
+        fragmentShader: atomFragmentShader,
+        colorWrite: false,
+    });
 
     const mesh = new Mesh(geometry, material);
     const outlineMesh = new Mesh(geometry, outlineMaterial);
+    outlineMesh.visible = false;
+    const depthMesh = new Mesh(geometry, depthMaterial);
+    depthMesh.layers.set(frontDepthLayer);
     /** Instances spread far beyond the one box the geometry's bounds describe. */
     mesh.frustumCulled = false;
     outlineMesh.frustumCulled = false;
+    depthMesh.frustumCulled = false;
 
     return {
-        meshes: [
-            mesh,
-            outlineMesh,
-        ],
+        mesh,
+        outlineMesh,
+        depthMesh,
         attributes,
         setSelfReflectionsEnabled(isEnabled: boolean) {
             if (isEnabled === 'USE_SELF_REFLECTIONS' in material.defines) {
@@ -667,6 +736,7 @@ export function createAtomImpostors({
             geometry.dispose();
             material.dispose();
             outlineMaterial.dispose();
+            depthMaterial.dispose();
         },
     };
 }
@@ -794,14 +864,13 @@ export function createStickImpostors({
 
     const mesh = new Mesh(geometry, material);
     const outlineMesh = new Mesh(geometry, outlineMaterial);
+    outlineMesh.visible = false;
     mesh.frustumCulled = false;
     outlineMesh.frustumCulled = false;
 
     return {
-        meshes: [
-            mesh,
-            outlineMesh,
-        ],
+        mesh,
+        outlineMesh,
         attributes,
         setTransmissionEnabled(isEnabled: boolean) {
             material.uniforms.stickTransmission = {

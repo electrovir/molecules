@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 186907. */
 const aflatoxinB1: Molecule = {
     name: 'Aflatoxin B1',
+    routeName: 'aflatoxin-b1',
     // cspell:disable-next-line
     pronunciation: 'ˌæflətˈɑksɪn bˈi wˈʌn',
     structureDescription: 'Five fused rings of carbon and oxygen with a methoxy group.',

@@ -1,9 +1,12 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, MatterState, type Molecule} from '../molecule.js';
+import adenine from './adenine.molecule.js';
+import guanine from './guanine.molecule.js';
 
 /** 3D coordinates from PubChem CID 1044. */
 const purine: Molecule = {
     name: 'Purine',
+    routeName: 'purine',
     // cspell:disable-next-line
     pronunciation: 'pjˈʊɹˌin',
     structureDescription:
@@ -17,6 +20,10 @@ const purine: Molecule = {
         logP: -0.37,
         yearDiscovered: 1898,
         habitat: 'Labs',
+        evolvesInto: [
+            adenine,
+            guanine,
+        ],
     },
     atoms: [
         {

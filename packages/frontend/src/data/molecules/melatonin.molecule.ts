@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 896. */
 const melatonin: Molecule = {
     name: 'Melatonin',
+    routeName: 'melatonin',
     // cspell:disable-next-line
     pronunciation: 'mˌɛlətˈOnən',
     structureDescription: 'A double ring with two side chains, made from serotonin.',

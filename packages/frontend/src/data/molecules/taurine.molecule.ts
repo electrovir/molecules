@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 1123. */
 const taurine: Molecule = {
     name: 'Taurine',
+    routeName: 'taurine',
     // cspell:disable-next-line
     pronunciation: 'tˈɔɹin',
     structureDescription:

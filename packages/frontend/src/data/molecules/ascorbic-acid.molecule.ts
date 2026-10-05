@@ -4,6 +4,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 54670067. */
 const ascorbicAcid: Molecule = {
     name: 'Ascorbic Acid',
+    routeName: 'ascorbic-acid',
     // cspell:disable-next-line
     pronunciation: 'əskˈɔɹbɪk ˈæsəd',
     structureDescription:

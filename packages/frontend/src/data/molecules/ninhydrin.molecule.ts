@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 10236. */
 const ninhydrin: Molecule = {
     name: 'Ninhydrin',
+    routeName: 'ninhydrin',
     // cspell:disable-next-line
     pronunciation: 'nˌɪnhˈIdɹɪn',
     structureDescription:

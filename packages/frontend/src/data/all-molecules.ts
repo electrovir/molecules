@@ -7,727 +7,961 @@ import {getObjectTypedKeys} from '@augment-vir/common';
  * Display order: fewest atoms first, ties broken by total bond order, then by route name.
  */
 export const moleculeSummaries: Readonly<
-    Record<string, Readonly<{name: string; formula: string}>>
+    Record<string, Readonly<{name: string; formula: string; evolvesInto: string[]}>>
 > = {
     bromine: {
         name: 'Bromine',
         formula: 'Br₂',
+        evolvesInto: ['halothane'],
     },
     chlorine: {
         name: 'Chlorine',
         formula: 'Cl₂',
+        evolvesInto: [
+            'chloral-hydrate',
+            'hypochlorous-acid',
+        ],
     },
     hydrogen: {
         name: 'Hydrogen',
         formula: 'H₂',
+        evolvesInto: ['water'],
     },
     'hydrogen-chloride': {
         name: 'Hydrogen Chloride',
         formula: 'HCl',
+        evolvesInto: [],
     },
     'hydrogen-fluoride': {
         name: 'Hydrogen Fluoride',
         formula: 'FH',
+        evolvesInto: [
+            'boron-trifluoride',
+            'dichlorodifluoromethane',
+        ],
     },
     iodine: {
         name: 'Iodine',
         formula: 'I₂',
+        evolvesInto: [
+            'iodoform',
+            'thyroxine',
+        ],
     },
     oxygen: {
         name: 'Oxygen',
         formula: 'O₂',
+        evolvesInto: ['ozone'],
     },
     'carbon-monoxide': {
         name: 'Carbon Monoxide',
         formula: 'CO',
+        evolvesInto: [
+            'carbon-dioxide',
+            'phosgene',
+        ],
     },
     nitrogen: {
         name: 'Nitrogen',
         formula: 'N₂',
+        evolvesInto: ['ammonia'],
     },
     'hydrogen-sulfide': {
         name: 'Hydrogen Sulfide',
         formula: 'SH₂',
+        evolvesInto: [
+            'octasulfur',
+            'ethanethiol',
+        ],
     },
     'hypochlorous-acid': {
         name: 'Hypochlorous Acid',
         formula: 'ClOH',
+        evolvesInto: [],
     },
     water: {
         name: 'Water',
         formula: 'H₂O',
+        evolvesInto: ['hydrogen-peroxide'],
     },
     'xenon-difluoride': {
         name: 'Xenon Difluoride',
         formula: 'XeF₂',
+        evolvesInto: ['xenon-tetrafluoride'],
     },
     ozone: {
         name: 'Ozone',
         formula: 'O₃',
+        evolvesInto: [],
     },
     'carbon-dioxide': {
         name: 'Carbon Dioxide',
         formula: 'CO₂',
+        evolvesInto: ['carbonic-acid'],
     },
     'hydrogen-cyanide': {
         name: 'Hydrogen Cyanide',
         formula: 'NCH',
+        evolvesInto: [
+            'glycine',
+            'edta',
+        ],
     },
     'nitrous-oxide': {
         name: 'Nitrous Oxide',
         formula: 'ON₂',
+        evolvesInto: [],
     },
     'sulfur-dioxide': {
         name: 'Sulfur Dioxide',
         formula: 'SO₂',
+        evolvesInto: [
+            'sulfur-trioxide',
+            'thionyl-chloride',
+        ],
     },
     ammonia: {
         name: 'Ammonia',
         formula: 'NH₃',
+        evolvesInto: [
+            'hydrazine',
+            'urea',
+        ],
     },
     'boron-trifluoride': {
         name: 'Boron Trifluoride',
         formula: 'BF₃',
+        evolvesInto: [],
     },
     'hydrogen-peroxide': {
         name: 'Hydrogen Peroxide',
         formula: 'H₂O₂',
+        evolvesInto: [],
     },
     'nitrogen-trifluoride': {
         name: 'Nitrogen Trifluoride',
         formula: 'F₃N',
+        evolvesInto: [],
     },
     phosphine: {
         name: 'Phosphine',
         formula: 'PH₃',
+        evolvesInto: [],
     },
     'phosphorus-trichloride': {
         name: 'Phosphorus Trichloride',
         formula: 'Cl₃P',
+        evolvesInto: ['phosphorus-pentachloride'],
     },
     formaldehyde: {
         name: 'Formaldehyde',
         formula: 'CH₂O',
+        evolvesInto: [
+            'formic-acid',
+            'methenamine',
+        ],
     },
     phosgene: {
         name: 'Phosgene',
         formula: 'Cl₂OC',
+        evolvesInto: [],
     },
     'thionyl-chloride': {
         name: 'Thionyl Chloride',
         formula: 'Cl₂SO',
+        evolvesInto: [],
     },
     acetylene: {
         name: 'Acetylene',
         formula: 'C₂H₂',
+        evolvesInto: ['acetaldehyde'],
     },
     'sulfur-trioxide': {
         name: 'Sulfur Trioxide',
         formula: 'SO₃',
+        evolvesInto: [
+            'sulfamic-acid',
+            'sulfuric-acid',
+        ],
     },
     'white-phosphorus': {
         name: 'White Phosphorus',
         formula: 'P₄',
+        evolvesInto: [],
     },
     'carbon-tetrachloride': {
         name: 'Carbon Tetrachloride',
         formula: 'Cl₄C',
+        evolvesInto: [],
     },
     chloroform: {
         name: 'Chloroform',
         formula: 'Cl₃CH',
+        evolvesInto: ['tetrafluoroethylene'],
     },
     dichlorodifluoromethane: {
         name: 'Dichlorodifluoromethane',
         formula: 'Cl₂F₂C',
+        evolvesInto: [],
     },
     hydroxylamine: {
         name: 'Hydroxylamine',
         formula: 'ONH₃',
+        evolvesInto: [],
     },
     iodoform: {
         name: 'Iodoform',
         formula: 'I₃CH',
+        evolvesInto: [],
     },
     methane: {
         name: 'Methane',
         formula: 'CH₄',
+        evolvesInto: ['methanol'],
     },
     silane: {
         name: 'Silane',
         formula: 'SiH₄',
+        evolvesInto: [],
     },
     'silicon-tetrachloride': {
         name: 'Silicon Tetrachloride',
         formula: 'Cl₄Si',
+        evolvesInto: [],
     },
     tetrafluoromethane: {
         name: 'Tetrafluoromethane',
         formula: 'F₄C',
+        evolvesInto: [],
     },
     'xenon-tetrafluoride': {
         name: 'Xenon Tetrafluoride',
         formula: 'XeF₄',
+        evolvesInto: [],
     },
     'formic-acid': {
         name: 'Formic Acid',
         formula: 'O₂CH₂',
+        evolvesInto: [],
     },
     'nitric-acid': {
         name: 'Nitric Acid',
         formula: 'O₃NH',
+        evolvesInto: [
+            'tnt',
+            'nitromethane',
+        ],
     },
     hydrazine: {
         name: 'Hydrazine',
         formula: 'N₂H₄',
+        evolvesInto: [],
     },
     methanol: {
         name: 'Methanol',
         formula: 'OCH₄',
+        evolvesInto: [
+            'aspartame',
+            'trimethylamine',
+        ],
     },
     'phosphorus-pentachloride': {
         name: 'Phosphorus Pentachloride',
         formula: 'PCl₅',
+        evolvesInto: ['phosphoric-acid'],
     },
     'carbonic-acid': {
         name: 'Carbonic Acid',
         formula: 'O₃CH₂',
+        evolvesInto: [],
     },
     ethylene: {
         name: 'Ethylene',
         formula: 'C₂H₄',
+        evolvesInto: [
+            'ethanol',
+            'ethylene-glycol',
+        ],
     },
     tetrafluoroethylene: {
         name: 'Tetrafluoroethylene',
         formula: 'F₄C₂',
+        evolvesInto: ['pfoa'],
     },
     'dinitrogen-tetroxide': {
         name: 'Dinitrogen Tetroxide',
         formula: 'O₄N₂',
+        evolvesInto: [],
     },
     'boric-acid': {
         name: 'Boric Acid',
         formula: 'BO₃H₃',
+        evolvesInto: [],
     },
     'sulfur-hexafluoride': {
         name: 'Sulfur Hexafluoride',
         formula: 'SF₆',
+        evolvesInto: [],
     },
     acetaldehyde: {
         name: 'Acetaldehyde',
         formula: 'OC₂H₄',
+        evolvesInto: ['acetic-acid'],
     },
     nitromethane: {
         name: 'Nitromethane',
         formula: 'O₂NCH₃',
+        evolvesInto: [],
     },
     'sulfuric-acid': {
         name: 'Sulfuric Acid',
         formula: 'SO₄H₂',
+        evolvesInto: [],
     },
     halothane: {
         name: 'Halothane',
         formula: 'BrClF₃C₂H',
+        evolvesInto: [],
     },
     'acetic-acid': {
         name: 'Acetic Acid',
         formula: 'C₂H₄O₂',
+        evolvesInto: [],
     },
     diborane: {
         name: 'Diborane',
         formula: 'B₂H₆',
+        evolvesInto: ['borazine'],
     },
     octasulfur: {
         name: 'Octasulfur',
         formula: 'S₈',
+        evolvesInto: [],
     },
     'phosphoric-acid': {
         name: 'Phosphoric Acid',
         formula: 'PO₄H₃',
+        evolvesInto: [],
     },
     urea: {
         name: 'Urea',
         formula: 'ON₂CH₄',
+        evolvesInto: [],
     },
     'sulfamic-acid': {
         name: 'Sulfamic Acid',
         formula: 'SO₃NH₃',
+        evolvesInto: [],
     },
     'dimethyl-sulfide': {
         name: 'Dimethyl Sulfide',
         formula: 'SC₂H₆',
+        evolvesInto: ['dimethyl-sulfoxide'],
     },
     ethanethiol: {
         name: 'Ethanethiol',
         formula: 'SC₂H₆',
+        evolvesInto: [],
     },
     ethanol: {
         name: 'Ethanol',
         formula: 'C₂H₆O',
+        evolvesInto: ['diethyl-ether'],
     },
     cyclopropane: {
         name: 'Cyclopropane',
         formula: 'C₃H₆',
+        evolvesInto: [],
     },
     'chloral-hydrate': {
         name: 'Chloral Hydrate',
         formula: 'Cl₃O₂C₂H₃',
+        evolvesInto: ['ddt'],
     },
     'ethylene-glycol': {
         name: 'Ethylene Glycol',
         formula: 'O₂C₂H₆',
+        evolvesInto: ['18-crown-6'],
     },
     acetone: {
         name: 'Acetone',
         formula: 'OC₃H₆',
+        evolvesInto: ['isopropyl-alcohol'],
     },
     'dimethyl-sulfoxide': {
         name: 'Dimethyl Sulfoxide',
         formula: 'SOC₂H₆',
+        evolvesInto: [],
     },
     glycine: {
         name: 'Glycine',
         formula: 'O₂NC₂H₅',
+        evolvesInto: [
+            'creatine',
+            'glyphosate',
+        ],
     },
     cisplatin: {
         name: 'Cisplatin',
         formula: 'PtCl₂N₂H₆',
+        evolvesInto: [],
     },
     propane: {
         name: 'Propane',
         formula: 'C₃H₈',
+        evolvesInto: [],
     },
     'allyl-isothiocyanate': {
         name: 'Allyl Isothiocyanate',
         formula: 'SNC₄H₅',
+        evolvesInto: [],
     },
     'isopropyl-alcohol': {
         name: 'Isopropyl Alcohol',
         formula: 'OC₃H₈',
+        evolvesInto: [],
     },
     'lactic-acid': {
         name: 'Lactic Acid',
         formula: 'O₃C₃H₆',
+        evolvesInto: [],
     },
     benzene: {
         name: 'Benzene',
         formula: 'C₆H₆',
+        evolvesInto: [
+            'salicylic-acid',
+            'acetaminophen',
+        ],
     },
     borazine: {
         name: 'Borazine',
         formula: 'B₃N₃H₆',
+        evolvesInto: [],
     },
     'trichloroisocyanuric-acid': {
         name: 'Trichloroisocyanuric Acid',
         formula: 'Cl₃O₃N₃C₃',
+        evolvesInto: [],
     },
     uracil: {
         name: 'Uracil',
         formula: 'O₂N₂C₄H₄',
+        evolvesInto: [
+            'cytosine',
+            'thymine',
+        ],
     },
     trimethylamine: {
         name: 'Trimethylamine',
         formula: 'NC₃H₉',
+        evolvesInto: [],
     },
     cytosine: {
         name: 'Cytosine',
         formula: 'ON₃C₄H₅',
+        evolvesInto: [],
     },
     purine: {
         name: 'Purine',
         formula: 'N₄C₅H₄',
+        evolvesInto: [
+            'adenine',
+            'guanine',
+        ],
     },
     butane: {
         name: 'Butane',
         formula: 'C₄H₁₀',
+        evolvesInto: [],
     },
     glycerol: {
         name: 'Glycerol',
         formula: 'O₃C₃H₈',
+        evolvesInto: ['nitroglycerin'],
     },
     cysteine: {
         name: 'Cysteine',
         formula: 'SO₂NC₃H₇',
+        evolvesInto: ['taurine'],
     },
     taurine: {
         name: 'Taurine',
         formula: 'SO₃NC₂H₇',
+        evolvesInto: [],
     },
     benzaldehyde: {
         name: 'Benzaldehyde',
         formula: 'OC₇H₆',
+        evolvesInto: ['cinnamaldehyde'],
     },
     niacin: {
         name: 'Niacin',
         formula: 'O₂NC₆H₅',
+        evolvesInto: ['nicotine'],
     },
     'diethyl-ether': {
         name: 'Diethyl Ether',
         formula: 'OC₄H₁₀',
+        evolvesInto: [],
     },
     sevoflurane: {
         name: 'Sevoflurane',
         formula: 'F₇OC₄H₃',
+        evolvesInto: [],
     },
     creatinine: {
         name: 'Creatinine',
         formula: 'ON₃C₄H₇',
+        evolvesInto: [],
     },
     melamine: {
         name: 'Melamine',
         formula: 'N₆C₃H₆',
+        evolvesInto: [],
     },
     thymine: {
         name: 'Thymine',
         formula: 'O₂N₂C₅H₆',
+        evolvesInto: [],
     },
     acesulfame: {
         name: 'Acesulfame',
         formula: 'SO₄NC₄H₅',
+        evolvesInto: [],
     },
     adenine: {
         name: 'Adenine',
         formula: 'N₅C₅H₅',
+        evolvesInto: ['adenosine-triphosphate'],
     },
     gaba: {
         name: 'GABA',
         formula: 'O₂NC₄H₉',
+        evolvesInto: [],
     },
     'salicylic-acid': {
         name: 'Salicylic Acid',
         formula: 'O₃C₇H₆',
+        evolvesInto: [
+            'aspirin',
+            'methyl-salicylate',
+        ],
     },
     guanine: {
         name: 'Guanine',
         formula: 'ON₅C₅H₅',
+        evolvesInto: [],
     },
     'uric-acid': {
         name: 'Uric Acid',
         formula: 'O₃N₄C₅H₄',
+        evolvesInto: [],
     },
     histamine: {
         name: 'Histamine',
         formula: 'N₃C₅H₉',
+        evolvesInto: [],
     },
     coumarin: {
         name: 'Coumarin',
         formula: 'O₂C₉H₆',
+        evolvesInto: [],
     },
     saccharin: {
         name: 'Saccharin',
         formula: 'SO₃NC₇H₅',
+        evolvesInto: [],
     },
     'isoamyl-mercaptan': {
         name: 'Isoamyl Mercaptan',
         formula: 'SC₅H₁₂',
+        evolvesInto: [],
     },
     creatine: {
         name: 'Creatine',
         formula: 'O₂N₃C₄H₉',
+        evolvesInto: [],
     },
     glyphosate: {
         name: 'Glyphosate',
         formula: 'PO₅NC₃H₈',
+        evolvesInto: [],
     },
     cinnamaldehyde: {
         name: 'Cinnamaldehyde',
         formula: 'OC₉H₈',
+        evolvesInto: [],
     },
     'glutamic-acid': {
         name: 'Glutamic Acid',
         formula: 'O₄NC₅H₉',
+        evolvesInto: [],
     },
     allicin: {
         name: 'Allicin',
         formula: 'S₂OC₆H₁₀',
+        evolvesInto: [],
     },
     'methyl-salicylate': {
         name: 'Methyl Salicylate',
         formula: 'O₃C₈H₈',
+        evolvesInto: [],
     },
     vanillin: {
         name: 'Vanillin',
         formula: 'O₃C₈H₈',
+        evolvesInto: ['capsaicin'],
     },
     ninhydrin: {
         name: 'Ninhydrin',
         formula: 'O₄C₉H₆',
+        evolvesInto: [],
     },
     methionine: {
         name: 'Methionine',
         formula: 'SO₂NC₅H₁₁',
+        evolvesInto: [],
     },
     ribose: {
         name: 'Ribose',
         formula: 'O₅C₅H₁₀',
+        evolvesInto: ['riboflavin'],
     },
     metformin: {
         name: 'Metformin',
         formula: 'N₅C₄H₁₁',
+        evolvesInto: [],
     },
     'ascorbic-acid': {
         name: 'Ascorbic Acid',
         formula: 'O₆C₆H₈',
+        evolvesInto: [],
     },
     nitroglycerin: {
         name: 'Nitroglycerin',
         formula: 'O₉N₃C₃H₅',
+        evolvesInto: [],
     },
     acetaminophen: {
         name: 'Acetaminophen',
         formula: 'O₂NC₈H₉',
+        evolvesInto: [],
     },
     'citric-acid': {
         name: 'Citric Acid',
         formula: 'O₇C₆H₈',
+        evolvesInto: [],
     },
     aspirin: {
         name: 'Aspirin',
         formula: 'C₉H₈O₄',
+        evolvesInto: [],
     },
     theobromine: {
         name: 'Theobromine',
         formula: 'O₂N₄C₇H₈',
+        evolvesInto: ['caffeine'],
     },
     theophylline: {
         name: 'Theophylline',
         formula: 'O₂N₄C₇H₈',
+        evolvesInto: [],
     },
     tnt: {
         name: 'TNT',
         formula: 'O₆N₃C₇H₅',
+        evolvesInto: [],
     },
     methenamine: {
         name: 'Methenamine',
         formula: 'N₄C₆H₁₂',
+        evolvesInto: [],
     },
     dopamine: {
         name: 'Dopamine',
         formula: 'O₂NC₈H₁₁',
+        evolvesInto: ['adrenaline'],
     },
     fructose: {
         name: 'Fructose',
         formula: 'O₆C₆H₁₂',
+        evolvesInto: ['sucrose'],
     },
     glucose: {
         name: 'Glucose',
         formula: 'C₆H₁₂O₆',
+        evolvesInto: ['lactose'],
     },
     caffeine: {
         name: 'Caffeine',
         formula: 'C₈H₁₀N₄O₂',
+        evolvesInto: [],
     },
     triclosan: {
         name: 'Triclosan',
         formula: 'Cl₃O₂C₁₂H₇',
+        evolvesInto: [],
     },
     carvone: {
         name: 'Carvone',
         formula: 'OC₁₀H₁₄',
+        evolvesInto: [],
     },
     serotonin: {
         name: 'Serotonin',
         formula: 'ON₂C₁₀H₁₂',
+        evolvesInto: ['melatonin'],
     },
     hydrochlorothiazide: {
         name: 'Hydrochlorothiazide',
         formula: 'ClS₂O₄N₃C₇H₈',
+        evolvesInto: [],
     },
     acetylcholine: {
         name: 'Acetylcholine',
         formula: 'O₂NC₇H₁₆',
+        evolvesInto: [],
     },
     pfoa: {
         name: 'PFOA',
         formula: 'F₁₅O₂C₈H',
+        evolvesInto: [],
     },
     limonene: {
         name: 'Limonene',
         formula: 'C₁₀H₁₆',
+        evolvesInto: [],
     },
     adrenaline: {
         name: 'Adrenaline',
         formula: 'O₃NC₉H₁₃',
+        evolvesInto: [],
     },
     nicotine: {
         name: 'Nicotine',
         formula: 'N₂C₁₀H₁₄',
+        evolvesInto: [],
     },
     luciferin: {
         name: 'Luciferin',
         formula: 'S₂O₃N₂C₁₁H₈',
+        evolvesInto: [],
     },
     tryptophan: {
         name: 'Tryptophan',
         formula: 'O₂N₂C₁₁H₁₂',
+        evolvesInto: ['indigo'],
     },
     ddt: {
         name: 'DDT',
         formula: 'Cl₅C₁₄H₉',
+        evolvesInto: [],
     },
     sulfamethoxazole: {
         name: 'Sulfamethoxazole',
         formula: 'SO₃N₃C₁₀H₁₁',
+        evolvesInto: [],
     },
     thalidomide: {
         name: 'Thalidomide',
         formula: 'O₄N₂C₁₃H₁₀',
+        evolvesInto: [],
     },
     minoxidil: {
         name: 'Minoxidil',
         formula: 'ON₅C₉H₁₅',
+        evolvesInto: [],
     },
     indigo: {
         name: 'Indigo',
         formula: 'O₂N₂C₁₆H₁₀',
+        evolvesInto: [],
     },
     menthol: {
         name: 'Menthol',
         formula: 'OC₁₀H₂₀',
+        evolvesInto: [],
     },
     deet: {
         name: 'DEET',
         formula: 'ONC₁₂H₁₇',
+        evolvesInto: [],
     },
     biotin: {
         name: 'Biotin',
         formula: 'SO₃N₂C₁₀H₁₆',
+        evolvesInto: [],
     },
     ibuprofen: {
         name: 'Ibuprofen',
         formula: 'O₂C₁₃H₁₈',
+        evolvesInto: [],
     },
     melatonin: {
         name: 'Melatonin',
         formula: 'O₂N₂C₁₃H₁₆',
+        evolvesInto: [],
     },
     diazepam: {
         name: 'Diazepam',
         formula: 'ClON₂C₁₆H₁₃',
+        evolvesInto: [],
     },
     geosmin: {
         name: 'Geosmin',
         formula: 'OC₁₂H₂₂',
+        evolvesInto: [],
     },
     famotidine: {
         name: 'Famotidine',
         formula: 'S₃O₂N₇C₈H₁₅',
+        evolvesInto: [],
     },
     thiamine: {
         name: 'Thiamine',
         formula: 'SON₄C₁₂H₁₇',
+        evolvesInto: [],
     },
     thyroxine: {
         name: 'Thyroxine',
         formula: 'I₄O₄NC₁₅H₁₁',
+        evolvesInto: [],
     },
     'aflatoxin-b1': {
         name: 'Aflatoxin B1',
         formula: 'O₆C₁₇H₁₂',
+        evolvesInto: [],
     },
     edta: {
         name: 'EDTA',
         formula: 'O₈N₂C₁₀H₁₆',
+        evolvesInto: [],
     },
     sertraline: {
         name: 'Sertraline',
         formula: 'Cl₂NC₁₇H₁₇',
+        evolvesInto: [],
     },
     malathion: {
         name: 'Malathion',
         formula: 'S₂PO₆C₁₀H₁₉',
+        evolvesInto: [],
     },
     albuterol: {
         name: 'Albuterol',
         formula: 'O₃NC₁₃H₂₁',
+        evolvesInto: [],
     },
     lidocaine: {
         name: 'Lidocaine',
         formula: 'ON₂C₁₄H₂₂',
+        evolvesInto: [],
     },
     tetrodotoxin: {
         name: 'Tetrodotoxin',
         formula: 'O₈N₃C₁₁H₁₇',
+        evolvesInto: [],
     },
     aspartame: {
         name: 'Aspartame',
         formula: 'O₅N₂C₁₄H₁₈',
+        evolvesInto: [],
     },
     fluoxetine: {
         name: 'Fluoxetine',
         formula: 'F₃ONC₁₇H₁₈',
+        evolvesInto: [],
     },
     morphine: {
         name: 'Morphine',
         formula: 'O₃NC₁₇H₁₉',
+        evolvesInto: [],
     },
     'penicillin-g': {
         name: 'Penicillin G',
         formula: 'SO₄N₂C₁₆H₁₈',
+        evolvesInto: [],
     },
     '18-crown-6': {
         name: '18-Crown-6',
         formula: 'O₆C₁₂H₂₄',
+        evolvesInto: [],
     },
     sucralose: {
         name: 'Sucralose',
         formula: 'Cl₃O₈C₁₂H₁₉',
+        evolvesInto: [],
     },
     artemisinin: {
         name: 'Artemisinin',
         formula: 'O₅C₁₅H₂₂',
+        evolvesInto: [],
     },
     ciprofloxacin: {
         name: 'Ciprofloxacin',
         formula: 'FO₃N₃C₁₇H₁₈',
+        evolvesInto: [],
     },
     omeprazole: {
         name: 'Omeprazole',
         formula: 'SO₃N₃C₁₇H₁₉',
+        evolvesInto: [],
     },
     amoxicillin: {
         name: 'Amoxicillin',
         formula: 'SO₅N₃C₁₆H₁₉',
+        evolvesInto: [],
     },
     lactose: {
         name: 'Lactose',
         formula: 'O₁₁C₁₂H₂₂',
+        evolvesInto: [],
     },
     sucrose: {
         name: 'Sucrose',
         formula: 'O₁₁C₁₂H₂₂',
+        evolvesInto: [],
     },
     'adenosine-triphosphate': {
         name: 'Adenosine Triphosphate',
         formula: 'P₃O₁₃N₅C₁₀H₁₆',
+        evolvesInto: [],
     },
     riboflavin: {
         name: 'Riboflavin',
         formula: 'O₆N₄C₁₇H₂₀',
+        evolvesInto: [],
     },
     capsaicin: {
         name: 'Capsaicin',
         formula: 'O₃NC₁₈H₂₇',
+        evolvesInto: [],
     },
     oseltamivir: {
         name: 'Oseltamivir',
         formula: 'O₄N₂C₁₆H₂₈',
+        evolvesInto: [],
     },
     'folic-acid': {
         name: 'Folic Acid',
         formula: 'O₆N₇C₁₉H₁₉',
+        evolvesInto: [],
     },
     cortisol: {
         name: 'Cortisol',
         formula: 'O₅C₂₁H₃₀',
+        evolvesInto: [],
     },
     tetracycline: {
         name: 'Tetracycline',
         formula: 'O₈N₂C₂₂H₂₄',
+        evolvesInto: [],
     },
     'beta-carotene': {
         name: 'Beta-Carotene',
         formula: 'C₄₀H₅₆',
+        evolvesInto: [],
     },
 };
 

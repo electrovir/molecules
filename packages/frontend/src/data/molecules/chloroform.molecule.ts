@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import tetrafluoroethylene from './tetrafluoroethylene.molecule.js';
 
 /** 3D coordinates from PubChem CID 6212. */
 const chloroform: Molecule = {
     name: 'Chloroform',
+    routeName: 'chloroform',
     /** The space keeps the "r" in the first syllable; without it Kokoro says "clara-form". */
     // cspell:disable-next-line
     pronunciation: 'klˈɔɹ Ofˌɔɹm',
@@ -27,10 +29,7 @@ const chloroform: Molecule = {
         smell: 'sweet, pleasant, ether-like',
         taste: 'sweet',
         habitat: 'Seaweeds, soil fungi, chlorinated tap water',
-        evolvesInto: [
-            'phosgene',
-            'carbon-monoxide',
-        ],
+        evolvesInto: [tetrafluoroethylene],
     },
     atoms: [
         {

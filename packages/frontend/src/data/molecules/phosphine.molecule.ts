@@ -4,6 +4,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 24404. */
 const phosphine: Molecule = {
     name: 'Phosphine',
+    routeName: 'phosphine',
     // cspell:disable-next-line
     pronunciation: 'fˈɑsfˌin',
     structureDescription: 'A phosphorus atom with three hydrogens, shaped like a short pyramid.',
@@ -26,7 +27,6 @@ const phosphine: Molecule = {
         yearDiscovered: 1783,
         smell: 'fishy or garlicky (impure)',
         habitat: "Decaying organic matter in soils and sludge, Jupiter's atmosphere",
-        evolvesInto: ['phosphoric-acid'],
     },
     atoms: [
         {

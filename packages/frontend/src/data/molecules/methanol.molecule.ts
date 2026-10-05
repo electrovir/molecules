@@ -1,9 +1,13 @@
+// cspell:words trimethylamine
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import aspartame from './aspartame.molecule.js';
+import trimethylamine from './trimethylamine.molecule.js';
 
 /** 3D coordinates from PubChem CID 887. */
 const methanol: Molecule = {
     name: 'Methanol',
+    routeName: 'methanol',
     // cspell:disable-next-line
     pronunciation: 'mˈɛθˌənˌɔl',
     structureDescription:
@@ -27,7 +31,10 @@ const methanol: Molecule = {
         yearDiscovered: 1661,
         smell: 'faint, alcoholic, pungent',
         habitat: 'Fruit pectin breakdown, plants, microbes, volcanic gases, star-forming regions',
-        evolvesInto: ['formaldehyde'],
+        evolvesInto: [
+            aspartame,
+            trimethylamine,
+        ],
     },
     atoms: [
         {

@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 7955. */
 const melamine: Molecule = {
     name: 'Melamine',
+    routeName: 'melamine',
     // cspell:disable-next-line
     pronunciation: 'mˈɛləmˌin',
     structureDescription:

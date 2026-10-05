@@ -1,9 +1,13 @@
+// cspell:words sulfamic
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import sulfamicAcid from './sulfamic-acid.molecule.js';
+import sulfuricAcid from './sulfuric-acid.molecule.js';
 
 /** 3D coordinates from PubChem CID 24682. */
 const sulfurTrioxide: Molecule = {
     name: 'Sulfur Trioxide',
+    routeName: 'sulfur-trioxide',
     // cspell:disable-next-line
     pronunciation: 'sˈʌlfəɹ tɹIˈɑksˌId',
     structureDescription: 'A sulfur atom double bonded to three oxygens in a flat triangle.',
@@ -24,7 +28,10 @@ const sulfurTrioxide: Molecule = {
         ],
         smell: 'pungent, like sulfur dioxide',
         habitat: 'Factories, burning sulfur',
-        evolvesInto: ['sulfuric-acid'],
+        evolvesInto: [
+            sulfamicAcid,
+            sulfuricAcid,
+        ],
     },
     atoms: [
         {

@@ -1,9 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import isopropylAlcohol from './isopropyl-alcohol.molecule.js';
 
 /** 3D coordinates from PubChem CID 180. */
 const acetone: Molecule = {
     name: 'Acetone',
+    routeName: 'acetone',
     // cspell:disable-next-line
     pronunciation: 'ˈæsətˌOn',
     structureDescription: 'A carbon atom double bonded to an oxygen, with a carbon on each side.',
@@ -26,6 +28,7 @@ const acetone: Molecule = {
         smell: 'fruity, mint-like',
         taste: 'pungent, sweetish',
         habitat: 'Human blood and breath, plants, volcanoes, forest fires',
+        evolvesInto: [isopropylAlcohol],
     },
     atoms: [
         {

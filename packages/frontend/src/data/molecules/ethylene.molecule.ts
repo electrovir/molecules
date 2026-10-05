@@ -1,8 +1,11 @@
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import ethanol from './ethanol.molecule.js';
+import ethyleneGlycol from './ethylene-glycol.molecule.js';
 
 const ethylene: Molecule = {
     name: 'Ethylene',
+    routeName: 'ethylene',
     // cspell:disable-next-line
     pronunciation: 'ˈɛθəlˌin',
     structureDescription:
@@ -27,8 +30,8 @@ const ethylene: Molecule = {
         taste: 'sweet',
         habitat: 'Ripening fruits, flowers, leaves, roots, petrochemical plants',
         evolvesInto: [
-            'ethanol',
-            'acetaldehyde',
+            ethanol,
+            ethyleneGlycol,
         ],
     },
     atoms: [

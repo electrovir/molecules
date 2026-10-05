@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 29746. */
 const geosmin: Molecule = {
     name: 'Geosmin',
+    routeName: 'geosmin',
     // cspell:disable-next-line
     pronunciation: 'ʤiˈɑzmən',
     structureDescription: 'Two fused rings of carbon with an OH group and two methyl groups.',

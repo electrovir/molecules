@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** Idealized geometry from measured bond lengths and angles. PubChem has no 3D record for it. */
 const boricAcid: Molecule = {
     name: 'Boric Acid',
+    routeName: 'boric-acid',
     // cspell:disable-next-line
     pronunciation: 'bˈɔɹɪk ˈæsəd',
     structureDescription: 'A boron atom bonded to three OH groups in a flat triangle.',

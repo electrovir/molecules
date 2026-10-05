@@ -3,6 +3,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 
 const aceticAcid: Molecule = {
     name: 'Acetic Acid',
+    routeName: 'acetic-acid',
     // cspell:disable-next-line
     pronunciation: 'əsˈiɾɪk ˈæsəd',
     structureDescription:
@@ -25,7 +26,6 @@ const aceticAcid: Molecule = {
         smell: 'pungent, vinegar-like',
         taste: 'burning',
         habitat: 'Vinegar, fermented fruit juices, ocean water, nearly all living cells',
-        evolvesInto: ['formic-acid'],
     },
     atoms: [
         {

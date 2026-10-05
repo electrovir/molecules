@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 68617. */
 const sertraline: Molecule = {
     name: 'Sertraline',
+    routeName: 'sertraline',
     // cspell:disable-next-line
     pronunciation: 'sˈɜɹtɹəlˌin',
     structureDescription:

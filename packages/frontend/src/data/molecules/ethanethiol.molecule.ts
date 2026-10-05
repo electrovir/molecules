@@ -5,6 +5,7 @@ import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.j
 /** 3D coordinates from PubChem CID 6343. */
 const ethanethiol: Molecule = {
     name: 'Ethanethiol',
+    routeName: 'ethanethiol',
     // cspell:disable-next-line
     pronunciation: 'ˌɛθˌAnθˈIˌɔl',
     structureDescription: 'An ethyl group bonded to a sulfur with a hydrogen.',

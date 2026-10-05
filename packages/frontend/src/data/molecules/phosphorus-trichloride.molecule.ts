@@ -1,10 +1,12 @@
 // cspell:words pentachloride
 import {ChemicalElementSymbol} from '../chemical-element.js';
 import {BondOrder, GhsPictogram, MatterState, type Molecule} from '../molecule.js';
+import phosphorusPentachloride from './phosphorus-pentachloride.molecule.js';
 
 /** 3D coordinates from PubChem CID 24387. */
 const phosphorusTrichloride: Molecule = {
     name: 'Phosphorus Trichloride',
+    routeName: 'phosphorus-trichloride',
     // cspell:disable-next-line
     pronunciation: 'fˈɑsfəɹəs tɹˌIklˈɔɹˌId',
     structureDescription: 'A phosphorus atom bonded to three chlorine atoms in a low pyramid.',
@@ -24,10 +26,7 @@ const phosphorusTrichloride: Molecule = {
         yearDiscovered: 1808,
         smell: 'pungent, like hydrochloric acid',
         habitat: 'Made only in labs and factories',
-        evolvesInto: [
-            'phosphorus-pentachloride',
-            'hydrogen-chloride',
-        ],
+        evolvesInto: [phosphorusPentachloride],
     },
     atoms: [
         {

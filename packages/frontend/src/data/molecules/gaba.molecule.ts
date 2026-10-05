@@ -5,6 +5,7 @@ import {BondOrder, MatterState, type Molecule} from '../molecule.js';
 /** 3D coordinates from PubChem CID 119. */
 const gaba: Molecule = {
     name: 'GABA',
+    routeName: 'gaba',
     // cspell:disable-next-line
     pronunciation: 'ɡˈæbə',
     structureDescription:
