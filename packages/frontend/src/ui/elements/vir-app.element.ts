@@ -119,6 +119,11 @@ export const VirApp = defineElement()({
                 align-self: stretch;
                 flex-grow: 1;
                 min-height: 0;
+                /**
+                 * The * rule above beats these pages' own :host rules, which would leave their
+                 * scrolling hosts unable to pan.
+                 */
+                touch-action: pan-x pan-y;
             }
         `;
     },
