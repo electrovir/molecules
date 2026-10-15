@@ -14,6 +14,7 @@ import {
     ViraButton,
     ViraColorVariant,
     type ViraIconSvg,
+    ViraLink,
     ViraSize,
     viraTheme,
 } from 'vira';
@@ -115,6 +116,12 @@ export const VirApp = defineElement()({
                 gap: 8px;
             }
 
+            :host > ${ViraLink} {
+                position: absolute;
+                bottom: 16px;
+                left: 16px;
+            }
+
             ${VirAllMolecules}, ${VirEvolutionChains}, ${VirPeriodicTable} {
                 align-self: stretch;
                 flex-grow: 1;
@@ -211,6 +218,24 @@ export const VirApp = defineElement()({
         const molecule = state.molecule.isResolved() ? state.molecule.value : undefined;
 
         const isPhone = frontendState.value.screenSize === ScreenSize.Phone;
+        /** Phones show a bottom panel over the bottom-left corner. */
+        const hubLink = html`
+            <${ViraLink.assign({
+                link: {
+                    url: 'https://electrovir.github.io/edu/',
+                    newTab: false,
+                },
+                disableLinkStyles: true,
+            })}>
+                <${ViraButton.assign({
+                    icon: lucideIcons.List,
+                    color: ViraColorVariant.Neutral,
+                    buttonSize: ViraSize.Large,
+                })}
+                    title="More apps"
+                ></${ViraButton}>
+            </${ViraLink}>
+        `;
         const viewerBottom = isPhone
             ? /** The overlay's top padding plus the gap below its header. */
               state.overlayHeaderHeight + 24
@@ -413,8 +438,9 @@ export const VirApp = defineElement()({
                             `;
                         },
                     )}
+                ${isPhone ? hubLink : nothing}
             </div>
-            ${pageRenderers[currentPage]()}
+            ${isPhone ? nothing : hubLink} ${pageRenderers[currentPage]()}
         `;
     },
 });
